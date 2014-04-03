@@ -28,23 +28,19 @@ namespace _2Real
 	namespace bundle
 	{
 		FunctionBlockMetainfo::FunctionBlockMetainfo( std::shared_ptr< SharedServiceMetainfo > info ) :
+			BlockMetainfo(),
 			mImpl( info )
 		{
 		}
 
-		OutletMetainfo FunctionBlockMetainfo::createOutlet( std::string const& name )
+		std::string FunctionBlockMetainfo::getName() const
 		{
-			return OutletMetainfo( mImpl.lock()->createOutlet( name ) );
+			return mImpl.lock()->getName();
 		}
 
-		InletMetainfo FunctionBlockMetainfo::createInlet( std::string const& name )
+		void FunctionBlockMetainfo::setBlockClassInternal( std::shared_ptr< AbstractSharedServiceFactory > factory )
 		{
-			return InletMetainfo( mImpl.lock()->createInlet( name ) );
-		}
-
-		ParameterMetainfo FunctionBlockMetainfo::createParameter( std::string const& name )
-		{
-			return ParameterMetainfo( mImpl.lock()->createParameter( name ) );
+			mImpl.lock()->setFactory( factory );
 		}
 
 		void FunctionBlockMetainfo::setDescription( std::string const& description )
@@ -52,9 +48,19 @@ namespace _2Real
 			mImpl.lock()->setDescription( description );
 		}
 
-		void FunctionBlockMetainfo::setBlockClassInternal( std::shared_ptr< AbstractSharedServiceFactory > f )
+		OutletMetainfo FunctionBlockMetainfo::getOutletMetainfo( std::string const& name )
 		{
-			mImpl.lock()->setFactory( f );
+			return OutletMetainfo( mImpl.lock()->getOutletMetainfo( name ) );
+		}
+
+		InletMetainfo FunctionBlockMetainfo::getInletMetainfo( std::string const& name )
+		{
+			return InletMetainfo( mImpl.lock()->getInletMetainfo( name ) );
+		}
+
+		ParameterMetainfo FunctionBlockMetainfo::getParameterMetainfo( std::string const& name )
+		{
+			return ParameterMetainfo( mImpl.lock()->getParameterMetainfo( name ) );
 		}
 
 		void FunctionBlockMetainfo::setDependencies( std::vector< std::string > const& dependencies )
@@ -62,14 +68,9 @@ namespace _2Real
 			mImpl.lock()->setDependencies( dependencies );
 		}
 
-		void FunctionBlockMetainfo::setDefaultUpdatePolicy( InSlotPolicy const& policy  )
-		{
-			mImpl.lock()->setDefaultUpdatePolicy( static_cast< std::shared_ptr< DefaultPolicy > >( policy ) );
-		}
-
-		void FunctionBlockMetainfo::setDefaultSetupPolicy( InSlotPolicy const& policy  )
-		{
-			mImpl.lock()->setDefaultUpdatePolicy( static_cast< std::shared_ptr< DefaultPolicy > >( policy ) );
-		}
+		//void FunctionBlockMetainfo::setDefaultUpdatePolicy( InSlotPolicy const& policy  )
+		//{
+		//	mImpl.lock()->setDefaultUpdatePolicy( static_cast< std::shared_ptr< DefaultPolicy > >( policy ) );
+		//}
 	}
 }

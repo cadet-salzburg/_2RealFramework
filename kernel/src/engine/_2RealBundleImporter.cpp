@@ -17,7 +17,6 @@
 	limitations under the License.
 */
 
-#include "bundle/_2RealBundleMetainfo.h"
 #include "engine/_2RealBundleImporter.h"
 #include "engine/_2RealSharedLibrary.h"
 #include "engine/_2RealSharedLibraryMetainfo.h"
@@ -51,44 +50,29 @@ namespace _2Real
 		return ( mImportData.find( path ) != mImportData.end() );
 	}
 
-	std::shared_ptr< const SharedLibraryMetainfo > BundleImporter::importLibrary( Path const& path )
+	std::shared_ptr< const SharedLibraryMetainfo > BundleImporter::importLibrary( Path const& path, std::shared_ptr< TypeCollection > types )
 	{
 		if ( isLibraryLoaded( path ) )
 		{
 			auto it = mImportData.find( path );
-			//return it->second.metainfo;
 			return nullptr;
 		}
 
-		typedef void ( *MetainfoFunc )( bundle::BundleMetainfo &info );
-
 		// may throw libraryloadexception
 		std::shared_ptr< SharedLibrary > lib( new SharedLibrary( path ) );
-		std::shared_ptr< SharedLibraryMetainfo > info( new SharedLibraryMetainfo( path ) );
+		std::shared_ptr< SharedLibraryMetainfo > bundleinfo = SharedLibraryMetainfo::make( lib, path, types );
 
-		if ( lib->hasSymbol( "getBundleMetainfo" ) )
-		{
-			MetainfoFunc func = ( MetainfoFunc ) lib->getSymbol( "getBundleMetainfo" );
-
-			bundle::BundleMetainfo bundleMetainfo( info );
-			func( bundleMetainfo );
-
-			// exported services, exported types
-			bool isOk = info->performExport();
-			if ( !isOk )
-				throw BundleImportException( "library metainfo is malformed" );
-
+		if ( bundleinfo )
+		{		
 			SharedLibraryImportData importData;
 			importData.library = lib;
-			//importData.metainfo = info;
 			mImportData[ path ] = importData;
 
-			return info;
+			return bundleinfo;
 		}
 		else
 		{
 			lib.reset();
-			info.reset();
 
 			std::ostringstream msg;
 			msg << "shared library " << path << " does not export required function \'getBundleMetainfo\'";

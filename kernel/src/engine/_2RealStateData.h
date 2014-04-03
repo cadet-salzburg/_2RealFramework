@@ -30,7 +30,6 @@ namespace _2Real
 	class UpdateTrigger;
 
 	enum class Action : uint8_t { DO_SETUP, DO_UPDATE, DO_SHUTDOWN, DO_NOTHING };		
-	//enum class State : uint8_t { PRE_SETUP, POST_SETUP, POST_SETUP_RUNNING, POST_SHUTDOWN };
 
 	struct SignalResponse
 	{

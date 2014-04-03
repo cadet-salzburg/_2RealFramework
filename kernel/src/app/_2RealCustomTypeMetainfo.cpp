@@ -31,12 +31,6 @@ namespace _2Real
 		{
 		}
 
-		std::string CustomTypeMetainfo::getName() const
-		{
-			std::shared_ptr< const SharedTypeMetainfo > meta = checkValidity< const SharedTypeMetainfo >( mImpl, "custom type metainfo" );
-			return meta->getName();
-		}
-
 		std::string CustomTypeMetainfo::getDescription() const
 		{
 			std::shared_ptr< const SharedTypeMetainfo > meta = checkValidity< const SharedTypeMetainfo >( mImpl, "custom type metainfo" );
@@ -47,6 +41,28 @@ namespace _2Real
 		{
 			std::shared_ptr< const SharedTypeMetainfo > meta = checkValidity< const SharedTypeMetainfo >( mImpl, "custom type metainfo" );
 			return meta->makeCustomData();
+		}
+
+		std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo > > > CustomTypeMetainfo::getDataFields() const
+		{
+			std::shared_ptr< const SharedTypeMetainfo > meta = checkValidity< const SharedTypeMetainfo >( mImpl, "custom type metainfo" );
+			std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo > > > result;
+			std::vector< std::pair< std::string, std::shared_ptr< const TMetainfo > > > tmp = meta->getDataFields();
+			for ( auto const& it : tmp )
+			{
+				if ( it.second->isBasicType() )
+				{
+					std::shared_ptr< TypeMetainfo > info( new TypeMetainfo( it.second ) );
+					result.push_back( std::make_pair( it.first, info ) );
+				}
+				else
+				{
+					std::shared_ptr< const SharedTypeMetainfo > shared = std::dynamic_pointer_cast< const SharedTypeMetainfo >( it.second );
+					std::shared_ptr< const CustomTypeMetainfo > info( new CustomTypeMetainfo( shared ) );
+					result.push_back( std::make_pair( it.first, info ) );
+				}
+			}
+			return result;
 		}
 
 	}

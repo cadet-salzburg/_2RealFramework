@@ -43,9 +43,8 @@ namespace _2Real
 			void setCategory( std::string const& );
 			void setVersion( const unsigned int, const unsigned int, const unsigned int );
 
-			TypeMetainfo createTypeMetainfo( std::string const& name );
-			FunctionBlockMetainfo createFunctionBlockMetainfo( std::string const& name );
-			ContextBlockMetainfo createContextBlockMetainfo( std::string const& name );
+			void exportType( std::string const& name );
+			void exportBlock( std::string const& name, bool isSingleton, std::vector< std::string > const& inlets, std::vector< std::string > const& outlets, std::vector< std::string > const& parameters );
 
 		private:
 

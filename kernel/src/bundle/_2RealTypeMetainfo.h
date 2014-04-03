@@ -32,12 +32,15 @@ namespace _2Real
 
 		public:
 
+			//TypeMetainfo() = default;
 			explicit TypeMetainfo( std::shared_ptr< SharedTypeMetainfo > );
+
+			std::string getName() const;
 
 			void setDescription( std::string );
 			void addField( std::string const& fieldName, DataItem value );
 
-			CustomDataItem makeData();
+			CustomDataItem makeData() const;
 
 		private:
 

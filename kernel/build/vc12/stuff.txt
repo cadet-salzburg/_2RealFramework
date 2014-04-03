@@ -12,5 +12,54 @@ datatypes
 
 write test bundle + datatypes
 
-PROBLEMO w. TYPES EXPORTED BY BUNDLE: IF YOU DELETE THE BUNDLE, THE DATA MUST BE GONE AS WELL
+Metainfo Id:
+
+bundle ( unique path on pc, name not necessarily )
+block ( unique name in bundle )
+type ( unique name in bundle )
+io slot ( unique name in block )
+
+ONCE THE ENGINE IS DEAD, EVERYTHING, INCLUDING CUSTOM TYPES, BECOMES INVALID :)
+
+custom type:
+
+getName -> name
+getBundleName -> bundle name
+
+-> call getTypemetainfo in bundle
+
+createTypeMetainfo -> place request in bundle metainfo, ctor thread creates this shit?
+make custom data: always problematic
+
+clone: clones all subfields -> i need the fucking new metainfo id to clone
+
+so:
+
+makeData mainly called from application, which controls engine
+
+getBundleMetainfo: shared_ptr auf bundle metainfo created by engine
+
+-> tell engine which types exist ( names )
+
+getTypeMetainfo: shared_ptr auf type metainfo created by engine
+-> fields which themselves are custom types? -> bundle handle, can grab handle to metainfo
+
+getBlockMetainfo: same as above
+
+tell engine which blocks exist: name, number of inlets, number of outlets, number of parameters
+each block: update policy
+
+setDescription
+setUpdatePolicy -> allocated, copy
+setInlet( )
+
+
+getTypeMetainfo
+
+TypeMetainfo::
+std::vector< std::pair< std::string, TypeMetainfo > >
+
+@ type metainfo: one big type collection, contains basic types ( on init! )
+bundle: on unload removes all types -> no more shitty export needed
+
 

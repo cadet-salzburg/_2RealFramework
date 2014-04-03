@@ -28,7 +28,7 @@ namespace _2Real
 		{
 		}
 
-		std::string const& ParameterHandle::getName() const
+		std::string ParameterHandle::getName() const
 		{
 			return mImpl->getName();
 		}

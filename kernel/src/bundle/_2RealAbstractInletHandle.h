@@ -36,7 +36,7 @@ namespace _2Real
 			virtual ~AbstractInletHandle();
 
 			bool isMultiInlet() const;
-			std::string const& getName() const;
+			std::string getName() const;
 
 		private:
 

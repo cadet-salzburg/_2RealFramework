@@ -18,98 +18,109 @@
 
 #include "engine/_2RealCustomData.h"
 #include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealHumanReadableNameVisitor.h"
 #include "helpers/_2RealException.h"
+#include "engine/_2RealId.h"
 
 namespace _2Real
 {
-	//CustomData::CustomData()
-	//{
-	//}
+	std::ostream& operator<<( std::ostream& out, CustomDataItem const& val )
+	{
+		for ( auto const& it : val.mDataFields )
+			// TODO: visitor for formatting
+			out << it.getName() << " : " << it.getValue() << std::endl;
+		return out;
+	}
 
-	//CustomData::~CustomData()
-	//{
-	//}
+	CustomDataItem::CustomDataItem() :
+		mDataFields(),
+		mTypeMetainfo()
+	{
+		std::cout << "custom data item  def ctor" << std::endl;
+	}
 
-	//CustomData::CustomData( CustomData const& other )
-	//{
-	//	for ( auto it : other.mDataFields )
-	//	{
-	//		std::string name = it.first;
-	//		std::shared_ptr< AbstractAnyHolder > value( it.second->clone() );
-	//		mDataFields[ name ] = value;
-	//	}
-	//}
+	CustomDataItem::CustomDataItem( std::shared_ptr< const MetainfoId > type ) :
+		mDataFields(),
+		mTypeMetainfo( type )
+	{
+		std::cout << "custom data item init ctor" << std::endl;
+	}
 
-	//CustomData& CustomData::operator=( CustomData const& other )
-	//{
-	//	if ( this == &other )
-	//		return *this;
+	CustomDataItem::CustomDataItem( CustomDataItem const& other ) :
+		mDataFields( other.mDataFields ),
+		mTypeMetainfo( other.mTypeMetainfo )
+	{
+		std::cout << "custom data item copy ctor" << std::endl;
+		std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
+	}
 
-	//	mDataFields.clear();
+	CustomDataItem::CustomDataItem( CustomDataItem && other ) :
+		mDataFields( std::move( other.mDataFields ) ),
+		mTypeMetainfo( std::move( other.mTypeMetainfo ) )
+	{
+		std::cout << "custom data item move ctor" << std::endl;
+		std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
+	}
 
-	//	for ( auto it : other.mDataFields )
-	//	{
-	//		std::string name = it.first;
-	//		std::shared_ptr< AbstractAnyHolder > value( it.second->clone() );
-	//		mDataFields[ name ] = value;
-	//	}
+	CustomDataItem& CustomDataItem::operator=( CustomDataItem const& other )
+	{
+		if ( this == &other )
+			return *this;
 
-	//	return *this;
-	//}
+		mDataFields = other.mDataFields;
+		mTypeMetainfo = other.mTypeMetainfo;
+		std::cout << "custom data item copy assignment" << std::endl;
+		std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 
-	//void CustomData::setValueInternal( std::string const& fieldName, std::shared_ptr< AbstractAnyHolder > value )
-	//{
-	//	auto it = mDataFields.find( fieldName );
-	//	if ( it == mDataFields.end() )
-	//	{
-	//		std::ostringstream msg;
-	//		msg << "no field called " << fieldName << " found in custom data" << std::endl;
-	//		throw NotFoundException( msg.str() );
-	//	}
+		return *this;
+	}
 
-	//	it->second = value;
+	CustomDataItem& CustomDataItem::operator=( CustomDataItem && other )
+	{
+		if ( this == &other )
+			return *this;
 
-	//	// ok... old code sets the already existing any holder? wtf
-	//	// i leave this here, in case there are problems....
-	//	//AbstractAnyHolder *h = it->second;
-	//	//h->set( *value );
-	//	//delete value;
-	//}
+		mDataFields = std::move( other.mDataFields );
+		mTypeMetainfo = std::move( other.mTypeMetainfo );
+		std::cout << "custom data item move assignment" << std::endl;
+		std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 
-	//std::shared_ptr< const AbstractAnyHolder > CustomData::getValueInternal( std::string const& fieldName ) const
-	//{
-	//	auto it = mDataFields.find( fieldName );
-	//	if ( it == mDataFields.end() )
-	//	{
-	//		std::ostringstream msg;
-	//		msg << "no field called " << fieldName << " found in custom data" << std::endl;
-	//		throw NotFoundException( msg.str() );
-	//	}
+		return *this;
+	}
 
-	//	return it->second;
-	//}
+	std::string CustomDataItem::getName() const
+	{
+		return mTypeMetainfo->getName();
+	}
 
-	//std::shared_ptr< AbstractAnyHolder > CustomData::getValueInternal( std::string const& fieldName )
-	//{
-	//	auto it = mDataFields.find( fieldName );
-	//	if ( it == mDataFields.end() )
-	//	{
-	//		std::ostringstream msg;
-	//		msg << "no field called " << fieldName << " found in custom data" << std::endl;
-	//		throw NotFoundException( msg.str() );
-	//	}
+	void CustomDataItem::addField( DataField field )
+	{
+		// TODO: check if field exists
+		mDataFields.push_back( std::move( field ) );
+	}
 
-	//	return it->second;
-	//}
+	void CustomDataItem::set( std::string const& fieldName, DataItem value )
+	{
+		for ( auto &it : mDataFields )
+		{
+			if ( it.getName() == fieldName )
+			{
+				// TODO: multi-visitation
+				std::string n0 = boost::apply_visitor( HumanReadableNameVisitor(), value );
+				std::string n1 = boost::apply_visitor( HumanReadableNameVisitor(), it.getValue() );
 
-	//bool CustomData::operator==( CustomData const& other )
-	//{
-	//	return false;
-	//}
+				std::cout << n0 << " " << n1 << std::endl;
 
-	//bool CustomData::operator<( CustomData const& other )
-	//{
-	//	return false;
-	//}
+				if ( n0 == n1 )
+				{
+					it.setValue( std::move( value ) );
+					return;
+				}
+				else
+					throw _2Real::TypeMismatchException( fieldName );
+			}
+		}
 
+		throw _2Real::NotFoundException( fieldName );
+	}
 }

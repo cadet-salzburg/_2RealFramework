@@ -28,7 +28,7 @@ namespace _2Real
 		{
 		}
 
-		std::string const& OutletHandle::getName() const
+		std::string OutletHandle::getName() const
 		{
 			return mImpl->getName();
 		}

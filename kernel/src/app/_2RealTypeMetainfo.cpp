@@ -48,5 +48,11 @@ namespace _2Real
 			return meta->makeData();
 		}
 
+		std::string TypeMetainfo::getName() const
+		{
+			std::shared_ptr< const TMetainfo > meta = checkValidity< const TMetainfo >( mImpl, "type metainfo" );
+			return meta->getName();
+		}
+
 	}
 }

@@ -18,15 +18,11 @@
 
 #include "engine/_2RealBlock.h"
 #include "engine/_2RealSharedServiceMetainfo.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
-#include "engine/_2RealSharedServiceOutletMetainfo.h"
-#include "engine/_2RealSharedServiceParameterMetainfo.h"
+#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
 #include "engine/_2RealParameter.h"
 #include "engine/_2RealMultiInlet.h"
-
-#include "engine/_2RealConditionFactory.h"
 
 namespace _2Real
 {
@@ -72,12 +68,12 @@ namespace _2Real
 
 	void Block::createIo( std::shared_ptr< const SharedServiceMetainfo > info, std::vector< std::shared_ptr< Parameter > > &parameters, std::vector< std::shared_ptr< AbstractInlet > > &inlets, std::vector< std::shared_ptr< Outlet > > &outlets )
 	{
-		std::vector< std::shared_ptr< const SharedServiceInletMetainfo > > inletinfos;		info->getInletMetainfos( inletinfos );
-		std::vector< std::shared_ptr< const SharedServiceOutletMetainfo > > outletinfos;	info->getOutletMetainfos( outletinfos );
-		std::vector< std::shared_ptr< const SharedServiceInletMetainfo > > parameterinfos;	info->getParameterMetainfos( parameterinfos );
+		auto inletinfos = info->getInletMetainfos();
+		auto outletinfos = info->getOutletMetainfos();
+		auto parameterinfos = info->getParameterMetainfos();
 
 		for ( auto it : inletinfos )
-			inlets.push_back( it->isMultiInlet() ? std::shared_ptr< AbstractInlet >( new MultiInlet( it ) ) : std::shared_ptr< AbstractInlet >( new Inlet( it ) ) );
+			inlets.push_back( it->isMulti() ? std::shared_ptr< AbstractInlet >( new MultiInlet( it ) ) : std::shared_ptr< AbstractInlet >( new Inlet( it ) ) );
 
 		for ( auto it : outletinfos )
 			outlets.push_back( std::shared_ptr< Outlet >( new Outlet( it ) ) );

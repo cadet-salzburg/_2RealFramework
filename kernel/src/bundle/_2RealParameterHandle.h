@@ -36,7 +36,7 @@ namespace _2Real
 
 			explicit ParameterHandle( std::shared_ptr< const Parameter > );
 
-			std::string const& getName() const;
+			std::string getName() const;
 
 			DataItem const& getValue() const;
 

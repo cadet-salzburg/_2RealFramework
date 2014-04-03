@@ -16,17 +16,22 @@
 	limitations under the License.
 */
 
+#pragma once
+
+#include "helpers/_2RealStdIncludes.h"
+
 namespace _2Real
 {
-	//std::shared_ptr< AbstractAnyHolder > BasicDataFieldMetainfo::makeData() const
-	//{
-	//	return mMetainfo->makeAny();
-	//}
+	namespace bundle
+	{
+		class BlockMetainfo
+		{
 
-	//std::shared_ptr< AbstractAnyHolder > ComplexDataFieldMetainfo::makeData() const
-	//{
-	//	std::shared_ptr< CustomData > data = mMetainfo.lock()->makeData();
-	//	AnyHolder_T< CustomData > *any = new AnyHolder_T< CustomData >( data );
-	//	return std::shared_ptr< AbstractAnyHolder >( any );
-	//}
+		public:
+
+			BlockMetainfo() = default;
+			virtual std::string getName() const = 0;
+
+		};
+	}
 }

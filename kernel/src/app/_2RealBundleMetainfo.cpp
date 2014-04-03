@@ -88,8 +88,7 @@ namespace _2Real
 		void BundleMetainfo::getExportedBlocks( std::vector< BlockMetainfo > &blocks ) const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
-			std::vector< std::shared_ptr< const SharedServiceMetainfo > > tmp;
-			meta->getServiceMetainfos( tmp );
+			auto tmp = meta->getServiceMetainfos();
 			for ( auto it : tmp )
 			{
 				std::shared_ptr< const SharedServiceMetainfo > s = it;
@@ -100,8 +99,7 @@ namespace _2Real
 		void BundleMetainfo::getExportedTypes( std::vector< CustomTypeMetainfo > &types ) const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
-			std::vector< std::shared_ptr< const SharedTypeMetainfo > > tmp;
-			meta->getTypeMetainfos( tmp );
+			auto tmp = meta->getTypeMetainfos();
 			for ( auto it : tmp ) types.push_back( CustomTypeMetainfo( it ) );
 		}
 	}

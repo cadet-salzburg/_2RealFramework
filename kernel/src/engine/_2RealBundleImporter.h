@@ -44,7 +44,7 @@ namespace _2Real
 
 		void clear();
 		bool isLibraryLoaded( Path const& path ) const;
-		std::shared_ptr< const SharedLibraryMetainfo > importLibrary( Path const& path );
+		std::shared_ptr< const SharedLibraryMetainfo > importLibrary( Path const& path, std::shared_ptr< TypeCollection > );
 		void unimportLibrary( Path const& path );
 
 	private:

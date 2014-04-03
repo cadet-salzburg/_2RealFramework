@@ -38,6 +38,7 @@ namespace _2Real
 
 			bool isValid() const;
 			bool isBasicType() const;
+			std::string getName() const;
 			DataItem makeData() const;
 
 		private:

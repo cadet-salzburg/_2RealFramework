@@ -20,36 +20,43 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include <unordered_map>
 
 namespace _2Real
 {
 	class TMetainfo;
+	class SharedTypeMetainfo;
+	class MetainfoId;
 
-	/*
-	*	collection of all shared types exported by a shared library
-	*/
 	class TypeCollection : public std::enable_shared_from_this< TypeCollection >
 	{
 
 	public:
 
-		TypeCollection();
+		TypeCollection() = default;
 		~TypeCollection();
-
-		void clear();
-		void addType( std::shared_ptr< const TMetainfo > );
-		void typeRemoved( std::shared_ptr< const TMetainfo > );
-
-		std::shared_ptr< const TMetainfo > getTypeMetainfo( std::string const& name ) const;
-
-	private:
 
 		TypeCollection( TypeCollection const& other ) = delete;
 		TypeCollection& operator=( TypeCollection const& other ) = delete;
 
-		typedef std::map< std::string, std::shared_ptr< const TMetainfo > >		Types;
+		void clear();
 
-		Types	mTypes;
+		void addType( std::shared_ptr< const TMetainfo > );
+		std::shared_ptr< const TMetainfo > getMetainfo( std::shared_ptr< const MetainfoId > ) const;
+
+		void typeRemoved( std::shared_ptr< const MetainfoId > info );
+
+	private:
+
+		struct Cmp
+		{
+			bool operator()( std::shared_ptr< const MetainfoId > one, std::shared_ptr< const MetainfoId > other ) const;
+		};
+
+		typedef std::map< std::shared_ptr< const MetainfoId >, std::shared_ptr< const TMetainfo >, Cmp > Types;
+
+		Types								mTypes;
 
 	};
+
 }

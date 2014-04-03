@@ -33,7 +33,7 @@ namespace _2Real
 		{
 		}
 
-		std::string const& AbstractInletHandle::getName() const
+		std::string AbstractInletHandle::getName() const
 		{
 			return mImpl->getName();
 		}

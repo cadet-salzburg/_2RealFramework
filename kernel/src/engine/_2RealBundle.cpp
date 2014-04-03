@@ -52,8 +52,7 @@ namespace _2Real
 
 	void Bundle::initServices()	
 	{
-		std::vector< std::shared_ptr< const SharedServiceMetainfo > > serviceMetainfos;
-		mMetainfo->getServiceMetainfos( serviceMetainfos );
+		auto serviceMetainfos = mMetainfo->getServiceMetainfos();
 
 		for ( auto info : serviceMetainfos )
 		{
@@ -90,7 +89,7 @@ namespace _2Real
 		tmp.reset();
 	}
 
-	Path const& Bundle::getFilePath() const
+	Path Bundle::getFilePath() const
 	{
 		return mMetainfo->getFilePath();
 	}
@@ -117,8 +116,7 @@ namespace _2Real
 		// for all dependencies:	check if instance already was created
 		//							if not, create instance
 		std::vector< std::shared_ptr< AbstractSharedService > > dependencies;
-		std::vector< std::string > dependenciesByName;
-		info->getDependencies( dependenciesByName );
+		std::vector< std::string > dependenciesByName = info->getDependencies();
 		for ( auto dependency : dependenciesByName )
 		{
 		//	if ( mServiceInstances.find( dependency ) == mServiceInstances.end() )

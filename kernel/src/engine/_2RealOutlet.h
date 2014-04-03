@@ -25,16 +25,16 @@
 
 namespace _2Real
 {
-	class SharedServiceOutletMetainfo;
+	class SharedServiceIoSlotMetainfo;
 
 	class Outlet : public DataSource, public std::enable_shared_from_this< Outlet >
 	{
 
 	public:
 
-		explicit Outlet( std::shared_ptr< const SharedServiceOutletMetainfo > );
+		explicit Outlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
 
-		std::string const& getName() const;
+		std::string getName() const;
 
 		DataItem & getValue();
 
@@ -42,7 +42,7 @@ namespace _2Real
 
 	private:
 
-		std::shared_ptr< const SharedServiceOutletMetainfo >  mMetainfo;
+		std::shared_ptr< const SharedServiceIoSlotMetainfo >  mMetainfo;
 
 		mutable std::mutex					mMutex;
 		std::shared_ptr< DataItem >			mTmpValue;

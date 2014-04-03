@@ -17,13 +17,13 @@
 */
 
 #include "engine/_2RealInlet.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
+#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
 #include "engine/_2RealLink.h"
 
 namespace _2Real
 {
 
-	Inlet::Inlet( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
+	Inlet::Inlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
 		InSlot(), AbstractInlet( meta ), DataSink(), std::enable_shared_from_this< Inlet >()
 	{
 		std::shared_ptr< DataItem > initValue( new DataItem( meta->getInitialValue() ) );

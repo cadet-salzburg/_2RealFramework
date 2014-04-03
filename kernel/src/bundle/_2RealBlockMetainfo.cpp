@@ -16,18 +16,11 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealSharedServiceParameterMetainfo.h"
+#include "bundle/_2RealBlockMetainfo.h"
 
 namespace _2Real
 {
-
-	SharedServiceParameterMetainfo::SharedServiceParameterMetainfo( std::string const& name ) :
-		std::enable_shared_from_this< SharedServiceParameterMetainfo >()
+	namespace bundle
 	{
 	}
-
-	SharedServiceParameterMetainfo::~SharedServiceParameterMetainfo()
-	{
-	}
-
 }

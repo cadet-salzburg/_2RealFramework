@@ -65,15 +65,14 @@ namespace _2Real
 		void BlockMetainfo::getDependencies( std::vector< std::string > &dependencies ) const
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
-			meta->getDependencies( dependencies );
+			dependencies = meta->getDependencies();
 		}
 
 		void BlockMetainfo::getInletMetainfos( std::vector< InletMetainfo > &inlets )
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
 			
-			std::vector< std::shared_ptr< const _2Real::SharedServiceInletMetainfo > > tmp;
-			meta->getInletMetainfos( tmp );
+			auto tmp = meta->getInletMetainfos();
 
 			for ( auto it : tmp )
 				inlets.push_back( InletMetainfo( it ) );
@@ -83,8 +82,7 @@ namespace _2Real
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
 
-			std::vector< std::shared_ptr< const _2Real::SharedServiceOutletMetainfo > > tmp;
-			meta->getOutletMetainfos( tmp );
+			auto tmp = meta->getOutletMetainfos();
 
 			for ( auto it : tmp )
 				outlets.push_back( OutletMetainfo( it ) );
@@ -94,8 +92,7 @@ namespace _2Real
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
 
-			std::vector< std::shared_ptr< const _2Real::SharedServiceInletMetainfo > > tmp;
-			meta->getParameterMetainfos( tmp );
+			auto tmp = meta->getParameterMetainfos();
 
 			for ( auto it : tmp )
 				parameters.push_back( ParameterMetainfo( it ) );
@@ -104,13 +101,7 @@ namespace _2Real
 		void BlockMetainfo::getDefaultUpdatePolicy( std::vector< std::vector< std::string > > &policy ) const
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
-			meta->getDefaultUpdatePolicy( policy );
-		}
-
-		void BlockMetainfo::getDefaultSetupPolicy( std::vector< std::vector< std::string > > &policy ) const
-		{
-			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
-			meta->getDefaultSetupPolicy( policy );
+			policy = meta->getDefaultUpdatePolicy();
 		}
 	}
 }

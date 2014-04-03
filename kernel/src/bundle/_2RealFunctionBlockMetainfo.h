@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "bundle/_2RealBlockMetainfo.h"
 #include "engine/_2RealSharedServiceFactory_T.h"
 
 namespace _2Real
@@ -30,14 +31,15 @@ namespace _2Real
 		class InletMetainfo;
 		class OutletMetainfo;
 		class ParameterMetainfo;
-		class InSlotPolicy;
 
-		class FunctionBlockMetainfo
+		class FunctionBlockMetainfo : public BlockMetainfo
 		{
 
 		public:
 
 			explicit FunctionBlockMetainfo( std::shared_ptr< SharedServiceMetainfo > );
+
+			std::string getName() const;
 
 			template< typename TBlock >
 			void setBlockClass()
@@ -49,12 +51,11 @@ namespace _2Real
 			void setDescription( std::string const& );
 			void setDependencies( std::vector< std::string > const& );
 
-			OutletMetainfo createOutlet( std::string const& name );
-			InletMetainfo createInlet( std::string const& name );
-			ParameterMetainfo createParameter( std::string const& name );
+			OutletMetainfo		getOutletMetainfo( std::string const& name );
+			InletMetainfo		getInletMetainfo( std::string const& name );
+			ParameterMetainfo	getParameterMetainfo( std::string const& name );
 
-			void setDefaultUpdatePolicy( InSlotPolicy const& );
-			void setDefaultSetupPolicy( InSlotPolicy const& );
+			void getDefaultUpdatePolicy();
 
 		private:
 

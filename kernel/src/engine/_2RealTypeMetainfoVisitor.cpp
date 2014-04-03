@@ -1,0 +1,108 @@
+/*
+	CADET - Center for Advances in Digital Entertainment Technologies
+	Copyright 2011 Fachhochschule Salzburg GmbH
+		http://www.cadet.at
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
+#include "engine/_2RealTypeMetainfoVisitor.h"
+#include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealTypeCollection.h"
+#include "engine/_2RealCustomData.h"
+#include "engine/_2RealId.h"
+
+namespace _2Real
+{
+
+	TypeMetainfoVisitor::TypeMetainfoVisitor( std::shared_ptr< const TypeCollection > types ) :
+		mTypes( types )
+	{
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const uint8_t val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "unsigned char" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const int8_t val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "char" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const uint32_t val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "unsigned int" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const int32_t val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "int" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const uint64_t val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "unsigned long" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const int64_t val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "long" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const double val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "double" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const float val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "float" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( std::string const& val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "string" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( const bool val ) const
+	{
+		( void )( val );
+		std::shared_ptr< MetainfoId > id ( new MetainfoId( nullptr, MetainfoType::TYPE, "bool" ) );
+		return mTypes->getMetainfo( id );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeMetainfoVisitor::operator()( _2Real::CustomDataItem const& val ) const
+	{
+		return mTypes->getMetainfo( val.mTypeMetainfo );
+	}
+
+}

@@ -50,7 +50,6 @@ namespace _2Real
 			void getParameterMetainfos( std::vector< ParameterMetainfo > & );
 
 			void getDefaultUpdatePolicy( std::vector< std::vector< std::string > > & ) const;
-			void getDefaultSetupPolicy( std::vector< std::vector< std::string > > & ) const;
 			
 		private:
 

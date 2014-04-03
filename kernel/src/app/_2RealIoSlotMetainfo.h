@@ -45,9 +45,6 @@ namespace _2Real
 
 			IoSlotMetainfo();
 			explicit IoSlotMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
-
-		private:
-
 			std::weak_ptr< const SharedServiceIoSlotMetainfo >		mImpl;
 
 		};

@@ -17,12 +17,12 @@
 */
 
 #include "engine/_2RealOutlet.h"
-#include "engine/_2RealSharedServiceOutletMetainfo.h"
+#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
 
 namespace _2Real
 {
 
-	Outlet::Outlet( std::shared_ptr< const SharedServiceOutletMetainfo > meta ) :
+	Outlet::Outlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
 		DataSource(),
 		std::enable_shared_from_this< Outlet >(),
 		mMetainfo( meta ),
@@ -31,7 +31,7 @@ namespace _2Real
 	{
 	}
 
-	std::string const& Outlet::getName() const
+	std::string Outlet::getName() const
 	{
 		return mMetainfo->getName();
 	}

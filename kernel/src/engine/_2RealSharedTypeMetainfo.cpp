@@ -17,13 +17,27 @@
 */
 
 #include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealId.h"
+#include "engine/_2RealHumanReadableNameVisitor.h"
+#include "engine/_2RealTypeMetainfoVisitor.h"
+#include "engine/_2RealTypeCollection.h"
 
 namespace _2Real
 {
+	////////////////////////////////////
 
-	BasicTypeMetainfo::BasicTypeMetainfo( DataItem val ) :
-		mTemplate( val ),
-		mTypeDescriptor()
+	std::shared_ptr< BasicTypeMetainfo > BasicTypeMetainfo::make( std::shared_ptr< TypeCollection > types, const DataItem item )
+	{
+		std::string name = boost::apply_visitor( HumanReadableNameVisitor(), item );
+		std::shared_ptr< MetainfoId > basictypeId( new MetainfoId( nullptr, MetainfoType::TYPE, name ) );
+		std::shared_ptr< BasicTypeMetainfo > basictypeInfo( new BasicTypeMetainfo( basictypeId, types, item ) );
+		return basictypeInfo;
+	}
+
+	BasicTypeMetainfo::BasicTypeMetainfo( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, DataItem val ) :
+		mId( id ),
+		mTypes( types ),
+		mTemplate( val )
 	{
 	}
 
@@ -37,14 +51,39 @@ namespace _2Real
 		return true;
 	}
 
+	std::shared_ptr< const MetainfoId > BasicTypeMetainfo::getId() const
+	{
+		return mId;
+	}
+
+	std::string BasicTypeMetainfo::getName() const
+	{
+		return mId->getName();
+	}
+
 	////////////////////////////////////
 
-	SharedTypeMetainfo::SharedTypeMetainfo( const std::string name ) :
-		mName( name ),
+	std::shared_ptr< SharedTypeMetainfo > SharedTypeMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, std::string const& name )
+	{
+		std::shared_ptr< MetainfoId > sharedtypeId( new MetainfoId( id, MetainfoType::TYPE, name ) );
+		std::shared_ptr< SharedTypeMetainfo > sharedtypeInfo( new SharedTypeMetainfo( sharedtypeId, types ) );
+		sharedtypeInfo->mTemplate = CustomDataItem( sharedtypeId );
+		return sharedtypeInfo;
+	}
+
+	SharedTypeMetainfo::SharedTypeMetainfo( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types ) :
+		TMetainfo(),
+		mId( id ),
 		mDescription( "no description available" ),
 		mTemplate(),
-		mTypeDescriptor()
+		mTypes( types )
 	{
+	}
+
+	void SharedTypeMetainfo::unregisterFromTypeCollection()
+	{
+		std::shared_ptr< TypeCollection > types = mTypes.lock();
+		if ( types.get() != nullptr ) types->typeRemoved( mId );
 	}
 
 	bool SharedTypeMetainfo::isBasicType() const
@@ -54,12 +93,17 @@ namespace _2Real
 
 	std::string SharedTypeMetainfo::getName() const
 	{
-		return mName;
+		return mId->getName();
 	}
 
 	std::string SharedTypeMetainfo::getDescription() const
 	{
 		return mDescription;
+	}
+
+	std::shared_ptr< const MetainfoId > SharedTypeMetainfo::getId() const
+	{
+		return mId;
 	}
 
 	DataItem SharedTypeMetainfo::makeData() const
@@ -80,17 +124,16 @@ namespace _2Real
 	void SharedTypeMetainfo::addField( std::string fieldName, DataItem value )
 	{
 		mTemplate.addField( DataField( std::move( fieldName ), std::move( value ) ) );
-		// TODO: update descr.
 	}
 
-	void SharedTypeMetainfo::cloneFrom( SharedTypeMetainfo const& other )
+	std::vector< std::pair< std::string, std::shared_ptr< const TMetainfo > > > SharedTypeMetainfo::getDataFields() const
 	{
-		if ( this == &other )
-			return;
+		std::vector< std::pair< std::string, std::shared_ptr< const TMetainfo > > > result;
+			
+		for ( auto const& it : mTemplate.mDataFields )
+			result.push_back( std::make_pair( it.getName(), boost::apply_visitor( TypeMetainfoVisitor( mTypes.lock() ), it.getValue() ) ) );
 
-		mDescription = other.mDescription;
-		mTemplate = other.mTemplate;
-		mTypeDescriptor->cloneFrom( *other.mTypeDescriptor.get() );
+		return result;
 	}
 
 }

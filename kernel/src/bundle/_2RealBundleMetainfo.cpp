@@ -32,20 +32,6 @@ namespace _2Real
 		{
 		}
 
-		TypeMetainfo BundleMetainfo::createTypeMetainfo( std::string const& name )
-		{
-			return TypeMetainfo( mImpl.lock()->createType( name ) );
-		}
-
-		FunctionBlockMetainfo BundleMetainfo::createFunctionBlockMetainfo( std::string const& name )
-		{
-			return FunctionBlockMetainfo( mImpl.lock()->createService( name, false ) );
-		}
-
-		ContextBlockMetainfo BundleMetainfo::createContextBlockMetainfo( std::string const& name )
-		{
-			return ContextBlockMetainfo( mImpl.lock()->createService( name, true ) );
-		}
 
 		void BundleMetainfo::setAuthor( std::string const& author )
 		{
@@ -71,5 +57,16 @@ namespace _2Real
 		{
 			mImpl.lock()->setVersion( Version( major, minor, revision ) );
 		}
+	
+		void BundleMetainfo::exportType( std::string const& name )
+		{
+			mImpl.lock()->exportType( name );
+		}
+
+		void BundleMetainfo::exportBlock( std::string const& name, bool isSingleton, std::vector< std::string > const& inlets, std::vector< std::string > const& outlets, std::vector< std::string > const& parameters )
+		{
+			mImpl.lock()->exportBlock( name, isSingleton, inlets, outlets, parameters );
+		}
+
 	}
 }

@@ -24,24 +24,22 @@
 
 namespace _2Real
 {
-	class SharedServiceInletMetainfo;
+	class SharedServiceIoSlotMetainfo;
 
 	class Parameter : private InSlot, public std::enable_shared_from_this< Parameter >
 	{
 
 	public:
 
-		explicit Parameter( std::shared_ptr< const SharedServiceInletMetainfo > );
+		explicit Parameter( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
 
-		std::string const& getName() const;
-		//std::shared_ptr< const SharedServiceInletMetainfo > getMetainfo() const;
-
+		std::string getName() const;
 		using InSlot::update;
 		using InSlot::getValue;
 
 	private:
 
-		std::shared_ptr< const SharedServiceInletMetainfo >	mMetainfo;
+		std::shared_ptr< const SharedServiceIoSlotMetainfo >	mMetainfo;
 
 	};
 }

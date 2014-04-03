@@ -23,7 +23,7 @@
 
 namespace _2Real
 {
-	class SharedServiceInletMetainfo;
+	class SharedServiceIoSlotMetainfo;
 
 	namespace bundle
 	{
@@ -32,14 +32,10 @@ namespace _2Real
 
 		public:
 
-			explicit ParameterMetainfo( std::shared_ptr< SharedServiceInletMetainfo > );
+			explicit ParameterMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > );
 
 			using IoSlotMetainfo::setDescription;
 			using IoSlotMetainfo::setDatatypeAndInitialValue;
-
-		private:
-
-			std::weak_ptr< SharedServiceInletMetainfo >		mImpl;
 
 		};
 	}

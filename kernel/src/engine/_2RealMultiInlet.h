@@ -26,7 +26,7 @@
 namespace _2Real
 {
 	class Inlet;
-	class SharedServiceInletMetainfo;
+	class SharedServiceIoSlotMetainfo;
 
 	class MultiInlet : public AbstractInlet, public std::enable_shared_from_this< MultiInlet >
 	{
@@ -35,7 +35,7 @@ namespace _2Real
 
 	public:
 
-		explicit MultiInlet( std::shared_ptr< const SharedServiceInletMetainfo > );
+		explicit MultiInlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
 
 		uint32_t getSize() const;
 		bool isEmpty() const;
@@ -53,7 +53,7 @@ namespace _2Real
 
 		mutable std::mutex									mMutex;
 		Inlets												mInlets;
-		std::shared_ptr< SharedServiceInletMetainfo >		mInfo;
+		std::shared_ptr< SharedServiceIoSlotMetainfo >		mInfo;
 
 	};
 

@@ -19,6 +19,8 @@
 #pragma once
 
 #include "app/_2RealEngine.h"
+#include "engine/_2RealData.h"
+#include "engine/_2RealCustomData.h"
 
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealFunctionBlockHandle.h"

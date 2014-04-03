@@ -18,15 +18,16 @@
 
 #include "engine/_2RealMultiInlet.h"
 #include "engine/_2RealInlet.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
+#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
 
 namespace _2Real
 {
 
-	MultiInlet::MultiInlet( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
-		AbstractInlet( meta ), std::enable_shared_from_this< MultiInlet >(), mInfo( meta->clone() )
+	MultiInlet::MultiInlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
+		AbstractInlet( meta ), std::enable_shared_from_this< MultiInlet >(), mInfo( nullptr )
 	{
-		mInfo->setMultiInlet( false );
+		//mInfo = clone( mMetainfo, meta.)
+		//mInfo->setMultiInlet( false );
 	}
 
 	void MultiInlet::update()

@@ -20,8 +20,10 @@
 #include "engine/_2RealBundleCollection.h"
 #include "engine/_2RealTimerCollection.h"
 #include "engine/_2RealThreadpoolCollection.h"
+#include "engine/_2RealTypeCollection.h"
 #include "helpers/_2RealConstants.h"
 #include "helpers/_2RealException.h"
+#include "engine/_2RealSharedTypeMetainfo.h"
 
 namespace _2Real
 {
@@ -31,9 +33,19 @@ namespace _2Real
 		mThreadpoolCollection( new ThreadpoolCollection ),
 		mStdThreads( mThreadpoolCollection->createThreadpool( ThreadpoolPolicy::FIFO ) ),
 		mCtxtThreads( mThreadpoolCollection->createThreadpool( ThreadpoolPolicy::DEDICATED ) ),
-		mTypeCollection( nullptr ),
+		mTypeCollection( new TypeCollection ),
 		mBundleCollection( new BundleCollection( mTypeCollection, mStdThreads.lock(), mCtxtThreads.lock() ) )
 	{
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( uint8_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( int8_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( uint32_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( int32_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( uint64_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( int64_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, 0.0 ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, 0.f ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, false ) );
+			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, std::string() ) );
 	}
 
 	EngineImpl::~EngineImpl()
@@ -62,7 +74,7 @@ namespace _2Real
 		if ( file.find( Constants::SharedLibrarySuffix ) == std::string::npos )
 			file.append( Constants::SharedLibrarySuffix );
 
-		return mBundleCollection->loadBundle( file );
+		return mBundleCollection->loadBundle( file, mTypeCollection );
 	}
 
 	Path const& EngineImpl::getBundleDirectory() const

@@ -21,136 +21,150 @@
 #include "engine/_2RealSharedTypeMetainfo.h"
 #include "engine/_2RealTypeCollection.h"
 #include "helpers/_2RealException.h"
+#include "engine/_2RealId.h"
+#include "engine/_2RealSharedLibrary.h"
+
+#include "bundle/_2RealBundleMetainfo.h"
+#include "bundle/_2RealFunctionBlockMetainfo.h"
+#include "bundle/_2RealContextBlockMetainfo.h"
+#include "bundle/_2RealTypeMetainfo.h"
+#include "bundle/_2RealIoSlotMetainfo.h"
 
 namespace _2Real
 {
+	std::shared_ptr< SharedLibraryMetainfo > SharedLibraryMetainfo::make( std::shared_ptr< SharedLibrary > lib, Path const& path, std::shared_ptr< TypeCollection > types )
+	{
+		typedef void ( *BundleMetainfoFunc )( bundle::BundleMetainfo & );
+		typedef void ( *BlockMetainfoFunc )( bundle::BlockMetainfo &, std::map< std::string, const bundle::TypeMetainfo > const& );
+		typedef void ( *TypeMetainfoFunc )( bundle::TypeMetainfo &, std::map< std::string, const bundle::TypeMetainfo > const& );
 
-	SharedLibraryMetainfo::SharedLibraryMetainfo( Path const& absPath ) :
-		std::enable_shared_from_this< SharedLibraryMetainfo >(),
-		mName(), mCategory(), mDescription(), mAuthor(), mContact(), mVersion( 0, 0, 0 ), mPath( absPath ),
-		mTypes( new TypeCollection )
+		if ( lib->hasSymbol( "getBundleMetainfo" ) )
+		{
+			BundleMetainfoFunc bundlefunc = ( BundleMetainfoFunc ) lib->getSymbol( "getBundleMetainfo" );
+
+			std::shared_ptr< const MetainfoId > id( new MetainfoId( nullptr, MetainfoType::BUNDLE, path.string() ) );
+			std::shared_ptr< SharedLibraryMetainfo > bundleinfo( new SharedLibraryMetainfo( path, id, types ) );
+
+			bundle::BundleMetainfo bundleMetainfo( bundleinfo );
+			bundlefunc( bundleMetainfo );
+
+			// TODO: check basic attribs
+
+			std::map< std::string, const bundle::TypeMetainfo > previousTypes;
+			std::cout << bundleinfo->mTypePreinfos.size() << std::endl;
+
+			if ( !bundleinfo->mTypePreinfos.empty() && lib->hasSymbol( "getTypeMetainfo" ) )
+			{
+				TypeMetainfoFunc typefunc = ( TypeMetainfoFunc ) lib->getSymbol( "getTypeMetainfo" );
+
+				for ( auto const& it : bundleinfo->mTypePreinfos )
+				{
+					std::shared_ptr< SharedTypeMetainfo > typeinfo = SharedTypeMetainfo::make( id, types, it.mName );
+					bundleinfo->mTypes[ it.mName ] = typeinfo;
+					bundle::TypeMetainfo typeMetainfo( typeinfo );
+					typefunc( typeMetainfo, previousTypes );
+					previousTypes.insert( std::make_pair( it.mName, typeMetainfo ) );
+
+					types->addType( typeinfo );
+				}
+
+				bundleinfo->mTypePreinfos.clear();
+			}
+			else if ( !bundleinfo->mTypePreinfos.empty() && !lib->hasSymbol( "getTypeMetainfo" ) )
+			{
+				throw NotFoundException( "function getTypeMetainfo not found in bundle" );
+			}
+
+			if ( bundleinfo->mBlockPreinfos.empty() )
+			{	
+				// EXCEPTION
+			}
+			else if ( !lib->hasSymbol( "getBlockMetainfo" ) )
+			{
+				// EXCEPTION
+			}
+			else
+			{
+				BlockMetainfoFunc blockfunc = ( BlockMetainfoFunc ) lib->getSymbol( "getBlockMetainfo" );
+
+				for ( auto const& it : bundleinfo->mBlockPreinfos )
+				{
+					std::shared_ptr< SharedServiceMetainfo > blockinfo = SharedServiceMetainfo::make( id, types, it.mName, it.mIsSingleton, it.mInlets, it.mOutlets, it.mParameters );
+
+					bundleinfo->mBlocks[ it.mName] = blockinfo;
+					if ( it.mIsSingleton )
+					{
+						bundle::ContextBlockMetainfo blockMetainfo( blockinfo );
+						blockfunc( blockMetainfo, previousTypes );
+					}
+					else
+					{
+						bundle::FunctionBlockMetainfo blockMetainfo( blockinfo );
+						blockfunc( blockMetainfo, previousTypes );
+					}
+				}
+
+				bundleinfo->mBlockPreinfos.clear();
+			}
+
+			return bundleinfo;
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	SharedLibraryMetainfo::SharedLibraryMetainfo( Path const& absPath, std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types ) :
+		mCategory(), mDescription(), mAuthor(), mContact(), mVersion( 0, 0, 0 ), mPath( absPath ),
+		mId( id ), mTypeCollection( types ), mTypes(), mBlocks()
 	{
 	}
 
 	SharedLibraryMetainfo::~SharedLibraryMetainfo()
 	{
-		mServices.clear();
-		mTypes->clear();
+		mBlocks.clear();
+		mTypes.clear();
 	}
 
-	std::shared_ptr< SharedServiceMetainfo > SharedLibraryMetainfo::createService( std::string const& name, const bool isSingleton )
-	{
-		if ( mServices.find( name ) != mServices.end() )
-		{
-			std::ostringstream msg;
-			msg << "a block named " << name << " was already exported by bundle " << mName << std::endl;
-			throw AlreadyExistsException( msg.str() );
-		}
-
-		std::shared_ptr< SharedServiceMetainfo > result( new SharedServiceMetainfo( name, mTypes ) );
-		result->setSingleton( isSingleton );
-		mServices[ name ] = result;
-		return result;
-	}
-
-	std::shared_ptr< SharedTypeMetainfo > SharedLibraryMetainfo::createType( std::string const& name )
-	{
-		//if ( mTypes.find( name ) != mTypes.end() )
-		//{
-		//	std::ostringstream msg;
-		//	msg << "a type named " << name << " was already exported by bundle " << mName << std::endl;
-		//	throw AlreadyExistsException( msg.str() );
-		//}
-
-		std::shared_ptr< SharedTypeMetainfo > result( new SharedTypeMetainfo( name ) );
-		mTypes->addType( result );
-		//mTypes[ name ] = result;
-		return result;
-	}
-
-	bool SharedLibraryMetainfo::performExport()
-	{
-		bool ok = true;//isBasicDataOk();
-
-		//TypeMetainfos tmpTypes = mTypes;
-		//mTypes.clear();
-
-		//for ( auto it : tmpTypes )
-		//{
-		//	std::string name = it.first;
-		//	std::cout << "cloning type metainfo " << name << std::endl;
-		//	std::shared_ptr< SharedTypeMetainfo > newInfo( new SharedTypeMetainfo( name ) );
-		//	newInfo->cloneFrom( *it.second.get() );
-		//	mTypes[ name ] = newInfo;
-		//}
-
-		//ok &= isTypeDataOk();
-
-		ServiceMetainfos tmpServices = mServices;
-		mServices.clear();
-
-		for ( auto it : tmpServices )
-		{
-			std::string name = it.first;
-			std::cout << "cloning block metainfo " << name << std::endl;
-			std::shared_ptr< SharedServiceMetainfo > newInfo( new SharedServiceMetainfo( name ) );
-			newInfo->cloneFrom( *it.second.get() );
-			mServices[ name ] = newInfo;
-		}
-
-		//ok &= isServiceDataOk();
-
-		return ok;
-	}
-
-	//bool SharedLibraryMetainfo::isBasicDataOk() const
-	//{
-	//	return true;
-	//}
-
-	//bool SharedLibraryMetainfo::isServiceDataOk() const
-	//{
-	//	return true;
-	//}
-
-	//bool SharedLibraryMetainfo::isTypeDataOk() const
-	//{
-	//	return true;
-	//}
-
-	Path const& SharedLibraryMetainfo::getFilePath() const
+	Path SharedLibraryMetainfo::getFilePath() const
 	{
 		return mPath;
 	}
 
-	std::string const& SharedLibraryMetainfo::getName() const
+	std::string SharedLibraryMetainfo::getName() const
 	{
-		return mName;
+		return mId->getName();
 	}
 
-	std::string const& SharedLibraryMetainfo::getDescription() const
+	std::string SharedLibraryMetainfo::getDescription() const
 	{
 		return mDescription;
 	}
 
-	std::string const& SharedLibraryMetainfo::getAuthor() const
+	std::string SharedLibraryMetainfo::getAuthor() const
 	{
 		return mAuthor;
 	}
 
-	std::string const& SharedLibraryMetainfo::getContact() const
+	std::string SharedLibraryMetainfo::getContact() const
 	{
 		return mContact;
 	}
 
-	std::string const& SharedLibraryMetainfo::getCategory() const
+	std::string SharedLibraryMetainfo::getCategory() const
 	{
 		return mCategory;
 	}
 
-	Version const& SharedLibraryMetainfo::getVersion() const
+	Version SharedLibraryMetainfo::getVersion() const
 	{
 		return mVersion;
+	}
+
+	std::shared_ptr< const MetainfoId > SharedLibraryMetainfo::getId() const
+	{
+		return mId;
 	}
 
 	void SharedLibraryMetainfo::setDescription( std::string const& description )
@@ -178,20 +192,61 @@ namespace _2Real
 		mVersion = version;
 	}
 
-	void SharedLibraryMetainfo::getServiceMetainfos( std::vector< std::shared_ptr< const SharedServiceMetainfo > > &infos ) const
+	void SharedLibraryMetainfo::exportType( std::string const& name )
 	{
-		infos.clear();
-		infos.reserve( mServices.size() );
-		for ( auto it : mServices )
-			infos.push_back( it.second );
+		for ( auto const& it : mTypePreinfos )
+		{
+			if ( it.mName == name )
+			{
+				std::ostringstream msg;
+				msg << "a type named " << name << " was already exported by bundle " << getName() << std::endl;
+				throw AlreadyExistsException( msg.str() );
+			}
+		}
+
+		TypePreinfo info;
+		info.mName = name;
+		mTypePreinfos.push_back( info );
 	}
 
-	void SharedLibraryMetainfo::getTypeMetainfos( std::vector< std::shared_ptr< const SharedTypeMetainfo > > &infos ) const
+	void SharedLibraryMetainfo::exportBlock( std::string const& name, const bool isSingleton, std::vector< std::string > const& inlets, std::vector< std::string > const& outlets, std::vector< std::string > const& parameters )
 	{
-		infos.clear();
-		//infos.reserve( mTypes.size() );
-		//for ( auto it : mTypes )
-		//	infos.push_back( it.second );
+
+		for ( auto const& it : mBlockPreinfos )
+		{
+			if ( it.mName == name )
+			{
+				std::ostringstream msg;
+				msg << "a block named " << name << " was already exported by bundle " << getName() << std::endl;
+				throw AlreadyExistsException( msg.str() );
+			}
+		}
+
+		BlockPreinfo info;
+		info.mName = name;
+		info.mIsSingleton = isSingleton;
+		info.mInlets = inlets;
+		info.mOutlets = outlets;
+		info.mParameters = parameters;
+		mBlockPreinfos.push_back( info );
+	}
+
+	std::vector< std::shared_ptr< const SharedServiceMetainfo > > SharedLibraryMetainfo::getServiceMetainfos() const
+	{
+		std::vector< std::shared_ptr< const SharedServiceMetainfo > > tmp;
+		tmp.reserve( mBlocks.size() );
+		for ( auto it : mBlocks )
+			tmp.push_back( it.second );
+		return tmp;
+	}
+
+	std::vector< std::shared_ptr< const SharedTypeMetainfo > > SharedLibraryMetainfo::getTypeMetainfos() const
+	{
+		std::vector< std::shared_ptr< const SharedTypeMetainfo > > tmp;
+		tmp.reserve( mTypes.size() );
+		for ( auto it : mTypes )
+			tmp.push_back( it.second );
+		return tmp;
 	}
 
 }

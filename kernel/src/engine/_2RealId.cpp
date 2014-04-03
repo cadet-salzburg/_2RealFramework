@@ -20,9 +20,21 @@
 
 namespace _2Real
 {
-	MetainfoId::MetainfoId( const MetainfoType type, const std::string name ) :
-		mOwner(), mType( type ), mName( name )
+	std::string typeToString( const MetainfoType t )
 	{
+		switch ( t )
+		{
+		case MetainfoType::BUNDLE:
+			return "bundle";
+		case MetainfoType::TYPE:
+			return "customtype";
+		case MetainfoType::BLOCK:
+			return "block";
+		case MetainfoType::IOSLOT:
+			return "ioslot";
+		default:
+			return "undefined";
+		}
 	}
 
 	MetainfoId::MetainfoId( std::shared_ptr< const MetainfoId > owner, const MetainfoType type, const std::string name ) :
@@ -30,23 +42,38 @@ namespace _2Real
 	{
 	}
 
-	MetainfoId MetainfoId::makeId( std::shared_ptr< const MetainfoId > owner, const MetainfoType type, const std::string name )
+	std::string MetainfoId::toString() const
 	{
-		return MetainfoId( owner, type, name );
+		std::string owner = "";
+		auto o = mOwner.lock();
+		if ( o != nullptr )
+			owner = o->toString() + "\\\\";
+
+		return owner + typeToString( mType ) + mName;
 	}
 
-	InstanceId::InstanceId( const InstanceType type, const std::string name ) :
-		mOwner(), mType( type ), mName( name )
+	std::string MetainfoId::getName() const
 	{
+		return mName;
 	}
 
-	InstanceId::InstanceId( std::shared_ptr< const InstanceId > owner, const InstanceType type, const std::string name ) :
-		mOwner( owner ), mType( type ), mName( name )
+	bool MetainfoId::operator<( MetainfoId const& other ) const
 	{
+		return toString() < other.toString();
 	}
 
-	InstanceId InstanceId::makeId( std::shared_ptr< const InstanceId > owner, const InstanceType type, const std::string name )
-	{
-		return InstanceId( owner, type, name );
-	}
+	//InstanceId::InstanceId( const InstanceType type, const std::string name ) :
+	//	mOwner(), mType( type ), mName( name )
+	//{
+	//}
+
+	//InstanceId::InstanceId( std::shared_ptr< const InstanceId > owner, const InstanceType type, const std::string name ) :
+	//	mOwner( owner ), mType( type ), mName( name )
+	//{
+	//}
+
+	//InstanceId InstanceId::makeId( std::shared_ptr< const InstanceId > owner, const InstanceType type, const std::string name )
+	//{
+	//	return InstanceId( owner, type, name );
+	//}
 }

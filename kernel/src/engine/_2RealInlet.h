@@ -26,7 +26,7 @@
 
 namespace _2Real
 {
-	class SharedServiceInletMetainfo;
+	class SharedServiceIoSlotMetainfo;
 	class Link;
 	class DataSource;
 	class TMetainfo;
@@ -36,7 +36,7 @@ namespace _2Real
 
 	public:
 
-		explicit Inlet( std::shared_ptr< const SharedServiceInletMetainfo > );
+		explicit Inlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
 
 		// just for the sake of readability; these are public anyway
 		using AbstractInlet::getName;

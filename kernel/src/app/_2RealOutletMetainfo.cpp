@@ -18,21 +18,18 @@
 
 #include "app/_2RealOutletMetainfo.h"
 #include "app/_2RealHandleValidity.h"
-#include "engine/_2RealSharedServiceOutletMetainfo.h"
 
 namespace _2Real
 {
 	namespace app
 	{
 		OutletMetainfo::OutletMetainfo() :
-			IoSlotMetainfo(),
-			mImpl()
+			IoSlotMetainfo()
 		{
 		}
 
-		OutletMetainfo::OutletMetainfo( std::shared_ptr< const SharedServiceOutletMetainfo > meta ) :
-			IoSlotMetainfo( meta ),
-			mImpl( meta )
+		OutletMetainfo::OutletMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
+			IoSlotMetainfo( meta )
 		{
 		}
 	}

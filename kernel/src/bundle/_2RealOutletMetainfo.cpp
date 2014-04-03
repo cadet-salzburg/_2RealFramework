@@ -17,15 +17,13 @@
 */
 
 #include "bundle/_2RealOutletMetainfo.h"
-#include "engine/_2RealSharedServiceOutletMetainfo.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		OutletMetainfo::OutletMetainfo( std::shared_ptr< SharedServiceOutletMetainfo > info ) :
-			IoSlotMetainfo( info ),
-			mImpl( info )
+		OutletMetainfo::OutletMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > info ) :
+			IoSlotMetainfo( info )
 		{
 		}
 	}

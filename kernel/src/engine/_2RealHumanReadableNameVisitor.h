@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,25 +20,28 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealData.h"
 
 namespace _2Real
 {
-	class AbstractAnyHolder
+
+	class HumanReadableNameVisitor : public boost::static_visitor< std::string >
 	{
 
 	public:
 
-		virtual ~AbstractAnyHolder() {}
-		virtual std::string getHumanReadableName() const = 0;
-		virtual std::type_info const& getTypeinfo() const = 0;
-		virtual void writeTo( std::ostream &out ) const = 0;
-		virtual void readFrom( std::istream &in ) = 0;
-		virtual bool isEqualTo( AbstractAnyHolder const& other ) const = 0;
-		virtual bool isLessThan( AbstractAnyHolder const& other ) const = 0;
-		virtual AbstractAnyHolder* clone() const = 0;
-		virtual AbstractAnyHolder* create() const = 0;
-		/*virtual AbstractAnyHolder* copy_create() const = 0;*/
-		virtual void set( AbstractAnyHolder const& other ) = 0;
+		std::string operator()( const uint8_t val ) const;
+		std::string operator()( const int8_t val ) const;
+		std::string operator()( const uint32_t val ) const;
+		std::string operator()( const int32_t val ) const;
+		std::string operator()( const uint64_t val ) const;
+		std::string operator()( const int64_t val ) const;
+		std::string operator()( const double val ) const;
+		std::string operator()( const float val ) const;
+		std::string operator()( const bool val ) const;
+		std::string operator()( std::string const& val ) const;
+		std::string operator()( _2Real::CustomDataItem const& val ) const;
 
 	};
+
 }

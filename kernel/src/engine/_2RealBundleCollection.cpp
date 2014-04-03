@@ -80,7 +80,7 @@ namespace _2Real
 		std::cout << msg.str() << std::endl;
 	}
 
-	std::shared_ptr< Bundle > BundleCollection::loadBundle( Path const& path )
+	std::shared_ptr< Bundle > BundleCollection::loadBundle( Path const& path, std::shared_ptr< TypeCollection > types )
 	{
 		Path absPath = mBundleDirectory / path;
 
@@ -91,7 +91,7 @@ namespace _2Real
 			throw AlreadyExistsException( msg.str() );
 		}
 
-		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath );
+		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath, types );
 		std::shared_ptr< Bundle > bundle( new Bundle( shared_from_this(), info, mStdThreads.lock(), mCtxtThreads.lock() ) );
 		bundle->registerToUnload( this, &BundleCollection::bundleUnloaded );
 		bundle->init();

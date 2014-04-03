@@ -39,9 +39,14 @@ namespace _2Real
 			mImpl.lock()->addField( fieldName, std::move( value ) );
 		}
 
-		CustomDataItem TypeMetainfo::makeData()
+		CustomDataItem TypeMetainfo::makeData() const
 		{
 			return mImpl.lock()->makeCustomData();
+		}
+
+		std::string TypeMetainfo::getName() const
+		{
+			return mImpl.lock()->getName();
 		}
 
 	}

@@ -17,15 +17,13 @@
 */
 
 #include "bundle/_2RealParameterMetainfo.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		ParameterMetainfo::ParameterMetainfo( std::shared_ptr< SharedServiceInletMetainfo > info ) :
-			IoSlotMetainfo( info ),
-			mImpl( info )
+		ParameterMetainfo::ParameterMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > info ) :
+			IoSlotMetainfo( info )
 		{
 		}
 	}

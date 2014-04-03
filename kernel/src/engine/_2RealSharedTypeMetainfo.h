@@ -21,9 +21,13 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealCloneableMetainfo.h"
 #include "engine/_2RealData.h"
+#include "engine/_2RealCustomData.h"
 
 namespace _2Real
 {
+
+	class MetainfoId;
+	class TypeCollection;
 
 	/*
 	*	base class for basic type metainfo & user defined type metainfo
@@ -43,58 +47,69 @@ namespace _2Real
 
 		virtual DataItem makeData() const = 0;
 		virtual bool isBasicType() const = 0;
-
-		//virtual std::shared_ptr< TypeDescriptor > getTypeDescriptor() = 0;
+		virtual std::shared_ptr< const MetainfoId > getId() const = 0;
+		virtual std::string getName() const = 0;
 
 	};
 
-	class BasicTypeMetainfo : public TMetainfo, public std::enable_shared_from_this< BasicTypeMetainfo >
+	/*
+	*	basic type metainfo: represents every type within the set of data types except CustomDataItem
+	*/
+	class BasicTypeMetainfo : public TMetainfo
 	{
 
 	public:
 
-		BasicTypeMetainfo() = delete;
-		explicit BasicTypeMetainfo( DataItem );
+		static std::shared_ptr< BasicTypeMetainfo > make( std::shared_ptr< TypeCollection > types, const DataItem );
 
 		DataItem makeData() const;
 		bool isBasicType() const;
-
-	private:
-
-		DataItem									mTemplate;
-		std::shared_ptr< BasicTypeDescriptor >		mTypeDescriptor;
-
-	};
-
-	class SharedTypeMetainfo : public TMetainfo, /*public CloneableMetainfo< SharedTypeMetainfo >,*/ public std::enable_shared_from_this< SharedTypeMetainfo >
-	{
-
-	public:
-
-		SharedTypeMetainfo() = delete;
-		explicit SharedTypeMetainfo( const std::string );
-
-		DataItem makeData() const;
-		bool isBasicType() const;
-
-		CustomDataItem makeCustomData() const;
 
 		std::string getName() const;
-		std::string getDescription() const;
-
-		void setDescription( const std::string );
-
-		// TODO: missing default value as default argument for value
-		void addField( std::string fieldName, DataItem value );
-
-		void cloneFrom( SharedTypeMetainfo const& other );
+		std::shared_ptr< const MetainfoId > getId() const;
 
 	private:
 
-		std::string									mName;
+		explicit BasicTypeMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< TypeCollection >, DataItem );
+
+		std::shared_ptr< const MetainfoId >			mId;
+		std::weak_ptr< const TypeCollection >		mTypes;
+		DataItem									mTemplate;
+
+	};
+
+	class SharedTypeMetainfo : public TMetainfo
+	{
+
+	public:
+
+		static std::shared_ptr< SharedTypeMetainfo > make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, std::string const& );
+
+		bool isBasicType() const;
+		std::string getDescription() const;
+
+		DataItem makeData() const;
+		CustomDataItem makeCustomData() const;
+
+		void setDescription( const std::string );
+		void addField( std::string fieldName, DataItem value );
+
+		std::vector< std::pair< std::string, std::shared_ptr< const TMetainfo > > > getDataFields() const;
+
+		std::string getName() const;
+		std::shared_ptr< const MetainfoId > getId() const;
+
+		void unregisterFromTypeCollection();
+
+	private:
+
+		SharedTypeMetainfo() = delete;
+		SharedTypeMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< TypeCollection > );
+
+		std::shared_ptr< const MetainfoId >			mId;
 		std::string									mDescription;
 		CustomDataItem								mTemplate;
-		std::shared_ptr< CustomTypeDescriptor >		mTypeDescriptor;
+		std::weak_ptr< TypeCollection >				mTypes;
 
 	};
 

@@ -73,6 +73,7 @@
     <ClCompile Include="..\..\src\bundle\_2RealBlockIo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockMetainfo.cpp" />
     <ClCompile Include="..\..\src\bundle\_2RealFunctionBlockMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
@@ -124,16 +125,15 @@
     <ClCompile Include="..\..\src\engine\_2RealBundleCollection.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealCondition.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealCustomData.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealData.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealDataFieldMetainfo.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDataSink.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDataSource.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDefaultPolicy.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealHumanReadableNameVisitor.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealId.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealInlet.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealInSlot.cpp" />
@@ -162,11 +162,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealSharedServiceInletMetainfo.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealSharedServiceMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealSharedServiceOutletMetainfo.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealSharedServiceIoSlotMetainfo.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealSharedTypeMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
@@ -177,6 +175,7 @@
     <ClCompile Include="..\..\src\engine\_2RealTimer.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealTimerCollection.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealTypeCollection.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealTypeMetainfoVisitor.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealUpdateTrigger.cpp" />
     <ClCompile Include="..\..\src\helpers\_2RealConstants.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\helpers\</ObjectFileName>
@@ -215,9 +214,10 @@
     <ClInclude Include="..\..\src\bundle\_2RealAbstractBlock.h" />
     <ClInclude Include="..\..\src\bundle\_2RealAbstractInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBlockIo.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealBlockMetainfo.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealContextBlockMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealFunctionBlockMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h" />
-    <ClInclude Include="..\..\src\bundle\_2RealContextBlockMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealInletMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealInSlotPolicy.h" />
@@ -228,27 +228,21 @@
     <ClInclude Include="..\..\src\bundle\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealParameterMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo.h" />
-    <ClInclude Include="..\..\src\engine\_2RealAbstractAnyHolder.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractInlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractSharedServiceFactory.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractSharedServiceLifetimeMgr.h" />
     <ClInclude Include="..\..\src\engine\_2RealAbstractBlockState.h" />
-    <ClInclude Include="..\..\src\engine\_2RealAnyHolder_T.h" />
     <ClInclude Include="..\..\src\engine\_2RealBlock.h" />
-    <ClInclude Include="..\..\src\engine\_2RealCondition.h" />
-    <ClInclude Include="..\..\src\engine\_2RealCloneableMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealData.h" />
     <ClInclude Include="..\..\src\engine\_2RealDataSink.h" />
     <ClInclude Include="..\..\src\engine\_2RealDataSource.h" />
     <ClInclude Include="..\..\src\engine\_2RealDefaultPolicy.h" />
-    <ClInclude Include="..\..\src\engine\_2RealFieldDescriptor.h" />
-    <ClInclude Include="..\..\src\engine\_2RealFrameworkCompatibleType.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundle.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundleImporter.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundleCollection.h" />
     <ClInclude Include="..\..\src\engine\_2RealCustomData.h" />
-    <ClInclude Include="..\..\src\engine\_2RealDataFieldMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealEngineImpl.h" />
+    <ClInclude Include="..\..\src\engine\_2RealHumanReadableNameVisitor.h" />
     <ClInclude Include="..\..\src\engine\_2RealId.h" />
     <ClInclude Include="..\..\src\engine\_2RealInlet.h" />
     <ClInclude Include="..\..\src\engine\_2RealInSlot.h" />
@@ -268,9 +262,7 @@
     <ClInclude Include="..\..\src\engine\_2RealSharedLibrary_UNIX.h" />
     <ClInclude Include="..\..\src\engine\_2RealSharedLibrary_WIN.h" />
     <ClInclude Include="..\..\src\engine\_2RealSharedService.h" />
-    <ClInclude Include="..\..\src\engine\_2RealSharedServiceInletMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealSharedServiceMetainfo.h" />
-    <ClInclude Include="..\..\src\engine\_2RealSharedServiceOutletMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealSharedServiceIoSlotMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealSharedTypeMetainfo.h" />
     <ClInclude Include="..\..\src\engine\_2RealStateData.h" />
@@ -281,6 +273,7 @@
     <ClInclude Include="..\..\src\engine\_2RealTimer.h" />
     <ClInclude Include="..\..\src\engine\_2RealTimerCollection.h" />
     <ClInclude Include="..\..\src\engine\_2RealTypeCollection.h" />
+    <ClInclude Include="..\..\src\engine\_2RealTypeMetainfoVisitor.h" />
     <ClInclude Include="..\..\src\engine\_2RealUpdateTrigger.h" />
     <ClInclude Include="..\..\src\enums\_2RealBlockState.h" />
     <ClInclude Include="..\..\src\enums\_2RealThreadpoolPolicy.h" />

@@ -19,21 +19,36 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "bundle/_2RealBlockMetainfo.h"
 
 namespace _2Real
 {
 	class SharedServiceMetainfo;
+	class AbstractSharedServiceFactory;
 
 	namespace bundle
 	{
-		class ContextBlockMetainfo
+		class ContextBlockMetainfo : public BlockMetainfo
 		{
 
 		public:
 
 			explicit ContextBlockMetainfo( std::shared_ptr< SharedServiceMetainfo > );
 
+			std::string getName() const;
+
+			template< typename TBlock >
+			void setBlockClass()
+			{
+				std::shared_ptr< AbstractSharedServiceFactory > f( new SharedServiceFactory_T< TBlock > );
+				setBlockClassInternal( f );
+			}
+
+			void setDescription( std::string const& );
+
 		private:
+
+			void setBlockClassInternal( std::shared_ptr< AbstractSharedServiceFactory > );
 
 			std::weak_ptr< SharedServiceMetainfo >		mImpl;
 

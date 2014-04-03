@@ -20,44 +20,46 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealData.h"
+#include "engine/_2RealCustomData.h"
 
 namespace _2Real
 {
 
 	class TMetainfo;
 	class TypeCollection;
+	class MetainfoId;
 
-	class SharedServiceIoSlotMetainfo : public std::enable_shared_from_this< SharedServiceIoSlotMetainfo >
+	class SharedServiceIoSlotMetainfo
 	{
 
 	public:
 
-		SharedServiceIoSlotMetainfo( std::string const& name, std::shared_ptr< TypeCollection > );
-		virtual ~SharedServiceIoSlotMetainfo();
+		static std::shared_ptr< SharedServiceIoSlotMetainfo > make( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection >, std::string const& );
 
-		void setName( std::string const& );
 		void setDescription( std::string const& );
 		void setDatatypeAndInitialValue( DataItem const& value );
+		void setMulti( const bool );
 
-		std::string const& getName() const;
-		std::string const& getDescription() const;
+		std::string getName() const;
+		std::string getDescription() const;
+		std::string getDatatype() const;
 		DataItem const& getInitialValue() const;
-		std::string const& getDatatype() const;
-
 		std::shared_ptr< const TMetainfo >	getTypeMetainfo() const;
+		bool isMulti() const;
 
 	protected:
 
-		std::string									mName;
-		std::string									mDescription;
-		DataItem									mInitialValue;
-		std::string									mDatatype;		// stored, so that I don't have to look it up all the time
-		std::shared_ptr< TypeCollection >			mTypes;			// used to look up the type metadata
+		std::shared_ptr< const MetainfoId >				mId;
+		std::string										mDescription;
+		DataItem										mInitialValue;
+		bool											mIsMulti;
+		std::weak_ptr< const TypeCollection >			mTypes;
 
 	private:
 
-		SharedServiceIoSlotMetainfo( SharedServiceIoSlotMetainfo const& );
-		SharedServiceIoSlotMetainfo& operator=( SharedServiceIoSlotMetainfo const& );
+		SharedServiceIoSlotMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection > );
+		SharedServiceIoSlotMetainfo( SharedServiceIoSlotMetainfo const& ) = delete;
+		SharedServiceIoSlotMetainfo& operator=( SharedServiceIoSlotMetainfo const& ) = delete;
 
 	};
 

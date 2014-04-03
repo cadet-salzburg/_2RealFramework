@@ -37,7 +37,7 @@ namespace _2Real
 		BundleCollection( std::shared_ptr< TypeCollection > registry, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
 		~BundleCollection();
 
-		std::shared_ptr< Bundle > 					loadBundle( Path const& pathToBundle );
+		std::shared_ptr< Bundle > 					loadBundle( Path const& pathToBundle, std::shared_ptr< TypeCollection > );
 		Path const&									getBundleDirectory() const;
 
 		void										clear( const unsigned long timeout );

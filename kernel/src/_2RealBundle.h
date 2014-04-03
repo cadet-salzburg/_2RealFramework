@@ -19,6 +19,8 @@
 #pragma once
 
 #include "bundle/_2RealAbstractBlock.h"
+#include "engine/_2RealData.h"
+#include "engine/_2RealCustomData.h"
 
 #include "bundle/_2RealBlockIo.h"
 #include "bundle/_2RealBundleMetainfo.h"
@@ -39,7 +41,9 @@
 	#define _2REAL_LIBRARY_API
 #endif
 
-extern "C"
+extern "C"	/* used to prevent name mangling under windows */
 {
-	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::bundle::BundleMetainfo &info );
+	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::bundle::BundleMetainfo & info );
+	void _2REAL_LIBRARY_API getTypeMetainfo( _2Real::bundle::TypeMetainfo & info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& );
+	void _2REAL_LIBRARY_API getBlockMetainfo(  _2Real::bundle::BlockMetainfo & info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& );
 }

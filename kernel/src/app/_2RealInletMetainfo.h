@@ -23,7 +23,7 @@
 
 namespace _2Real
 {
-	class SharedServiceInletMetainfo;
+	class SharedServiceIoSlotMetainfo;
 
 	namespace app
 	{
@@ -33,7 +33,7 @@ namespace _2Real
 		public:
 
 			InletMetainfo();
-			explicit InletMetainfo( std::shared_ptr< const SharedServiceInletMetainfo > );
+			explicit InletMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
 
 			using IoSlotMetainfo::isValid;
 			using IoSlotMetainfo::getName;
@@ -42,10 +42,6 @@ namespace _2Real
 			using IoSlotMetainfo::getDescription;
 
 			bool isMultiInlet() const;
-			
-		private:
-
-			std::weak_ptr< const SharedServiceInletMetainfo >		mImpl;
 
 		};
 	}

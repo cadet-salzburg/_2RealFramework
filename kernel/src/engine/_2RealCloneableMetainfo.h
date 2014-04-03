@@ -18,21 +18,51 @@
 
 #pragma once
 
+#include <memory>
+
 namespace _2Real
 {
-	template< typename T >
-	class CloneableMetainfo
-	{
 
-	public:
+	//template< typename T, typename... TCtorArgs >
+	//std::shared_ptr< T > clone( std::shared_ptr< T > other, TCtorArgs... ctorArgs )
+	//{
+	//	assert( other != nullptr );
 
-		CloneableMetainfo() = default;
-		virtual ~CloneableMetainfo() = default;
+	//	std::shared_ptr< T > result( new T( ctorArgs... ) );
+	//	result->cloneFrom( *( other.get() ) );
+	//	return result;
+	//}
 
-		CloneableMetainfo( CloneableMetainfo< T > const& other ) = delete;
-		CloneableMetainfo( CloneableMetainfo< T > && other ) = delete;
+	//template< typename T, typename... TCtorArgs >
+	//std::shared_ptr< T > clone( std::shared_ptr< const T > other, TCtorArgs... ctorArgs )
+	//{
+	//	assert( other != nullptr );
 
-		virtual void cloneFrom( T const& other ) = 0;
+	//	std::shared_ptr< T > result( new T( ctorArgs... ) );
+	//	result->cloneFrom( *( other.get() ) );
+	//	return result;
+	//}
 
-	};
+	///*
+	//*	base class for all metainfo exported by dlls
+	//*	assignemnt & move -> disabled, cloneFrom must be implemented
+	//*/
+	//template< typename T >
+	//class CloneableMetainfo
+	//{
+
+	//public:
+
+	//	CloneableMetainfo() = default;
+	//	virtual ~CloneableMetainfo() = default;
+
+	//	CloneableMetainfo( CloneableMetainfo< T > const& other ) = delete;
+	//	CloneableMetainfo( CloneableMetainfo< T > && other ) = delete;
+	//	CloneableMetainfo& operator=( CloneableMetainfo< T > const& other ) = delete;
+	//	CloneableMetainfo& operator=( CloneableMetainfo< T > && other ) = delete;
+
+	//	virtual void cloneFrom( T const& other ) = 0;
+
+	//};
+
 }

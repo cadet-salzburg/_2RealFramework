@@ -23,25 +23,25 @@
 
 namespace _2Real
 {
-	class SharedServiceInletMetainfo;
+	class SharedServiceIoSlotMetainfo;
 
 	class AbstractInlet
 	{
 
 	public:
 
-		explicit AbstractInlet( std::shared_ptr< const SharedServiceInletMetainfo > );
+		explicit AbstractInlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
 		virtual ~AbstractInlet() {}
 
 		bool isMultiInlet() const;
-		std::string const& getName() const;
+		std::string getName() const;
 		//std::shared_ptr< const SharedServiceInletMetainfo > getMetainfo() const;
 
 		virtual void update() = 0;
 
 	protected:
 
-		std::shared_ptr< const SharedServiceInletMetainfo >	mMetainfo;
+		std::shared_ptr< const SharedServiceIoSlotMetainfo >	mMetainfo;
 
 	};
 }

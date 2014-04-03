@@ -47,7 +47,7 @@ namespace _2Real
 		void initServices();
 
 		// return file path ( from metainfo )
-		Path const&									getFilePath() const;
+		Path 										getFilePath() const;
 		// unload function, via app::bundle handle
 		void										unload( const long timeout );
 

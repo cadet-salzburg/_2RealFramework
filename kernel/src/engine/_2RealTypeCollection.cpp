@@ -18,12 +18,17 @@
 
 #include "engine/_2RealTypeCollection.h"
 #include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealId.h"
 #include "helpers/_2RealConstants.h"
 
 namespace _2Real
 {
-	TypeCollection::TypeCollection()
+	bool TypeCollection::Cmp::operator()( std::shared_ptr< const MetainfoId > one, std::shared_ptr< const MetainfoId > other ) const
 	{
+		assert( one.get() );
+		assert( other.get() );
+
+		return ( *one.get() < *other.get() );
 	}
 
 	TypeCollection::~TypeCollection()
@@ -33,31 +38,53 @@ namespace _2Real
 
 	void TypeCollection::clear()
 	{
-		//for ( auto it = mTypes.begin(); it != mTypes.end(); )
-		//{
-		//	it->second->unregisterFromRemove( this, &TypeCollection::typeRemoved );
-		//	it = mTypes.erase( it );
-		//	// careful... type may be stored in more than one collection, i.e. local & global
-		//}
+		mTypes.clear();
 	}
 
-	//void TypeCollection::addType( std::shared_ptr< SharedTypeMetainfo > info )
-	//{
-	//	mTypes[ info->getName() ] = info;
-	//}
-
-	//void TypeCollection::typeRemoved( std::shared_ptr< const SharedTypeMetainfo > info )
-	//{
-	//	Types::iterator it = mTypes.find( info->getName() );
-	//	mTypes.erase( it );
-	//}
-
-	std::shared_ptr< const TMetainfo > TypeCollection::getTypeMetainfo( std::string const& name ) const
+	void TypeCollection::addType( std::shared_ptr< const TMetainfo > type )
 	{
-		auto it = mTypes.find( name );
+		if ( mTypes.find( type->getId() ) != mTypes.end() )
+		{
+			std::ostringstream msg;
+			msg << "type " << type->getId()->toString() << " already exists" << std::endl;
+			throw AlreadyExistsException( msg.str() );
+		}
+
+		mTypes[ type->getId() ] = type;
+	}
+
+	void TypeCollection::typeRemoved( std::shared_ptr< const MetainfoId > info )
+	{
+		auto it = mTypes.find( info );
+		mTypes.erase( it );
+	}
+
+	std::shared_ptr< const TMetainfo > TypeCollection::getMetainfo( std::shared_ptr< const MetainfoId > id ) const
+	{
+		auto it = mTypes.find( id );
 		if ( it != mTypes.end() )
 			return it->second;
 		else
 			return nullptr;
 	}
+
+	//std::vector< std::shared_ptr< const SharedTypeMetainfo > > TypeCollection::getTypes() const
+	//{
+	//	std::vector< std::shared_ptr< const SharedTypeMetainfo > > result;
+
+	//	for ( auto it : mTypes )
+	//	{
+	//		if ( it.second->isBasicType() )
+	//		{
+	//			std::cout << "basic typemetainfo in get typemetainfo!" << std::endl;
+	//		}
+	//		else
+	//		{
+	//			std::shared_ptr< const SharedTypeMetainfo > info = std::dynamic_pointer_cast< const SharedTypeMetainfo >( it.second );
+	//			result.push_back( info );
+	//		}
+	//	}
+
+	//	return result;
+	//}
 }

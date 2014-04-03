@@ -18,21 +18,18 @@
 
 #include "app/_2RealParameterMetainfo.h"
 #include "app/_2RealHandleValidity.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
 
 namespace _2Real
 {
 	namespace app
 	{
 		ParameterMetainfo::ParameterMetainfo() :
-			IoSlotMetainfo(),
-			mImpl()
+			IoSlotMetainfo()
 		{
 		}
 
-		ParameterMetainfo::ParameterMetainfo( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
-			IoSlotMetainfo( meta ),
-			mImpl( meta )
+		ParameterMetainfo::ParameterMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
+			IoSlotMetainfo( meta )
 		{
 		}
 	}

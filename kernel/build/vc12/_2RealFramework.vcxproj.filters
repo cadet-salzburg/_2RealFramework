@@ -86,9 +86,6 @@
     <ClCompile Include="..\..\src\engine\_2RealTypeCollection.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealDataFieldMetainfo.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealCustomData.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
@@ -105,12 +102,6 @@
       <Filter>Source Files\bundle</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBlock.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealSharedServiceInletMetainfo.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealSharedServiceOutletMetainfo.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealInlet.cpp">
@@ -147,9 +138,6 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealIoSlot.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealCondition.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealStateMachine.cpp">
@@ -278,6 +266,15 @@
     <ClCompile Include="..\..\src\engine\_2RealId.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTypeMetainfoVisitor.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealHumanReadableNameVisitor.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockMetainfo.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\engine\_2RealBundle.h">
@@ -361,24 +358,6 @@
     <ClInclude Include="..\..\src\engine\_2RealCustomData.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealAbstractAnyHolder.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealAnyHolder_T.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealDataFieldMetainfo.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealFrameworkCompatibleType.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealFieldDescriptor.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bundle\_2RealContextBlockMetainfo.h">
-      <Filter>Header Files\bundle</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealFunctionBlockMetainfo.h">
       <Filter>Header Files\bundle</Filter>
     </ClInclude>
@@ -402,12 +381,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealTypeMetainfo.h">
       <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealSharedServiceOutletMetainfo.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealSharedServiceInletMetainfo.h">
-      <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealSharedService.h">
       <Filter>Header Files\engine</Filter>
@@ -485,9 +458,6 @@
       <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealInSlot.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealCondition.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealStateMachine.h">
@@ -589,11 +559,20 @@
     <ClInclude Include="..\..\src\app\_2RealCustomTypeMetainfo.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealCloneableMetainfo.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealId.h">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealHumanReadableNameVisitor.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTypeMetainfoVisitor.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealContextBlockMetainfo.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBlockMetainfo.h">
+      <Filter>Header Files\bundle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

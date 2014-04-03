@@ -20,45 +20,30 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealCloneableMetainfo.h"
 
 namespace _2Real
 {
 
-	enum class InstanceType { BUNDLE, BLOCK, IOSLOT, TYPE };
-	enum class MetainfoType { BUNDLE, BLOCK, IOSLOT, TYPE };
+	enum class MetainfoType { BUNDLE, BLOCK, IOSLOT, TYPE, UNKNOWN };
+
+	std::string typeToString( const MetainfoType );
 
 	class MetainfoId
 	{
 
 	public:
 
-		static MetainfoId makeId( std::shared_ptr< const MetainfoId > owner, const MetainfoType type, const std::string name );
+		MetainfoId( std::shared_ptr< const MetainfoId >, const MetainfoType, const std::string );
+		std::string toString() const;
+		std::string getName() const;
+
+		bool operator<( MetainfoId const& other ) const;
 
 	private:
-
-		MetainfoId( const MetainfoType type, const std::string name );
-		MetainfoId( std::shared_ptr< const MetainfoId > owner, const MetainfoType type, const std::string name );
 
 		std::weak_ptr< const MetainfoId >		mOwner;
 		MetainfoType							mType;
-		std::string								mName;
-
-	};
-
-	class InstanceId
-	{
-
-	public:
-
-		static InstanceId makeId( std::shared_ptr< const InstanceId > owner, const InstanceType type, const std::string name );
-
-	private:
-
-		InstanceId( const InstanceType type, const std::string name );
-		InstanceId( std::shared_ptr< const InstanceId > owner, const InstanceType type, const std::string name );
-
-		std::weak_ptr< const InstanceId >		mOwner;
-		InstanceType							mType;
 		std::string								mName;
 
 	};

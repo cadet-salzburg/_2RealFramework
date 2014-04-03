@@ -17,12 +17,12 @@
 */
 
 #include "engine/_2RealParameter.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
+#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
 
 namespace _2Real
 {
 
-	Parameter::Parameter( std::shared_ptr< const SharedServiceInletMetainfo > meta ) :
+	Parameter::Parameter( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
 		InSlot(), std::enable_shared_from_this< Parameter >(),
 		mMetainfo( meta )
 	{
@@ -31,7 +31,7 @@ namespace _2Real
 		InSlot::setTmpValue( initValue );
 	}
 
-	std::string const& Parameter::getName() const
+	std::string Parameter::getName() const
 	{
 		return mMetainfo->getName();
 	}

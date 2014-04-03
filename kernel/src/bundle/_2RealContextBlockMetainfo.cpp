@@ -25,8 +25,25 @@ namespace _2Real
 	{
 
 		ContextBlockMetainfo::ContextBlockMetainfo( std::shared_ptr< SharedServiceMetainfo > info ) :
+			BlockMetainfo(),
 			mImpl( info )
 		{
 		}
+
+		std::string ContextBlockMetainfo::getName() const
+		{
+			return mImpl.lock()->getName();
+		}
+
+		void ContextBlockMetainfo::setBlockClassInternal( std::shared_ptr< AbstractSharedServiceFactory > factory )
+		{
+			mImpl.lock()->setFactory( factory );
+		}
+
+		void ContextBlockMetainfo::setDescription( std::string const& description )
+		{
+			mImpl.lock()->setDescription( description );
+		}
+
 	}
 }

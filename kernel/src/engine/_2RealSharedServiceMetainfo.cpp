@@ -17,63 +17,48 @@
 */
 
 #include "engine/_2RealSharedServiceMetainfo.h"
-#include "engine/_2RealSharedServiceOutletMetainfo.h"
-#include "engine/_2RealSharedServiceInletMetainfo.h"
+#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
 #include "engine/_2RealDefaultPolicy.h"
 #include "engine/_2RealAbstractSharedServiceFactory.h"
+#include "engine/_2RealId.h"
 #include "helpers/_2RealException.h"
 
 namespace _2Real
 {
+	std::shared_ptr< SharedServiceMetainfo > SharedServiceMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types, std::string const& name, const bool isSingleton, std::vector< std::string > inlets, std::vector< std::string > outlets, std::vector< std::string > parameters )
+	{
+		std::shared_ptr< MetainfoId > blockId( new MetainfoId( id, MetainfoType::BLOCK, name ) );
+		std::shared_ptr< SharedServiceMetainfo > blockInfo( new SharedServiceMetainfo( blockId, types ) );
 
-	SharedServiceMetainfo::SharedServiceMetainfo( std::string const& name, std::shared_ptr< TypeCollection > types ) :
-		std::enable_shared_from_this< SharedServiceMetainfo >(),
-		mName( name ),
-		mDescription( "" ),
+		blockInfo->mIsSingleton = isSingleton;
+
+		for ( auto it : inlets )
+		{
+			std::shared_ptr< SharedServiceIoSlotMetainfo > inletinfo = SharedServiceIoSlotMetainfo::make( blockId, types, it );
+			blockInfo->mInlets[ it ] = inletinfo;
+		}
+
+		for ( auto it : outlets )
+		{
+			std::shared_ptr< SharedServiceIoSlotMetainfo > outletinfo = SharedServiceIoSlotMetainfo::make( blockId, types, it );
+			blockInfo->mOutlets[ it ] = outletinfo;
+		}
+
+		for ( auto it : parameters )
+		{
+			std::shared_ptr< SharedServiceIoSlotMetainfo > parameterinfo = SharedServiceIoSlotMetainfo::make( blockId, types, it );
+			blockInfo->mParameters[ it ] = parameterinfo;
+		}
+
+		return blockInfo;
+	}
+
+	SharedServiceMetainfo::SharedServiceMetainfo( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types ) :
+		mId( id ),
+		mDescription( "no description available" ),
 		mIsSingleton( false ),
 		mTypes( types )
 	{
-	}
-
-	SharedServiceMetainfo::~SharedServiceMetainfo()
-	{
-	}
-
-	void SharedServiceMetainfo::cloneFrom( SharedServiceMetainfo const& other )
-	{
-		mDescription = other.mDescription;
-		mIsSingleton = other.mIsSingleton;
-
-		for ( auto it : other.mDependencies )
-			mDependencies.push_back( it );
-
-		// not sure if cloning the factory is really necessary, after all, it don't hand out handles to it
-		mFactory = other.mFactory->clone();
-
-		mDefaultUpdatePolicy = other.mDefaultUpdatePolicy->clone();
-
-		for ( auto it : other.mInlets )
-		{
-			std::string name = it.first;
-			mInlets[ name ] = it.second->clone();
-		}
-
-		for ( auto it : other.mParameters )
-		{
-			std::string name = it.first;
-			mParameters[ name ] = it.second->clone();
-		}
-
-		for ( auto it : other.mOutlets )
-		{
-			std::string name = it.first;
-			mOutlets[ name ] = it.second->clone();
-		}
-	}
-
-	void SharedServiceMetainfo::setSingleton( const bool isSingleton )
-	{
-		mIsSingleton = isSingleton;
 	}
 
 	void SharedServiceMetainfo::setDescription( std::string const& description )
@@ -86,105 +71,80 @@ namespace _2Real
 		mDependencies = dependencies;
 	}
 
-	void SharedServiceMetainfo::setDefaultUpdatePolicy( std::shared_ptr< DefaultPolicy > policy )
-	{
-		mDefaultUpdatePolicy = policy;
-	}
-
-	void SharedServiceMetainfo::setDefaultSetupPolicy( std::shared_ptr< DefaultPolicy > policy )
-	{
-		mDefaultSetupPolicy = policy;
-	}
-
-	std::shared_ptr< SharedServiceInletMetainfo > SharedServiceMetainfo::createInlet( std::string const& name )
-	{
-		if ( mInlets.find( name ) != mInlets.end() )
-		{
-			std::ostringstream msg;
-			msg << "an inlet named " << name << " was already added to block " << mName << std::endl;
-			throw AlreadyExistsException( msg.str() );
-		}
-
-		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( name, mTypes ) );
-		mInlets[ name ] = result;
-		return result;
-	}
-
-	std::shared_ptr< SharedServiceOutletMetainfo > SharedServiceMetainfo::createOutlet( std::string const& name )
-	{
-		if ( mOutlets.find( name ) != mOutlets.end() )
-		{
-			std::ostringstream msg;
-			msg << "an outlet named " << name << " was already added to block " << mName << std::endl;
-			throw AlreadyExistsException( msg.str() );
-		}
-
-		std::shared_ptr< SharedServiceOutletMetainfo > result( new SharedServiceOutletMetainfo( name, mTypes ) );
-		mOutlets[ name ] = result;
-		return result;
-	}
-
-	std::shared_ptr< SharedServiceInletMetainfo > SharedServiceMetainfo::createParameter( std::string const& name )
-	{
-		if ( mParameters.find( name ) != mParameters.end() )
-		{
-			std::ostringstream msg;
-			msg << "a parameter named " << name << " was already added to block " << mName << std::endl;
-			throw AlreadyExistsException( msg.str() );
-		}
-
-		std::shared_ptr< SharedServiceInletMetainfo > result( new SharedServiceInletMetainfo( name, mTypes ) );
-		mParameters[ name ] = result;
-		return result;
-	}
-
 	bool SharedServiceMetainfo::isSingleton() const
 	{
 		return mIsSingleton;
 	}
 
-	std::string const& SharedServiceMetainfo::getName() const
+	std::string SharedServiceMetainfo::getName() const
 	{
-		return mName;
+		return mId->getName();
 	}
 
-	std::string const& SharedServiceMetainfo::getDescription() const
+	std::string SharedServiceMetainfo::getDescription() const
 	{
 		return mDescription;
 	}
 
-	void SharedServiceMetainfo::getDependencies( std::vector< std::string > &dependencies ) const
+	std::vector< std::string > SharedServiceMetainfo::getDependencies() const
 	{
-		for ( auto it : mDependencies )
-			dependencies.push_back( it );
+		return mDependencies;
 	}
 
-	void SharedServiceMetainfo::getInletMetainfos( std::vector< std::shared_ptr< const SharedServiceInletMetainfo > > &inlets ) const
+	std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > SharedServiceMetainfo::getInletMetainfos() const
 	{
+		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > result;
 		for ( auto it : mInlets )
-			inlets.push_back( it.second );
+			result.push_back( it.second );
+		return result;
 	}
 
-	void SharedServiceMetainfo::getOutletMetainfos( std::vector< std::shared_ptr< const SharedServiceOutletMetainfo  > > &outlets ) const
+	std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > SharedServiceMetainfo::getOutletMetainfos() const
 	{
+		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > result;
 		for ( auto it : mOutlets )
-			outlets.push_back( it.second );
+			result.push_back( it.second );
+		return result;
 	}
 
-	void SharedServiceMetainfo::getParameterMetainfos( std::vector< std::shared_ptr< const SharedServiceInletMetainfo  > > &parameters ) const
+	std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > SharedServiceMetainfo::getParameterMetainfos() const
 	{
+		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > result;
 		for ( auto it : mParameters )
-			parameters.push_back( it.second );
+			result.push_back( it.second );
+		return result;
 	}
 
-	void SharedServiceMetainfo::getDefaultSetupPolicy( std::vector< std::vector< std::string > > &policy ) const
+	std::shared_ptr< SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getInletMetainfo( std::string const& name ) const
 	{
-		policy = mDefaultSetupPolicy->getStringRep();
+		auto it = mInlets.find( name );
+		if ( it == mInlets.end() )
+			throw NotFoundException( name );
+
+		return it->second;
 	}
 
-	void SharedServiceMetainfo::getDefaultUpdatePolicy( std::vector< std::vector< std::string > > &policy ) const
+	std::shared_ptr< SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getOutletMetainfo( std::string const& name ) const
 	{
-		policy = mDefaultUpdatePolicy->getStringRep();
+		auto it = mOutlets.find( name );
+		if ( it == mOutlets.end() )
+			throw NotFoundException( name );
+
+		return it->second;
+	}
+
+	std::shared_ptr< SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getParameterMetainfo( std::string const& name ) const
+	{
+		auto it = mParameters.find( name );
+		if ( it == mParameters.end() )
+			throw NotFoundException( name );
+
+		return it->second;
+	}
+
+	std::vector< std::vector< std::string > > SharedServiceMetainfo::getDefaultUpdatePolicy() const
+	{
+		return mDefaultUpdatePolicy->getStringRep();
 	}
 
 	void SharedServiceMetainfo::setFactory( std::shared_ptr< AbstractSharedServiceFactory > factory )
