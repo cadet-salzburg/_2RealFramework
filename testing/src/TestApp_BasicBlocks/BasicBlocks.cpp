@@ -159,7 +159,7 @@ int main( int argc, char *argv[] )
 			}
 		}
 
-		// -------create block instances---------
+		//// -------create block instances---------
 
 		std::map< std::string, _2Real::app::FunctionBlockHandle > blocks;
 		for ( auto it : blockinfos )
@@ -176,45 +176,45 @@ int main( int argc, char *argv[] )
 
 		_2Real::app::TimerHandle timer = testEngine.createTimer( 5.0 );
 
-		//for ( auto it : blocks )
-		//{
-		//	std::future< _2Real::BlockState > setup = it.second.setup();
-		//	handleFuture( setup );
-		//	std::future< _2Real::BlockState > start = it.second.startUpdating( timer );
-		//	handleFuture( start );
-		//}
+		////for ( auto it : blocks )
+		////{
+		////	std::future< _2Real::BlockState > setup = it.second.setup();
+		////	handleFuture( setup );
+		////	std::future< _2Real::BlockState > start = it.second.startUpdating( timer );
+		////	handleFuture( start );
+		////}
 
 		// context & function block derived of base??
-		_2Real::app::FunctionBlockHandle counter = blocks[ "counter" ];
+		_2Real::app::FunctionBlockHandle counter = blocks[ "counterBlock" ];
 		_2Real::app::BlockIo counterio = counter.getBlockIo();
 		_2Real::app::InletHandle *incInlet = dynamic_cast< _2Real::app::InletHandle * >( counterio.mInlets[ 0 ] );
 		_2Real::app::ParameterHandle *iniParam = counterio.mParameters[ 0 ];
 
-		for ( auto it : counterio.mInlets )
-		{
-			if ( it->isMultiInlet() )
-			{
-				auto inlet = dynamic_cast< _2Real::app::MultiInletHandle * >( it );
-				std::cout << " inlet " << inlet->getName() << " is a multiinlet, size " << inlet->getSize() << std::endl;
-			}
-			else
-			{
-				auto inlet = dynamic_cast< _2Real::app::InletHandle * >( it );
-				std::cout << " inlet " << inlet->getName() << " is an regular inlet " << std::endl;
-			}
-		}
+		//for ( auto it : counterio.mInlets )
+		//{
+		//	if ( it->isMultiInlet() )
+		//	{
+		//		auto inlet = dynamic_cast< _2Real::app::MultiInletHandle * >( it );
+		//		std::cout << " inlet " << inlet->getName() << " is a multiinlet, size " << inlet->getSize() << std::endl;
+		//	}
+		//	else
+		//	{
+		//		auto inlet = dynamic_cast< _2Real::app::InletHandle * >( it );
+		//		std::cout << " inlet " << inlet->getName() << " is an regular inlet " << std::endl;
+		//	}
+		//}
 
-		for ( auto it : counterio.mParameters )
-		{
-			std::cout << "parameter " << it->getName() << std::endl;
-		}
+		//for ( auto it : counterio.mParameters )
+		//{
+		//	std::cout << "parameter " << it->getName() << std::endl;
+		//}
 
-		for ( auto it : counterio.mOutlets )
-		{
-			std::cout << "outlet " << it->getName() << std::endl;
-		}
+		//for ( auto it : counterio.mOutlets )
+		//{
+		//	std::cout << "outlet " << it->getName() << std::endl;
+		//}
 
-		//iniParam->setValue( ( int32_t )100 );
+		////iniParam->setValue( ( int32_t )100 );
 
 		std::future< _2Real::BlockState > setup = counter.setup();
 		handleFuture( setup );
@@ -222,7 +222,7 @@ int main( int argc, char *argv[] )
 		handleFuture( start );
 
 		int32_t inc = 0;
-		//incInlet->setValue( ( int32_t )inc );
+		////incInlet->setValue( ( int32_t )inc );
 
 		while( 1 )
 		{

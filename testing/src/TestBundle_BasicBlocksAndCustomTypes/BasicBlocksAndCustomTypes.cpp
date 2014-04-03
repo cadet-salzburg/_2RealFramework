@@ -28,36 +28,34 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.setContact( "fhs33223@fh-salzburg.ac.at" );
 	info.setVersion( 0, 0, 0 );
 
-	_2Real::bundle::TypeMetainfo simpleType = info.createTypeMetainfo( "testtype_simple" );
-	simpleType.setDescription( "a custom type w. simple fields" );
-	simpleType.addField( "uchar_field", ( uint8_t )0 );
-	simpleType.addField( "uint_field", ( uint32_t )0 );
-	simpleType.addField( "ulong_field", ( uint64_t )0 );
-	simpleType.addField( "double_field", 0.0 );
-	simpleType.addField( "float_field", 0.f );
+	info.exportType( "simpleType" );
+	info.exportType( "complexType" );
+	info.exportBlock( "counter", false, { "increment" }, { "value" }, { "init" } );
+}
 
-	_2Real::bundle::TypeMetainfo complexType = info.createTypeMetainfo( "testtype_complex" );
-	complexType.setDescription( "testing complex types, that is, types where at least one field is a custom type" );
-	complexType.addField( "string_field", std::string( "denn nudeln sind wir, und piraten wollen wir werden" ) );
-	complexType.addField( "simple_field", simpleType.makeData() );
+void getTypeMetainfo( _2Real::bundle::TypeMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& previousTypes )
+{
+	if ( info.getName() == "simpleType" )
+	{
+		info.setDescription( "testing simple types, that is, types where all fields are not custom types" );
+		info.addField( "uchar_field", ( uint8_t )5 );
+		info.addField( "uint_field", ( uint32_t )0 );
+		info.addField( "ulong_field", ( uint64_t )0 );
+		info.addField( "double_field", 0.0 );
+		info.addField( "float_field", 0.1f );
+	}
+	else if ( info.getName() == "complexType" )
+	{
+		const _2Real::bundle::TypeMetainfo simpleInfo = previousTypes.at( "simpleType" );
 
-	_2Real::bundle::FunctionBlockMetainfo counterMeta = info.createFunctionBlockMetainfo( "complex counter" );
-	counterMeta.setBlockClass< ComplexCounter >();
-	counterMeta.setDescription( "test block, a counter w. a custom type" );
-	counterMeta.setDefaultUpdatePolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW::ANY ) );
+		info.setDescription( "testing complex types, that is, types where at least one field is a custom type" );
+		info.addField( "string_field", std::string( "denn nudeln sind wir, und piraten wollen wir werden" ) );
+		info.addField( "simple_field", simpleInfo.makeData() );
+	}
+}
 
-	_2Real::bundle::InletMetainfo inA = counterMeta.createInlet( "inc" );
-	inA.setDescription( "increment" );
-	inA.setMultiInlet( false );
-	inA.setDatatypeAndInitialValue( simpleType.makeData() );
-
-	_2Real::bundle::ParameterMetainfo paramA = counterMeta.createParameter( "init" );
-	paramA.setDescription( "initial value" );
-	// param will be used to init the counter ( simple type ) & the string field
-	paramA.setDatatypeAndInitialValue( complexType.makeData() );
-
-	_2Real::bundle::OutletMetainfo outA = counterMeta.createOutlet( "counter" );
-	outA.setDescription( "counter value" );
-	outA.setDatatypeAndInitialValue( complexType.makeData() );
-
+void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& types )
+{
+	if ( info.getName() == "counter" )
+		ComplexCounter::getBlockMetainfo( info, types );
 }

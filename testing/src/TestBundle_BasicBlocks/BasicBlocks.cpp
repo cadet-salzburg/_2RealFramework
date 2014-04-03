@@ -29,88 +29,14 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.setContact( "fhs33223@fh-salzburg.ac.at" );
 	info.setVersion( 0, 0, 0 );
 
-	{
-		_2Real::bundle::FunctionBlockMetainfo printInfoMeta = info.createFunctionBlockMetainfo( "print info" );
+	info.exportBlock( "printInfoBlock", false, { "inA", "inB", "inC" }, { "outA", "outB" }, { "paramA", "paramB" } );
+	info.exportBlock( "counterBlock", false, { "inA", "inB", "inC" }, { "outA", "outB", "outC" }, { "paramA", "paramB", "paramC" } );
+}
 
-		printInfoMeta.setBlockClass< PrintInfo >();
-		printInfoMeta.setDescription( "test block - prints the name/value of all io slots in setup, update & shutdown" );
-
-		//printInfoMeta.setDependencies( { "name1", "name2", "name3" } );
-		//std::vector< std::vector< std::string > > test2 = { { "a0", "b0", "c0" }, { "a1", "b1", "c1" } };
-
-		printInfoMeta.setDefaultUpdatePolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW::ANY ) );
-
-		_2Real::bundle::InletMetainfo inA = printInfoMeta.createInlet( "inA" );
-		inA.setDescription( "the first inlet" );
-		inA.setMultiInlet( false );
-		inA.setDatatypeAndInitialValue( ( int32_t )0 );
-		_2Real::bundle::InletMetainfo inB = printInfoMeta.createInlet( "inB" );
-		inB.setDescription( "the second inlet" );
-		inB.setMultiInlet( false );
-		inB.setDatatypeAndInitialValue( 0.1f );
-		_2Real::bundle::InletMetainfo inC = printInfoMeta.createInlet( "inC" );
-		inC.setDescription( "the third inlet" );
-		inC.setMultiInlet( true );
-		inC.setDatatypeAndInitialValue( ( int64_t )pow( 2, 60 ) );
-		_2Real::bundle::OutletMetainfo outA = printInfoMeta.createOutlet( "outA" );
-		outA.setDescription( "the first outlet" );
-		outA.setDatatypeAndInitialValue( ( bool )false );
-		_2Real::bundle::OutletMetainfo outB = printInfoMeta.createOutlet( "outB" );
-		outB.setDescription( "the second outlet" );
-		outB.setDatatypeAndInitialValue( ( int32_t )-5 );
-		_2Real::bundle::ParameterMetainfo paramA = printInfoMeta.createParameter( "paramA" );
-		paramA.setDescription( "the first parameter" );
-		paramA.setDatatypeAndInitialValue( ( uint32_t )10 );
-		_2Real::bundle::ParameterMetainfo paramB = printInfoMeta.createParameter( "paramB" );
-		paramB.setDescription( "the second parameter" );
-		paramB.setDatatypeAndInitialValue( ( uint64_t )0 );
-	}
-
-	{
-		_2Real::bundle::FunctionBlockMetainfo counterMeta = info.createFunctionBlockMetainfo( "counter" );
-
-		counterMeta.setBlockClass< Counter >();
-		counterMeta.setDescription( "test block - some simple counters" );
-		counterMeta.setDefaultUpdatePolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW::ANY ) );
-
-		_2Real::bundle::InletMetainfo inA = counterMeta.createInlet( "inA" );
-		inA.setDescription( "int increment" );
-		inA.setMultiInlet( false );
-		inA.setDatatypeAndInitialValue( ( int32_t )10 );
-
-		_2Real::bundle::InletMetainfo inB = counterMeta.createInlet( "inB" );
-		inB.setDescription( "float increment" );
-		inB.setMultiInlet( false );
-		inB.setDatatypeAndInitialValue( 1.f );
-
-		_2Real::bundle::InletMetainfo inC = counterMeta.createInlet( "inC" );
-		inC.setDescription( "ulong increment" );
-		inC.setMultiInlet( false );
-		inC.setDatatypeAndInitialValue( ( uint64_t )1000 );
-
-		_2Real::bundle::ParameterMetainfo paramA = counterMeta.createParameter( "paramA" );
-		paramA.setDescription( "int init value" );
-		paramA.setDatatypeAndInitialValue( ( int32_t )0 );
-
-		_2Real::bundle::ParameterMetainfo paramB = counterMeta.createParameter( "paramB" );
-		paramB.setDescription( "float init value" );
-		paramB.setDatatypeAndInitialValue( 0.f );
-
-		_2Real::bundle::ParameterMetainfo paramC = counterMeta.createParameter( "paramC" );
-		paramC.setDescription( "ulong init value" );
-		paramC.setDatatypeAndInitialValue( ( uint64_t )0 );
-
-		_2Real::bundle::OutletMetainfo outA = counterMeta.createOutlet( "outA" );
-		outA.setDescription( "int counter" );
-		outA.setDatatypeAndInitialValue( ( int32_t )0 );
-
-		_2Real::bundle::OutletMetainfo outB = counterMeta.createOutlet( "outB" );
-		outB.setDescription( "float counter" );
-		outB.setDatatypeAndInitialValue( 0.f );
-
-		_2Real::bundle::OutletMetainfo outC = counterMeta.createOutlet( "outC" );
-		outC.setDescription( "ulong counter" );
-		outC.setDatatypeAndInitialValue( ( uint64_t )0 );
-	}
-
+void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& previousTypes )
+{
+	if ( info.getName() == "printInfoBlock" )
+		PrintInfo::getBlockMetainfo( info, previousTypes );
+	else if ( info.getName() == "counterBlock" )
+		Counter::getBlockMetainfo( info, previousTypes );
 }

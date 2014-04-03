@@ -20,6 +20,31 @@
 #include "ComplexCounterBlock.h"
 #include "engine/_2RealData.h"
 
+void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& types )
+{
+	_2Real::bundle::FunctionBlockMetainfo &counterinfo = dynamic_cast< _2Real::bundle::FunctionBlockMetainfo & >( info );
+
+	const _2Real::bundle::TypeMetainfo simpleInfo = types.at( "simpleType" );
+	const _2Real::bundle::TypeMetainfo complexInfo = types.at( "complexType" );
+
+	counterinfo.setBlockClass< ComplexCounter >();
+	counterinfo.setDescription( "counter" );
+	//counterinfo.setDefaultUpdatePolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW::ANY ) );
+
+	_2Real::bundle::InletMetainfo in = counterinfo.getInletMetainfo( "increment" );
+	in.setDescription( "counter increment" );
+	in.setMultiInlet( false );
+	in.setDatatypeAndInitialValue( simpleInfo.makeData() );
+
+	_2Real::bundle::ParameterMetainfo param = counterinfo.getParameterMetainfo( "init" );
+	param.setDescription( "counter initial value" );
+	param.setDatatypeAndInitialValue( complexInfo.makeData() );
+
+	_2Real::bundle::OutletMetainfo out = counterinfo.getOutletMetainfo( "value" );
+	out.setDescription( "counter current value" );
+	out.setDatatypeAndInitialValue( complexInfo.makeData() );
+}
+
 ComplexCounter::ComplexCounter( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr< _2Real::bundle::AbstractBlock > > const& dependencies ) :
 	_2Real::bundle::AbstractBlock( io, dependencies )
 {

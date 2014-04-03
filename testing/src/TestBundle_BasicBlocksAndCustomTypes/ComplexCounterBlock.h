@@ -24,6 +24,8 @@ class ComplexCounter : public _2Real::bundle::AbstractBlock
 
 public:
 
+	static void getBlockMetainfo( _2Real::bundle::BlockMetainfo &, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& );
+
 	ComplexCounter( _2Real::bundle::BlockIo const&, std::vector< std::shared_ptr< _2Real::bundle::AbstractBlock > > const& );
 	~ComplexCounter();
 

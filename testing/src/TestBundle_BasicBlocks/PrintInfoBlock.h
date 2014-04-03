@@ -27,6 +27,8 @@ public:
 	PrintInfo( _2Real::bundle::BlockIo const&, std::vector< std::shared_ptr< _2Real::bundle::AbstractBlock > > const& );
 	~PrintInfo();
 
+	static void getBlockMetainfo( _2Real::bundle::BlockMetainfo &, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& );
+
 	void setup();
 	void update();
 	void shutdown();

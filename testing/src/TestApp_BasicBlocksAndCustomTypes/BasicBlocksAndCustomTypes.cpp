@@ -77,7 +77,6 @@ int main( int argc, char *argv[] )
 
 		std::vector< _2Real::app::BlockMetainfo > blockinfos;
 		bundleinfo.getExportedBlocks( blockinfos );
-		_2Real::app::BlockMetainfo blockinfo = blockinfos.front();
 		std::cout << "exported blocks " << blockinfos.size() << std::endl;
 		for ( auto it : blockinfos )
 		{
@@ -144,20 +143,19 @@ int main( int argc, char *argv[] )
 			return 0;
 
 		_2Real::app::TimerHandle timer = testEngine.createTimer( 5.0 );
-		_2Real::app::FunctionBlockHandle counter = blocks[ "complex counter" ];
+		_2Real::app::FunctionBlockHandle counter = blocks[ "counter" ];
 
 		_2Real::app::BlockIo counterio = counter.getBlockIo();
 		_2Real::app::InletHandle *incInlet = dynamic_cast< _2Real::app::InletHandle * >( counterio.mInlets[ 0 ] );
 
 		// should io slots really hand out type metainfo?
-		_2Real::app::TypeMetainfo info = incInlet->getTypeMetainfo();
+		//_2Real::app::TypeMetainfo info = incInlet->getTypeMetainfo();
+		//std::cout << std::boolalpha << info.isBasicType() << std::noboolalpha << std::endl;
 
-		std::cout << std::boolalpha << info.isBasicType() << std::noboolalpha << std::endl;
+		//_2Real::app::CustomTypeMetainfo &custominfo = dynamic_cast< _2Real::app::CustomTypeMetainfo & >( info );
 
-		_2Real::app::CustomTypeMetainfo &custominfo = dynamic_cast< _2Real::app::CustomTypeMetainfo & >( info );
-
-		std::cout << custominfo.getName() << std::endl;
-		std::cout << custominfo.getDescription() << std::endl;
+		//std::cout << custominfo.getName() << std::endl;
+		//std::cout << custominfo.getDescription() << std::endl;
 
 		//for ( auto it : counterio.mInlets )
 		//{

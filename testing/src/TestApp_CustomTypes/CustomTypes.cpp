@@ -33,6 +33,39 @@
 
 #include "_2RealApplication.h"
 
+void printTypeMetainfo( _2Real::app::TypeMetainfo const& );
+void printTypeMetainfo( _2Real::app::CustomTypeMetainfo const& );
+
+void printTypeMetainfo( _2Real::app::TypeMetainfo const& meta )
+{
+	assert( meta.isValid() );
+
+	if ( meta.isBasicType() )
+	{
+		std::cout << "basic type " << meta.getName() << std::endl;
+	}
+	else
+	{
+		_2Real::app::CustomTypeMetainfo const& custom = dynamic_cast< _2Real::app::CustomTypeMetainfo const& >( meta );
+		printTypeMetainfo( custom );
+	}
+}
+
+void printTypeMetainfo( _2Real::app::CustomTypeMetainfo const& meta )
+{
+	assert( meta.isValid() );
+
+	std::cout << "custom type " << meta.getName() << std::endl;
+	std::cout << meta.getDescription() << std::endl;
+
+	auto fields = meta.getDataFields();
+	for ( auto it : fields )
+	{
+		std::cout << "has field " << it.first << std::endl;
+		printTypeMetainfo( *it.second.get() );
+	}
+}
+
 int main( int argc, char *argv[] )
 {
 	try
@@ -58,8 +91,7 @@ int main( int argc, char *argv[] )
 		std::cout << "number of exported types : " << typeinfos.size() << std::endl;
 		for ( auto it : typeinfos )
 		{
-			std::cout << "\t" << it.getName() << std::endl;
-			std::cout << "\t" << it.getDescription() << std::endl;
+			printTypeMetainfo( it );
 		}
 
 	// -------print the metainfos---------

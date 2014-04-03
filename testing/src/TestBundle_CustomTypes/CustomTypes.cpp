@@ -21,91 +21,40 @@
 
 void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 {
+	// --- basic information
+
 	info.setAuthor( "fhs33223" );
 	info.setDescription( "test bundle for datatypes" );
 	info.setCategory( "testing" );
 	info.setContact( "fhs33223@fh-salzburg.ac.at" );
 	info.setVersion( 0, 0, 0 );
 
-	// this setup was used to figure out the most 'efficient' way of creating custom types ( msvc++13 )
-	// in terms of comfortability, i prefer the boost::variant based approach very much to the poco::any approach
-	// - the api sure has gotten a lot cleaner, plus the variant suits our intent better than the any
+	// -- types ( by name )
 
-	std::cout << "--------define simple type------" << std::endl;
+	info.exportType( "simpleType" );
+	info.exportType( "complexType" );
+}
 
-	_2Real::bundle::TypeMetainfo simpleType = info.createTypeMetainfo( "testtype_simple" );
-	simpleType.setDescription( "testing simple types, that is, types where all fields are not custom types" );
-	std::cout << "--------simple int field--------" << std::endl;
-	simpleType.addField( "int_field", ( int32_t )15 );
-	std::cout << "--------simple str field--------" << std::endl;
-	simpleType.addField( "string_field", std::string( "poit" ) );
-
-	std::cout << "--------init simple type--------" << std::endl;
-
-	_2Real::CustomDataItem aSimple;
-
-	try
+void getTypeMetainfo( _2Real::bundle::TypeMetainfo & info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& previousTypes )
+{
+	if ( info.getName() == "simpleType" )
 	{
-		aSimple = simpleType.makeData();											// one copy, one move assignemnt
+		info.setDescription( "testing simple types, that is, types where all fields are not custom types" );
+		info.addField( "int_field", ( int32_t )15 );
+		info.addField( "string_field", std::string( "poit" ) );
+	}
+	else if ( info.getName() == "complexType" )
+	{
+		const _2Real::bundle::TypeMetainfo simpleInfo = previousTypes.at( "simpleType" );
+		_2Real::CustomDataItem aSimple = simpleInfo.makeData();
 		aSimple.set( "int_field", ( int32_t )64 );
 		aSimple.set( "string_field", std::string( "narf" ) );
-		std::cout << aSimple << std::endl;
+
+		info.setDescription( "testing complex types, that is, types where at least one field is a custom type" );
+		info.addField( "simple_field1", aSimple );	
+		info.addField( "simple_field2", std::move( aSimple ) );
+		info.addField( "simple_field3", std::move( simpleInfo.makeData() ) );
+		info.addField( "simple_field4", simpleInfo.makeData() );
+		info.addField( "float_field", 10.5f );
 	}
-	catch ( _2Real::Exception const& e )
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-	std::cout << "--------define complex type-----" << std::endl;
-
-	_2Real::bundle::TypeMetainfo complexType = info.createTypeMetainfo( "testtype_complex" );
-	complexType.setDescription( "testing complex types, that is, types where at least one field is a custom type" );
-
-	std::cout << "--------simple field 1----------" << std::endl;
-
-	complexType.addField( "simple_field1", aSimple );								// one copy, followed by moves
-
-	std::cout << "--------simple field 2----------" << std::endl;
-
-	complexType.addField( "simple_field2", std::move( aSimple ) );					// moves only
-
-	std::cout << "--------simple field 3----------" << std::endl;
-
-	complexType.addField( "simple_field3", std::move( simpleType.makeData() ) );	// one copy, then moves
-
-	std::cout << "--------simple field 4----------" << std::endl;
-
-	complexType.addField( "simple_field4", simpleType.makeData() );					// one copy, then moves
-
-	std::cout << "--------float field-------------" << std::endl;
-
-	complexType.addField( "float_field", 10.5f );
-
-	std::cout << "--------init complex type-------" << std::endl;
-
-	_2Real::CustomDataItem aComplex = complexType.makeData();						// exactly one copy
-
-	std::cout << "--------cout complex type-------" << std::endl;
-
-	std::cout << aComplex << std::endl;
-
-	std::cout << "--------init simple type-------" << std::endl;
-
-	_2Real::CustomDataItem anotherSimple = simpleType.makeData();
-	anotherSimple.set( "int_field", ( int32_t )100 );
-
-	std::cout << "--------set complex type-------" << std::endl;
-
-	aComplex.set( "simple_field3", anotherSimple );
-
-	std::cout << "--------cout complex type-------" << std::endl;
-
-	std::cout << aComplex << std::endl;
-
-	std::cout << "--------done--------------------" << std::endl;
-
-	/*
-	*	TODO: one problem remains: what if the programmer now goes ahead and adds another field to the simpleType?
-	*	basically, once i start creating instances of a custom type, no more adding of fiels should be allowed.
-	*/
 }
