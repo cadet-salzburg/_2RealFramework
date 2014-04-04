@@ -30,8 +30,7 @@
 #include "bundle/_2RealInletMetainfo.h"
 #include "bundle/_2RealOutletMetainfo.h"
 #include "bundle/_2RealParameterMetainfo.h"
-
-#include "bundle/_2RealInSlotPolicy.h"
+#include "bundle/_2RealDefaultUpdatePolicy.h"
 
 #include "helpers/_2RealException.h"
 

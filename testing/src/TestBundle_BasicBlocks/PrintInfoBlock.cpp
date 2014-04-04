@@ -25,7 +25,9 @@ void PrintInfo::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map<
 
 	printinfo.setBlockClass< PrintInfo >();
 	printinfo.setDescription( "test block - prints the name/value of all io slots in setup, update & shutdown" );
-	//printinfo.setDefaultUpdatePolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW::ANY ) );
+
+	_2Real::bundle::DefaultUpdatePolicy policy = printinfo.getDefaultUpdatePolicy();
+	policy.set( _2Real::DefaultPolicy::ANY );
 
 	_2Real::bundle::InletMetainfo inA = printinfo.getInletMetainfo( "inA" );
 	inA.setDescription( "the first inlet" );

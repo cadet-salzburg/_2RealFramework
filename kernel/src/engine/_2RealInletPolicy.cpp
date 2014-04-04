@@ -16,32 +16,8 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealInletPolicy.h"
 
 namespace _2Real
 {
-	class DefaultPolicy
-	{
-
-	public:
-
-		enum Code { ALL, ANY, UNDEFINED };
-
-		DefaultPolicy( const Code c );
-		DefaultPolicy( std::vector< std::vector< std::string > > const& names );
-
-		bool resolve( std::vector< std::string > const& inlets );
-		std::vector< std::vector< std::string > > const& getStringRep() const;
-
-		std::shared_ptr< DefaultPolicy > clone() const;
-
-	private:
-
-		Code										mCode;
-		std::vector< std::vector< std::string > >	mInlets;
-
-	};
-
 }

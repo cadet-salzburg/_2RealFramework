@@ -88,7 +88,7 @@ namespace _2Real
 		{
 			std::ostringstream msg;
 			msg << "shared library " << absPath.string() << " is already loaded";
-			throw AlreadyExistsException( msg.str() );
+			throw AlreadyExists( msg.str() );
 		}
 
 		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath, types );

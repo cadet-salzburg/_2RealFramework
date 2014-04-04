@@ -106,7 +106,7 @@ namespace _2Real
 		{
 			std::ostringstream msg;
 			msg << "bundle " << mMetainfo->getName() << " does not export a block named " << name;
-			throw NotFoundException( msg.str() );
+			throw NotFound( msg.str() );
 		}
 
 		auto ctor = it->second.first;

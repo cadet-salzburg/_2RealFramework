@@ -28,7 +28,7 @@ namespace _2Real
 
 	std::shared_ptr< SharedServiceIoSlotMetainfo > SharedServiceIoSlotMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types, std::string const& name )
 	{
-		std::shared_ptr< const MetainfoId > ioslotId( new MetainfoId( id, MetainfoType::IOSLOT, name ) );
+		std::shared_ptr< const MetainfoId > ioslotId = MetainfoId::create( id, MetainfoType::IOSLOT, name );
 		std::shared_ptr< SharedServiceIoSlotMetainfo > ioslotInfo( new SharedServiceIoSlotMetainfo( ioslotId, types ) );
 
 		return ioslotInfo;

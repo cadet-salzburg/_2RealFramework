@@ -25,7 +25,7 @@ namespace _2Real
 	std::string HumanReadableNameVisitor::operator()( const uint8_t val ) const
 	{
 		( void )( val );
-		return "unsigned char";
+		return "uchar";
 	}
 
 	std::string HumanReadableNameVisitor::operator()( const int8_t val ) const
@@ -37,7 +37,7 @@ namespace _2Real
 	std::string HumanReadableNameVisitor::operator()( const uint32_t val ) const
 	{
 		( void )( val );
-		return "unsigned int";
+		return "uint";
 	}
 
 	std::string HumanReadableNameVisitor::operator()( const int32_t val ) const
@@ -49,7 +49,7 @@ namespace _2Real
 	std::string HumanReadableNameVisitor::operator()( const uint64_t val ) const
 	{
 		( void )( val );
-		return "unsigned long";
+		return "ulong";
 	}
 
 	std::string HumanReadableNameVisitor::operator()( const int64_t val ) const

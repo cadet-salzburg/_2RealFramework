@@ -21,13 +21,11 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealData.h"
-#include "helpers/_2RealEvent_T.h"
 
 namespace _2Real
 {
 	/*
 	*	base for parameters & ( normal ) inlets
-	*	implements listeners & value sync
 	*/
 	class InSlot
 	{
@@ -48,20 +46,6 @@ namespace _2Real
 		// used from bundle
 		DataItem const& getValue() const;
 
-		template< typename TCallable >
-		void registerToValueUpdated( TCallable *callable, void ( TCallable::*callback )( const unsigned int ) )
-		{
-			std::shared_ptr< AbstractCallback_T< const unsigned int > > listener( new MemberCallback_T< TCallable, const unsigned int >( callable, callback ) );
-			mValueUpdatedEvent.addListener( listener );
-		}
-
-		template< typename TCallable >
-		void unregisterFromValueUpdated( TCallable *callable, void ( TCallable::*callback )( const unsigned int ) )
-		{
-			std::shared_ptr< AbstractCallback_T< const unsigned int > > listener( new MemberCallback_T< TCallable, const unsigned int >( callable, callback ) );
-			mValueUpdatedEvent.removeListener( listener );
-		}
-
 		void update();
 
 	private:
@@ -72,8 +56,6 @@ namespace _2Real
 		mutable std::mutex					mMutex;
 		std::shared_ptr< const DataItem >	mTmpValue;
 		std::shared_ptr< const DataItem >	mValue;
-
-		Event_T< const unsigned int >		mValueUpdatedEvent;
 
 	};
 }

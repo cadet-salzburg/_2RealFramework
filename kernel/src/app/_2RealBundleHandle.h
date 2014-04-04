@@ -40,11 +40,13 @@ namespace _2Real
 			// use to check if underlying bundle is still valid ( =loaded ) if you're unsure
 			bool					isValid() const;
 			// no timeout could cause the app to block forever
-			void					unload( const long timeout = 1000 );
+			// void					unload( const long timeout = 1000 );
 			// metainfo
 			BundleMetainfo			getMetainfo() const;
-			// creates a block instance. state: before setup?
+			// creates a block instance. state: before setup
 			FunctionBlockHandle		createBlock( std::string const& name );
+			// creates singleton if it does not yet exist, then returns handle to it
+			// ContextBlockHandle	getBlock( std::string const& name );
 
 		private:
 

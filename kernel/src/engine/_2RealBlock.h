@@ -20,7 +20,6 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealStateMachine.h"
 
 #include <future>
 #include "enums/_2RealBlockState.h"
@@ -33,10 +32,15 @@ namespace _2Real
 	class SharedServiceMetainfo;
 	class UpdateTrigger;
 	class Threadpool;
+	class UpdatePolicy;
+	class StateMachine;
+	class InstanceId;
 
 	class BlockIo
 	{
+
 	public:
+
 		std::vector< std::shared_ptr< AbstractInlet > >		mInlets;
 		std::vector< std::shared_ptr< Parameter > >			mParameters;
 		std::vector< std::shared_ptr< Outlet > >			mOutlets;
@@ -46,6 +50,7 @@ namespace _2Real
 		void doUpdate();
 		void doShutdown();
 		void doNothing();
+
 	};
 
 	class Block : public std::enable_shared_from_this< Block >
@@ -53,20 +58,15 @@ namespace _2Real
 
 	public:
 
-		Block( std::shared_ptr< const SharedServiceMetainfo >, std::shared_ptr< Threadpool >, std::shared_ptr< BlockIo > );
-		~Block();
+		~Block() = default;
 
-		std::shared_ptr< const SharedServiceMetainfo >	getMetainfo() const;
-
-		static void createIo( std::shared_ptr< const SharedServiceMetainfo >, std::vector< std::shared_ptr< Parameter > > &, std::vector< std::shared_ptr< AbstractInlet > > &, std::vector< std::shared_ptr< Outlet > > & );
-
-		// called by engine
-		//void destroy( std::function< void() > const& );
+		static std::shared_ptr< Block > createFromMetainfo( std::shared_ptr< const SharedServiceMetainfo > meta, std::shared_ptr< const InstanceId > id, std::shared_ptr< Threadpool > threads, const std::string name );
 
 		std::future< BlockState > setup();
 		std::future< BlockState > singlestep();
 		std::future< BlockState > shutdown();
 
+		std::future< BlockState > startUpdating();
 		std::future< BlockState > startUpdating( std::shared_ptr< UpdateTrigger > );
 		std::future< BlockState > stopUpdating();
 
@@ -74,11 +74,17 @@ namespace _2Real
 
 	private:
 
+		Block( std::shared_ptr< const InstanceId >, std::shared_ptr< Threadpool >, std::shared_ptr< BlockIo > );
+
+		Block() = delete;
 		Block( Block const& other ) = delete;
 		Block operator=( Block const& other ) = delete;
+		Block( Block && other ) = delete;
+		Block& operator=( Block && other ) = delete;
 
-		std::weak_ptr< const SharedServiceMetainfo >		mMetainfo;
-		StateMachine										mStateMachine;
+		std::shared_ptr< const InstanceId >					mId;
+		std::shared_ptr< UpdatePolicy >						mUpdatePolicy;
+		std::shared_ptr< StateMachine >						mStateHandler;
 		std::shared_ptr< BlockIo >							mIo;
 
 	};

@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,32 +20,8 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealData.h"
 
 namespace _2Real
 {
-	class SharedTypeMetainfo;
-
-	namespace bundle
-	{
-		class TypeMetainfo
-		{
-
-		public:
-
-			explicit TypeMetainfo( std::shared_ptr< SharedTypeMetainfo > );
-
-			std::string getName() const;
-
-			void setDescription( std::string );
-			void addField( std::string const& fieldName, DataItem value );
-
-			CustomDataItem makeData() const;
-
-		private:
-
-			std::weak_ptr< SharedTypeMetainfo >		mImpl;
-
-		};
-	}
+	enum class DefaultPolicy : uint8_t { ANY, ALL, DISABLED };
 }

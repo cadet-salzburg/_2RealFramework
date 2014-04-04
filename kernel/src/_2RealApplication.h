@@ -31,6 +31,7 @@
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealParameterHandle.h"
 #include "app/_2RealBlockIo.h"
+#include "app/_2RealUpdatePolicyHandle.h"
 
 #include "app/_2RealTimerHandle.h"
 

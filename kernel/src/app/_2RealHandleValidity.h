@@ -33,7 +33,7 @@ namespace _2Real
 			{
 				std::stringstream msg;
 				msg << "nullptr access: " << what << " handle does not point to an object" << std::endl;
-				throw HandleAccessException( msg.str() );
+				throw HandleAccessFailure( msg.str() );
 			}
 
 			return locked;

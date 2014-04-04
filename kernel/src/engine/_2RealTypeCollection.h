@@ -42,18 +42,14 @@ namespace _2Real
 		void clear();
 
 		void addType( std::shared_ptr< const TMetainfo > );
-		std::shared_ptr< const TMetainfo > getMetainfo( std::shared_ptr< const MetainfoId > ) const;
 
-		void typeRemoved( std::shared_ptr< const MetainfoId > info );
+		std::shared_ptr< const TMetainfo > getMetainfo( const std::string ) const;
+
+		void typeRemoved( const std::string );
 
 	private:
 
-		struct Cmp
-		{
-			bool operator()( std::shared_ptr< const MetainfoId > one, std::shared_ptr< const MetainfoId > other ) const;
-		};
-
-		typedef std::map< std::shared_ptr< const MetainfoId >, std::shared_ptr< const TMetainfo >, Cmp > Types;
+		typedef std::map< std::string, std::shared_ptr< const TMetainfo > > Types;
 
 		Types								mTypes;
 

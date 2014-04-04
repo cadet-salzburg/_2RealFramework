@@ -42,11 +42,11 @@ namespace _2Real
 			return ( nullptr != bundle.get() );
 		}
 
-		void BundleHandle::unload( const long blockTimeout )
-		{
-			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			bundle->unload( blockTimeout );
-		}
+		//void BundleHandle::unload( const long blockTimeout )
+		//{
+		//	std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
+		//	bundle->unload( blockTimeout );
+		//}
 
 		BundleMetainfo BundleHandle::getMetainfo() const
 		{

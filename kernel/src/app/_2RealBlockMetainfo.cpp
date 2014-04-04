@@ -98,10 +98,10 @@ namespace _2Real
 				parameters.push_back( ParameterMetainfo( it ) );
 		}
 
-		void BlockMetainfo::getDefaultUpdatePolicy( std::vector< std::vector< std::string > > &policy ) const
-		{
-			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
-			policy = meta->getDefaultUpdatePolicy();
-		}
+		//std::shared_ptr< const UpdatePolicyMetainfo > BlockMetainfo::getDefaultUpdatePolicy() const
+		//{
+		//	std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
+		//	return meta->getDefaultUpdatePolicy();
+		//}
 	}
 }

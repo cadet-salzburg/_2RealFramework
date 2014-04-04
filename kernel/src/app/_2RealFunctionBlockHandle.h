@@ -31,6 +31,7 @@ namespace _2Real
 	namespace app
 	{
 		class TimerHandle;
+		class UpdatePolicyHandle;
 		class BlockIo;
 
 		class FunctionBlockHandle
@@ -64,9 +65,13 @@ namespace _2Real
 			std::future< BlockState >		setup();
 			std::future< BlockState >		singlestep();
 			std::future< BlockState >		shutdown();
+			// go to run state & start listening to a timer
 			std::future< BlockState >		startUpdating( TimerHandle );
-			//std::future< BlockState >		startUpdating( UpdatePolicyHandle );
+			// go to run state & start listening to the block's update policy
+			std::future< BlockState >		startUpdating();
 			std::future< BlockState >		stopUpdating();
+
+			UpdatePolicyHandle				getUpdatePolicy();
 
 			// --------- io slots
 

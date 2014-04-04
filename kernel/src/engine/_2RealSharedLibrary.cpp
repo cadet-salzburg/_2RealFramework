@@ -42,7 +42,7 @@ namespace _2Real
 	{
 		void * result = SharedLibraryImpl::findSymbolImpl( name );
 		if ( result )	return result;
-		else			throw NotFoundException( name );
+		else			throw NotFound( name );
 	}
 
 } 

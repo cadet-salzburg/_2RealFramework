@@ -161,68 +161,44 @@ int main( int argc, char *argv[] )
 
 		//// -------create block instances---------
 
-		std::map< std::string, _2Real::app::FunctionBlockHandle > blocks;
-		for ( auto it : blockinfos )
-		{
-			if ( !it.isContext() )
-			{
-				auto handle = bundle.createBlock( it.getName() );
-				blocks[ it.getName() ] = handle;
-			}
-		}
+		//std::map< std::string, _2Real::app::FunctionBlockHandle > blocks;
+		//for ( auto it : blockinfos )
+		//{
+		//	if ( !it.isContext() )
+		//	{
+		//		auto handle = bundle.createBlock( it.getName() );
+		//		blocks[ it.getName() ] = handle;
+		//	}
+		//}
 
-		if ( blocks.empty() )
-			return 0;
+		//if ( blocks.empty() )
+		//	return 0;
 
 		_2Real::app::TimerHandle timer = testEngine.createTimer( 5.0 );
 
-		////for ( auto it : blocks )
-		////{
-		////	std::future< _2Real::BlockState > setup = it.second.setup();
-		////	handleFuture( setup );
-		////	std::future< _2Real::BlockState > start = it.second.startUpdating( timer );
-		////	handleFuture( start );
-		////}
+		_2Real::app::FunctionBlockHandle aCounter = bundle.createBlock( "counterBlock" );
+		_2Real::app::BlockIo aCounterIo = aCounter.getBlockIo();
+		_2Real::app::InletHandle *anIncInlet = dynamic_cast< _2Real::app::InletHandle * >( aCounterIo.mInlets[ 0 ] );
+		_2Real::app::ParameterHandle *anInitParam = aCounterIo.mParameters[ 0 ];
 
-		// context & function block derived of base??
-		_2Real::app::FunctionBlockHandle counter = blocks[ "counterBlock" ];
-		_2Real::app::BlockIo counterio = counter.getBlockIo();
-		_2Real::app::InletHandle *incInlet = dynamic_cast< _2Real::app::InletHandle * >( counterio.mInlets[ 0 ] );
-		_2Real::app::ParameterHandle *iniParam = counterio.mParameters[ 0 ];
+		_2Real::app::FunctionBlockHandle otherCounter = bundle.createBlock( "counterBlock" );
+		_2Real::app::BlockIo otherCounterIo = otherCounter.getBlockIo();
+		_2Real::app::InletHandle *otherIncInlet = dynamic_cast< _2Real::app::InletHandle * >( otherCounterIo.mInlets[ 0 ] );
+		_2Real::app::ParameterHandle *otherInitParam = otherCounterIo.mParameters[ 0 ];
 
-		//for ( auto it : counterio.mInlets )
-		//{
-		//	if ( it->isMultiInlet() )
-		//	{
-		//		auto inlet = dynamic_cast< _2Real::app::MultiInletHandle * >( it );
-		//		std::cout << " inlet " << inlet->getName() << " is a multiinlet, size " << inlet->getSize() << std::endl;
-		//	}
-		//	else
-		//	{
-		//		auto inlet = dynamic_cast< _2Real::app::InletHandle * >( it );
-		//		std::cout << " inlet " << inlet->getName() << " is an regular inlet " << std::endl;
-		//	}
-		//}
+		{	
+			std::future< _2Real::BlockState > setup = aCounter.setup();
+			handleFuture( setup );
+			std::future< _2Real::BlockState > start = aCounter.startUpdating( timer );
+			handleFuture( start );
+		}
 
-		//for ( auto it : counterio.mParameters )
-		//{
-		//	std::cout << "parameter " << it->getName() << std::endl;
-		//}
-
-		//for ( auto it : counterio.mOutlets )
-		//{
-		//	std::cout << "outlet " << it->getName() << std::endl;
-		//}
-
-		////iniParam->setValue( ( int32_t )100 );
-
-		std::future< _2Real::BlockState > setup = counter.setup();
-		handleFuture( setup );
-		std::future< _2Real::BlockState > start = counter.startUpdating( timer );
-		handleFuture( start );
-
-		int32_t inc = 0;
-		////incInlet->setValue( ( int32_t )inc );
+		{	
+			std::future< _2Real::BlockState > setup = otherCounter.setup();
+			handleFuture( setup );
+			std::future< _2Real::BlockState > start = otherCounter.startUpdating( timer );
+			handleFuture( start );
+		}
 
 		while( 1 )
 		{
@@ -241,18 +217,19 @@ int main( int argc, char *argv[] )
 			{
 				timer.start();
 			}
-			else if ( line == "inc" )
-			{
-				inc += 1;
-				//incInlet->setValue( ( int32_t )inc );
-			}
 		}
 
-		for ( auto it : blocks )
 		{
-			std::future< _2Real::BlockState > stop = it.second.stopUpdating();
+			std::future< _2Real::BlockState > stop = aCounter.stopUpdating();
 			handleFuture( stop );
-			std::future< _2Real::BlockState > shutdown = it.second.shutdown();
+			std::future< _2Real::BlockState > shutdown = aCounter.shutdown();
+			handleFuture( shutdown );
+		}
+
+		{
+			std::future< _2Real::BlockState > stop = otherCounter.stopUpdating();
+			handleFuture( stop );
+			std::future< _2Real::BlockState > shutdown = otherCounter.shutdown();
 			handleFuture( shutdown );
 		}
 

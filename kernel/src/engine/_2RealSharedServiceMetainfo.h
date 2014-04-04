@@ -24,7 +24,7 @@ namespace _2Real
 {
 	class SharedServiceIoSlotMetainfo;
 
-	class DefaultPolicy;
+	class UpdatePolicyMetainfo;
 	class AbstractSharedServiceFactory;
 	class TypeCollection;
 	class MetainfoId;
@@ -48,37 +48,41 @@ namespace _2Real
 		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > getOutletMetainfos() const;
 		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > getParameterMetainfos() const;
 
-		std::shared_ptr< SharedServiceIoSlotMetainfo > getInletMetainfo( std::string const& ) const;
-		std::shared_ptr< SharedServiceIoSlotMetainfo > getOutletMetainfo( std::string const& ) const;
-		std::shared_ptr< SharedServiceIoSlotMetainfo > getParameterMetainfo( std::string const& ) const;
+		std::shared_ptr< SharedServiceIoSlotMetainfo > getInletMetainfo( std::string const& );
+		std::shared_ptr< SharedServiceIoSlotMetainfo > getOutletMetainfo( std::string const& );
+		std::shared_ptr< SharedServiceIoSlotMetainfo > getParameterMetainfo( std::string const& );
+		std::shared_ptr< const SharedServiceIoSlotMetainfo > getInletMetainfo( std::string const& ) const;
+		std::shared_ptr< const SharedServiceIoSlotMetainfo > getOutletMetainfo( std::string const& ) const;
+		std::shared_ptr< const SharedServiceIoSlotMetainfo > getParameterMetainfo( std::string const& ) const;
 
-		std::vector< std::vector< std::string > > getDefaultUpdatePolicy() const;
+		std::shared_ptr< UpdatePolicyMetainfo > getDefaultUpdatePolicy();
+		std::shared_ptr< const UpdatePolicyMetainfo > getDefaultUpdatePolicy() const;
 
 		void setFactory( std::shared_ptr< AbstractSharedServiceFactory > factory );
 		std::shared_ptr< const AbstractSharedServiceFactory > getFactory() const;
 
 	private:
 
-		SharedServiceMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection > );
+		SharedServiceMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection >, const bool );
 		SharedServiceMetainfo( SharedServiceMetainfo const& other ) = delete;
 		SharedServiceMetainfo& operator=( SharedServiceMetainfo const& ) = delete;
 
 		typedef std::map< std::string, std::shared_ptr< SharedServiceIoSlotMetainfo > >		IoSlots;
 
 		std::shared_ptr< const MetainfoId >					mId;
+		std::weak_ptr< const TypeCollection >				mTypes;
 
+		bool												mIsSingleton;
 		std::string											mDescription;
 		std::vector< std::string >							mDependencies;
-		bool												mIsSingleton;
 
-		std::shared_ptr< DefaultPolicy >					mDefaultUpdatePolicy;
-
+		std::shared_ptr< UpdatePolicyMetainfo >				mDefaultUpdatePolicy;
 		std::shared_ptr< AbstractSharedServiceFactory >		mFactory;
 
 		IoSlots												mInlets;
 		IoSlots												mParameters;
 		IoSlots												mOutlets;
-		std::weak_ptr< const TypeCollection >				mTypes;
+		
 
 	};
 

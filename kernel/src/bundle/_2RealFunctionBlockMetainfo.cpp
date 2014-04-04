@@ -20,7 +20,7 @@
 #include "bundle/_2RealInletMetainfo.h"
 #include "bundle/_2RealOutletMetainfo.h"
 #include "bundle/_2RealParameterMetainfo.h"
-#include "bundle/_2RealInSlotPolicy.h"
+#include "bundle/_2RealDefaultUpdatePolicy.h"
 #include "engine/_2RealSharedServiceMetainfo.h"
 
 namespace _2Real
@@ -68,9 +68,9 @@ namespace _2Real
 			mImpl.lock()->setDependencies( dependencies );
 		}
 
-		//void FunctionBlockMetainfo::setDefaultUpdatePolicy( InSlotPolicy const& policy  )
-		//{
-		//	mImpl.lock()->setDefaultUpdatePolicy( static_cast< std::shared_ptr< DefaultPolicy > >( policy ) );
-		//}
+		DefaultUpdatePolicy FunctionBlockMetainfo::getDefaultUpdatePolicy()
+		{
+			return mImpl.lock()->getDefaultUpdatePolicy();
+		}
 	}
 }

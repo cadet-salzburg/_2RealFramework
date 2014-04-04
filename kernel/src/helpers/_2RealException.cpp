@@ -83,13 +83,14 @@ namespace _2Real
 		m_Message = message;
 	}
 
-	IMPLEMENT_EXCEPTION( BundleImportException, Exception, "library load exception" )
+	IMPLEMENT_EXCEPTION( BundleImportFailure, Exception, "a dll ( bundle ) failed to load properly ( BundleImportFailure Exception )" )
 	//IMPLEMENT_EXCEPTION( InvalidStateChangeException, Exception, "invalid state change exception" )
 	//IMPLEMENT_EXCEPTION( InvalidTypeException, Exception, "invalid type exception" )
-	IMPLEMENT_EXCEPTION( NotFoundException, Exception, "not found exception" )
-	IMPLEMENT_EXCEPTION( AlreadyExistsException, Exception, "already exists exception" )
-	IMPLEMENT_EXCEPTION( TypeMismatchException, Exception, "type mismatch exception" )
-	IMPLEMENT_EXCEPTION( HandleAccessException, Exception, "uninitialized handle exception" )
+	IMPLEMENT_EXCEPTION( NotFound, Exception, "an object was not found ( NotFound Exception )" )
+	IMPLEMENT_EXCEPTION( AlreadyExists, Exception, "a named object already exists ( AlreadyExists Exception )" )
+	IMPLEMENT_EXCEPTION( TypeMismatch, Exception, "a type mismatch occured ( TypeMismatch Exception )" )
+	IMPLEMENT_EXCEPTION( HandleAccessFailure, Exception, "an uninitialized handle was accessed ( HandleAccessFailure Exception )" )
+	IMPLEMENT_EXCEPTION( CreationFailure, Exception, "an object could not be created ( CreationFailure Exception )" )
 	//IMPLEMENT_EXCEPTION( TimeOutException, Exception, "time out exception" )
 	//IMPLEMENT_EXCEPTION( InvalidNameException, Exception, "invalid name exception" )
 	//IMPLEMENT_EXCEPTION( XMLFormatException, Exception, "xml format exception" )

@@ -29,7 +29,9 @@ void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std:
 
 	counterinfo.setBlockClass< ComplexCounter >();
 	counterinfo.setDescription( "counter" );
-	//counterinfo.setDefaultUpdatePolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW::ANY ) );
+
+	_2Real::bundle::DefaultUpdatePolicy policy = counterinfo.getDefaultUpdatePolicy();
+	policy.set( _2Real::bundle::DefaultUpdatePolicy::Code::ALL );
 
 	_2Real::bundle::InletMetainfo in = counterinfo.getInletMetainfo( "increment" );
 	in.setDescription( "counter increment" );

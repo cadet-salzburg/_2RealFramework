@@ -19,31 +19,28 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealData.h"
+#include "engine/_2RealInletPolicy.h"
+#include "enums/_2RealDefaultPolicy.h"
 
 namespace _2Real
 {
-	class SharedTypeMetainfo;
+	class UpdatePolicyMetainfo;
 
 	namespace bundle
 	{
-		class TypeMetainfo
+		class DefaultUpdatePolicy
 		{
 
 		public:
 
-			explicit TypeMetainfo( std::shared_ptr< SharedTypeMetainfo > );
+			DefaultUpdatePolicy( std::shared_ptr< UpdatePolicyMetainfo > );
 
-			std::string getName() const;
-
-			void setDescription( std::string );
-			void addField( std::string const& fieldName, DataItem value );
-
-			CustomDataItem makeData() const;
+			void set( const DefaultPolicy );
+			void set( std::vector< std::vector< InletPolicy > > );
 
 		private:
 
-			std::weak_ptr< SharedTypeMetainfo >		mImpl;
+			std::weak_ptr< UpdatePolicyMetainfo >		mImpl;
 
 		};
 	}

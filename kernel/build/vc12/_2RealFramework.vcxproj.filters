@@ -116,12 +116,6 @@
     <ClCompile Include="..\..\src\bundle\_2RealParameterMetainfo.cpp">
       <Filter>Source Files\bundle</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealDefaultPolicy.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bundle\_2RealInSlotPolicy.cpp">
-      <Filter>Source Files\bundle</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealIoSlotMetainfo.cpp">
       <Filter>Source Files\bundle</Filter>
     </ClCompile>
@@ -275,6 +269,18 @@
     <ClCompile Include="..\..\src\bundle\_2RealBlockMetainfo.cpp">
       <Filter>Source Files\bundle</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealUpdatePolicy.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealInletPolicy.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealDefaultUpdatePolicy.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealUpdatePolicyHandle.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\engine\_2RealBundle.h">
@@ -415,9 +421,6 @@
     <ClInclude Include="..\..\src\app\_2RealParameterHandle.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\engine\_2RealDefaultPolicy.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealParameterMetainfo.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
@@ -429,9 +432,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealIoSlotMetainfo.h">
       <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\bundle\_2RealInSlotPolicy.h">
-      <Filter>Header Files\bundle</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealIoSlotMetainfo.h">
       <Filter>Header Files\bundle</Filter>
@@ -573,6 +573,21 @@
     </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealBlockMetainfo.h">
       <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealUpdatePolicy.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealDefaultUpdatePolicy.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealInletPolicy.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\enums\_2RealDefaultPolicy.h">
+      <Filter>Header Files\enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

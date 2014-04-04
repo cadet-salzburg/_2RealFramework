@@ -29,7 +29,7 @@ namespace _2Real
 	std::shared_ptr< BasicTypeMetainfo > BasicTypeMetainfo::make( std::shared_ptr< TypeCollection > types, const DataItem item )
 	{
 		std::string name = boost::apply_visitor( HumanReadableNameVisitor(), item );
-		std::shared_ptr< MetainfoId > basictypeId( new MetainfoId( nullptr, MetainfoType::TYPE, name ) );
+		std::shared_ptr< const MetainfoId > basictypeId = MetainfoId::create( nullptr, MetainfoType::TYPE, name );
 		std::shared_ptr< BasicTypeMetainfo > basictypeInfo( new BasicTypeMetainfo( basictypeId, types, item ) );
 		return basictypeInfo;
 	}
@@ -65,7 +65,7 @@ namespace _2Real
 
 	std::shared_ptr< SharedTypeMetainfo > SharedTypeMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, std::string const& name )
 	{
-		std::shared_ptr< MetainfoId > sharedtypeId( new MetainfoId( id, MetainfoType::TYPE, name ) );
+		std::shared_ptr< const MetainfoId > sharedtypeId = MetainfoId::create( id, MetainfoType::TYPE, name );
 		std::shared_ptr< SharedTypeMetainfo > sharedtypeInfo( new SharedTypeMetainfo( sharedtypeId, types ) );
 		sharedtypeInfo->mTemplate = CustomDataItem( sharedtypeId );
 		return sharedtypeInfo;
@@ -83,7 +83,7 @@ namespace _2Real
 	void SharedTypeMetainfo::unregisterFromTypeCollection()
 	{
 		std::shared_ptr< TypeCollection > types = mTypes.lock();
-		if ( types.get() != nullptr ) types->typeRemoved( mId );
+		if ( types.get() != nullptr ) types->typeRemoved( mId->toString() );
 	}
 
 	bool SharedTypeMetainfo::isBasicType() const

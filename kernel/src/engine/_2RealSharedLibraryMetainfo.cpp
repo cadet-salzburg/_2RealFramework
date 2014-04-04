@@ -42,7 +42,7 @@ namespace _2Real
 		{
 			BundleMetainfoFunc bundlefunc = ( BundleMetainfoFunc ) lib->getSymbol( "getBundleMetainfo" );
 
-			std::shared_ptr< const MetainfoId > id( new MetainfoId( nullptr, MetainfoType::BUNDLE, path.string() ) );
+			std::shared_ptr< const MetainfoId > id = MetainfoId::create( nullptr, MetainfoType::BUNDLE, path.string() );
 			std::shared_ptr< SharedLibraryMetainfo > bundleinfo( new SharedLibraryMetainfo( path, id, types ) );
 
 			bundle::BundleMetainfo bundleMetainfo( bundleinfo );
@@ -72,7 +72,7 @@ namespace _2Real
 			}
 			else if ( !bundleinfo->mTypePreinfos.empty() && !lib->hasSymbol( "getTypeMetainfo" ) )
 			{
-				throw NotFoundException( "function getTypeMetainfo not found in bundle" );
+				throw NotFound( "function getTypeMetainfo not found in bundle" );
 			}
 
 			if ( bundleinfo->mBlockPreinfos.empty() )
@@ -200,7 +200,7 @@ namespace _2Real
 			{
 				std::ostringstream msg;
 				msg << "a type named " << name << " was already exported by bundle " << getName() << std::endl;
-				throw AlreadyExistsException( msg.str() );
+				throw AlreadyExists( msg.str() );
 			}
 		}
 
@@ -218,7 +218,7 @@ namespace _2Real
 			{
 				std::ostringstream msg;
 				msg << "a block named " << name << " was already exported by bundle " << getName() << std::endl;
-				throw AlreadyExistsException( msg.str() );
+				throw AlreadyExists( msg.str() );
 			}
 		}
 

@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,33 +23,45 @@
 
 namespace _2Real
 {
-	class DefaultPolicy;
-
-	namespace bundle
+	class InletPolicy
 	{
-		class InSlotPolicy
-		{
-		public:
-			virtual ~InSlotPolicy() {}
-			virtual operator std::shared_ptr< DefaultPolicy > () const = 0;
-		};
 
-		class VALUES_NEW : public InSlotPolicy
-		{
+	public:
 
-		public:
+		InletPolicy() = delete;
+		InletPolicy( std::string const& name ) : mName( name ), mIsMulti( false ), mRequireAll( false ) {}
 
-			enum Code { ALL, ANY };
+		std::string		mName;
+		bool			mIsMulti;
+		bool			mRequireAll;
 
-			VALUES_NEW( const Code c );
-			VALUES_NEW( std::vector< std::vector< std::string > > const& names );
+	};
 
-			explicit operator std::shared_ptr< DefaultPolicy > () const;
+	class All
+	{
 
-		private:
+	public:
 
-			std::shared_ptr< DefaultPolicy > mPolicy;
+		All( std::string const& name ) : mSetting( name ) { mSetting.mIsMulti = true; mSetting.mRequireAll = true; }
+		operator InletPolicy() const { return mSetting; }
 
-		};
-	}
+	private:
+
+		InletPolicy mSetting;
+
+	};
+
+	class Any
+	{
+
+	public:
+
+		Any( std::string const& name ) : mSetting( name ) { mSetting.mIsMulti = true; mSetting.mRequireAll = false; }
+		operator InletPolicy() const { return mSetting; }
+
+	private:
+
+		InletPolicy mSetting;
+
+	};
 }

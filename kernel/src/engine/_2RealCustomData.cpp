@@ -117,10 +117,10 @@ namespace _2Real
 					return;
 				}
 				else
-					throw _2Real::TypeMismatchException( fieldName );
+					throw _2Real::TypeMismatch( fieldName );
 			}
 		}
 
-		throw _2Real::NotFoundException( fieldName );
+		throw _2Real::NotFound( fieldName );
 	}
 }

@@ -20,12 +20,11 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealCloneableMetainfo.h"
 
 namespace _2Real
 {
 
-	enum class MetainfoType { BUNDLE, BLOCK, IOSLOT, TYPE, UNKNOWN };
+	enum class MetainfoType { BUNDLE, BLOCK, IOSLOT, TYPE, POLICY, UNKNOWN };
 
 	std::string typeToString( const MetainfoType );
 
@@ -34,17 +33,55 @@ namespace _2Real
 
 	public:
 
-		MetainfoId( std::shared_ptr< const MetainfoId >, const MetainfoType, const std::string );
+		static std::shared_ptr< const MetainfoId > create( std::shared_ptr< const MetainfoId >, const MetainfoType, const std::string );
+
 		std::string toString() const;
 		std::string getName() const;
 
 		bool operator<( MetainfoId const& other ) const;
+		bool operator==( MetainfoId const& other ) const;
 
 	private:
 
-		std::weak_ptr< const MetainfoId >		mOwner;
+		static uint64_t	sCounter;
+
+		MetainfoId( std::shared_ptr< const MetainfoId >, const MetainfoType, const std::string, const uint64_t );
+
+		std::weak_ptr< const MetainfoId >		mParent;
 		MetainfoType							mType;
 		std::string								mName;
+		uint64_t								mId;
+
+	};
+
+	enum class InstanceType { BUNDLE, BLOCK, IOSLOT, TYPE, POLICY, UNKNOWN };
+
+	std::string typeToString( const InstanceType );
+
+	class InstanceId
+	{
+
+	public:
+
+		static std::shared_ptr< const InstanceId > create( std::shared_ptr< const MetainfoId >, std::shared_ptr< const InstanceId >, const InstanceType, const std::string );
+
+		std::string toString() const;
+		std::string getName() const;
+
+		bool operator<( InstanceId const& other ) const;
+		bool operator==( InstanceId const& other ) const;
+
+	private:
+
+		static uint64_t	sCounter;
+
+		InstanceId( std::shared_ptr< const MetainfoId >, std::shared_ptr< const InstanceId >, const InstanceType, const std::string, const uint64_t );
+
+		std::weak_ptr< const MetainfoId >		mMetainfo;
+		std::weak_ptr< const InstanceId >		mParent;
+		InstanceType							mType;
+		std::string								mName;
+		uint64_t								mId;
 
 	};
 

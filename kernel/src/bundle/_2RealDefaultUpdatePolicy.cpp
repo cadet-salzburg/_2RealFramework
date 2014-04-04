@@ -16,35 +16,26 @@
 	limitations under the License.
 */
 
-#pragma once
-
-#include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealData.h"
+#include "bundle/_2RealDefaultUpdatePolicy.h"
+#include "engine/_2RealUpdatePolicy.h"
 
 namespace _2Real
 {
-	class SharedTypeMetainfo;
-
 	namespace bundle
 	{
-		class TypeMetainfo
+		DefaultUpdatePolicy::DefaultUpdatePolicy( std::shared_ptr< UpdatePolicyMetainfo > info ) :
+			mImpl( info )
 		{
+		}
 
-		public:
+		void DefaultUpdatePolicy::set( const DefaultPolicy p )
+		{
+			mImpl.lock()->set( p );
+		}
 
-			explicit TypeMetainfo( std::shared_ptr< SharedTypeMetainfo > );
-
-			std::string getName() const;
-
-			void setDescription( std::string );
-			void addField( std::string const& fieldName, DataItem value );
-
-			CustomDataItem makeData() const;
-
-		private:
-
-			std::weak_ptr< SharedTypeMetainfo >		mImpl;
-
-		};
+		void DefaultUpdatePolicy::set( std::vector< std::vector< InletPolicy > > settings )
+		{
+			mImpl.lock()->set( settings );
+		}
 	}
 }

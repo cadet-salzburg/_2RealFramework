@@ -31,6 +31,7 @@ namespace _2Real
 		class InletMetainfo;
 		class OutletMetainfo;
 		class ParameterMetainfo;
+		class DefaultUpdatePolicy;
 
 		class FunctionBlockMetainfo : public BlockMetainfo
 		{
@@ -55,7 +56,7 @@ namespace _2Real
 			InletMetainfo		getInletMetainfo( std::string const& name );
 			ParameterMetainfo	getParameterMetainfo( std::string const& name );
 
-			void getDefaultUpdatePolicy();
+			DefaultUpdatePolicy	getDefaultUpdatePolicy();
 
 		private:
 

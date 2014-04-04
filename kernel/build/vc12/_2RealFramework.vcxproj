@@ -67,6 +67,7 @@
     <ClCompile Include="..\..\src\app\_2RealTypeMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealUpdatePolicyHandle.cpp" />
     <ClCompile Include="..\..\src\bundle\_2RealAbstractInletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
@@ -89,7 +90,7 @@
     <ClCompile Include="..\..\src\bundle\_2RealInletMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\bundle\_2RealInSlotPolicy.cpp">
+    <ClCompile Include="..\..\src\bundle\_2RealDefaultUpdatePolicy.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealIoSlotMetainfo.cpp">
@@ -129,7 +130,8 @@
     <ClCompile Include="..\..\src\engine\_2RealData.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDataSink.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealDataSource.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealDefaultPolicy.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealInletPolicy.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealUpdatePolicy.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
@@ -211,6 +213,7 @@
     <ClInclude Include="..\..\src\app\_2RealSystemHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealTimerHandle.h" />
     <ClInclude Include="..\..\src\app\_2RealTypeMetainfo.h" />
+    <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealAbstractBlock.h" />
     <ClInclude Include="..\..\src\bundle\_2RealAbstractInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealBlockIo.h" />
@@ -220,7 +223,7 @@
     <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealInletMetainfo.h" />
-    <ClInclude Include="..\..\src\bundle\_2RealInSlotPolicy.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealDefaultUpdatePolicy.h" />
     <ClInclude Include="..\..\src\bundle\_2RealIoSlotMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealMultiInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h" />
@@ -236,7 +239,8 @@
     <ClInclude Include="..\..\src\engine\_2RealData.h" />
     <ClInclude Include="..\..\src\engine\_2RealDataSink.h" />
     <ClInclude Include="..\..\src\engine\_2RealDataSource.h" />
-    <ClInclude Include="..\..\src\engine\_2RealDefaultPolicy.h" />
+    <ClInclude Include="..\..\src\engine\_2RealInletPolicy.h" />
+    <ClInclude Include="..\..\src\engine\_2RealUpdatePolicy.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundle.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundleImporter.h" />
     <ClInclude Include="..\..\src\engine\_2RealBundleCollection.h" />
@@ -276,6 +280,7 @@
     <ClInclude Include="..\..\src\engine\_2RealTypeMetainfoVisitor.h" />
     <ClInclude Include="..\..\src\engine\_2RealUpdateTrigger.h" />
     <ClInclude Include="..\..\src\enums\_2RealBlockState.h" />
+    <ClInclude Include="..\..\src\enums\_2RealDefaultPolicy.h" />
     <ClInclude Include="..\..\src\enums\_2RealThreadpoolPolicy.h" />
     <ClInclude Include="..\..\src\helpers\_2RealBoost.h" />
     <ClInclude Include="..\..\src\helpers\_2RealCallback_T.h" />

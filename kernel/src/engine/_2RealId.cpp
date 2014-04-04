@@ -20,6 +20,13 @@
 
 namespace _2Real
 {
+	uint64_t MetainfoId::sCounter = 0;
+
+	std::shared_ptr< const MetainfoId > MetainfoId::create( std::shared_ptr< const MetainfoId > parent, const MetainfoType type, const std::string name )
+	{
+		return std::shared_ptr< const MetainfoId >( new MetainfoId( parent, type, name, ++sCounter ) );
+	}
+
 	std::string typeToString( const MetainfoType t )
 	{
 		switch ( t )
@@ -37,19 +44,19 @@ namespace _2Real
 		}
 	}
 
-	MetainfoId::MetainfoId( std::shared_ptr< const MetainfoId > owner, const MetainfoType type, const std::string name ) :
-		mOwner( owner ), mType( type ), mName( name )
+	MetainfoId::MetainfoId( std::shared_ptr< const MetainfoId > parent, const MetainfoType type, const std::string name, const uint64_t id ) :
+		mParent( parent ), mType( type ), mName( name ), mId( id )
 	{
 	}
 
 	std::string MetainfoId::toString() const
 	{
-		std::string owner = "";
-		auto o = mOwner.lock();
-		if ( o != nullptr )
-			owner = o->toString() + "\\\\";
+		std::string parent = "";
+		auto p = mParent.lock();
+		if ( p != nullptr )
+			parent = p->toString() + "\\\\";
 
-		return owner + typeToString( mType ) + mName;
+		return parent + typeToString( mType ) + "\\\\" + mName;
 	}
 
 	std::string MetainfoId::getName() const
@@ -59,21 +66,65 @@ namespace _2Real
 
 	bool MetainfoId::operator<( MetainfoId const& other ) const
 	{
-		return toString() < other.toString();
+		return mId < other.mId;
 	}
 
-	//InstanceId::InstanceId( const InstanceType type, const std::string name ) :
-	//	mOwner(), mType( type ), mName( name )
-	//{
-	//}
+	bool MetainfoId::operator==( MetainfoId const& other ) const
+	{
+		return mId == other.mId;
+	}
 
-	//InstanceId::InstanceId( std::shared_ptr< const InstanceId > owner, const InstanceType type, const std::string name ) :
-	//	mOwner( owner ), mType( type ), mName( name )
-	//{
-	//}
+	uint64_t InstanceId::sCounter = 0;
 
-	//InstanceId InstanceId::makeId( std::shared_ptr< const InstanceId > owner, const InstanceType type, const std::string name )
-	//{
-	//	return InstanceId( owner, type, name );
-	//}
+	std::shared_ptr< const InstanceId > InstanceId::create( std::shared_ptr< const MetainfoId > meta, std::shared_ptr< const InstanceId > parent, const InstanceType type, const std::string name )
+	{
+		return std::shared_ptr< const InstanceId >( new InstanceId( meta, parent, type, name, ++sCounter ) );
+	}
+
+	std::string typeToString( const InstanceType t )
+	{
+		switch ( t )
+		{
+		case InstanceType::BUNDLE:
+			return "bundle";
+		case InstanceType::TYPE:
+			return "customtype";
+		case InstanceType::BLOCK:
+			return "block";
+		case InstanceType::IOSLOT:
+			return "ioslot";
+		default:
+			return "undefined";
+		}
+	}
+
+	InstanceId::InstanceId( std::shared_ptr< const MetainfoId > meta, std::shared_ptr< const InstanceId > parent, const InstanceType type, const std::string name, const uint64_t id ) :
+		mMetainfo( meta ), mParent( parent ), mType( type ), mName( name ), mId( id )
+	{
+	}
+
+	std::string InstanceId::toString() const
+	{
+		std::string parent = "";
+		auto p = mParent.lock();
+		if ( p != nullptr )
+			parent = p->toString() + "\\\\";
+
+		return parent + typeToString( mType ) + "\\\\" + mName;
+	}
+
+	std::string InstanceId::getName() const
+	{
+		return mName;
+	}
+
+	bool InstanceId::operator<( InstanceId const& other ) const
+	{
+		return mId < other.mId;
+	}
+
+	bool InstanceId::operator==( InstanceId const& other ) const
+	{
+		return mId == other.mId;
+	}
 }

@@ -51,7 +51,7 @@ namespace _2Real
 		{
 			std::ostringstream msg;
 			msg << "data sink no longer exists" << std::endl;
-			throw _2Real::NotFoundException( msg.str() );
+			throw _2Real::NotFound( msg.str() );
 		}
 
 		sink->receiveData( data );

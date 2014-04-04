@@ -16,34 +16,30 @@
 	limitations under the License.
 */
 
-#include "bundle/_2RealInSlotPolicy.h"
-#include "engine/_2RealDefaultPolicy.h"
+#pragma once
+
+#include "helpers/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	namespace bundle
+	class UpdatePolicy;
+
+	namespace app
 	{
-		VALUES_NEW::VALUES_NEW( const Code c )
+		class UpdatePolicyHandle
 		{
-			switch ( c )
-			{
-			case ALL:
-				mPolicy.reset( new DefaultPolicy( DefaultPolicy::ALL ) );
-				break;
-			case ANY:
-				mPolicy.reset( new DefaultPolicy( DefaultPolicy::ANY ) );
-				break;
-			}
-		}
 
-		VALUES_NEW::VALUES_NEW( std::vector< std::vector< std::string > > const& names ) :
-			mPolicy( new DefaultPolicy( names ) )
-		{
-		}
+		public:
 
-		VALUES_NEW::operator std::shared_ptr< DefaultPolicy > () const
-		{
-			return mPolicy;
-		}
+			UpdatePolicyHandle();
+			explicit UpdatePolicyHandle( std::shared_ptr< UpdatePolicy > );
+
+			bool isValid() const;
+
+		private:
+
+			std::weak_ptr< UpdatePolicy >		mImpl;
+
+		};
 	}
 }

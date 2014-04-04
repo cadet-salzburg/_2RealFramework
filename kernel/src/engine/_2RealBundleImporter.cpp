@@ -76,7 +76,7 @@ namespace _2Real
 
 			std::ostringstream msg;
 			msg << "shared library " << path << " does not export required function \'getBundleMetainfo\'";
-			throw BundleImportException( msg.str() );
+			throw BundleImportFailure( msg.str() );
 		}
 	}
 
@@ -88,7 +88,7 @@ namespace _2Real
 		{
 			std::ostringstream msg;
 			msg << "could not find library" << path.string() << std::endl;
-			throw NotFoundException( msg.str() );
+			throw NotFound( msg.str() );
 		}
 
 		// delete ? calls dtor

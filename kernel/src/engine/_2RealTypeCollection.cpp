@@ -23,13 +23,6 @@
 
 namespace _2Real
 {
-	bool TypeCollection::Cmp::operator()( std::shared_ptr< const MetainfoId > one, std::shared_ptr< const MetainfoId > other ) const
-	{
-		assert( one.get() );
-		assert( other.get() );
-
-		return ( *one.get() < *other.get() );
-	}
 
 	TypeCollection::~TypeCollection()
 	{
@@ -43,48 +36,28 @@ namespace _2Real
 
 	void TypeCollection::addType( std::shared_ptr< const TMetainfo > type )
 	{
-		if ( mTypes.find( type->getId() ) != mTypes.end() )
+		if ( mTypes.find( type->getId()->toString() ) != mTypes.end() )
 		{
 			std::ostringstream msg;
 			msg << "type " << type->getId()->toString() << " already exists" << std::endl;
-			throw AlreadyExistsException( msg.str() );
+			throw AlreadyExists( msg.str() );
 		}
 
-		mTypes[ type->getId() ] = type;
+		mTypes[ type->getId()->toString() ] = type;
 	}
 
-	void TypeCollection::typeRemoved( std::shared_ptr< const MetainfoId > info )
+	void TypeCollection::typeRemoved( const std::string name )
 	{
-		auto it = mTypes.find( info );
+		auto it = mTypes.find( name );
 		mTypes.erase( it );
 	}
 
-	std::shared_ptr< const TMetainfo > TypeCollection::getMetainfo( std::shared_ptr< const MetainfoId > id ) const
+	std::shared_ptr< const TMetainfo > TypeCollection::getMetainfo( const std::string name ) const
 	{
-		auto it = mTypes.find( id );
+		auto it = mTypes.find( name );
 		if ( it != mTypes.end() )
 			return it->second;
 		else
 			return nullptr;
 	}
-
-	//std::vector< std::shared_ptr< const SharedTypeMetainfo > > TypeCollection::getTypes() const
-	//{
-	//	std::vector< std::shared_ptr< const SharedTypeMetainfo > > result;
-
-	//	for ( auto it : mTypes )
-	//	{
-	//		if ( it.second->isBasicType() )
-	//		{
-	//			std::cout << "basic typemetainfo in get typemetainfo!" << std::endl;
-	//		}
-	//		else
-	//		{
-	//			std::shared_ptr< const SharedTypeMetainfo > info = std::dynamic_pointer_cast< const SharedTypeMetainfo >( it.second );
-	//			result.push_back( info );
-	//		}
-	//	}
-
-	//	return result;
-	//}
 }

@@ -22,6 +22,7 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealAbstractInlet.h"
 #include "engine/_2RealInSlot.h"
+#include "helpers/_2RealEvent_T.h"
 #include "engine/_2RealDataSink.h"
 
 namespace _2Real
@@ -30,6 +31,7 @@ namespace _2Real
 	class Link;
 	class DataSource;
 	class TMetainfo;
+	class InstanceId;
 
 	class Inlet : private InSlot, public AbstractInlet, public DataSink, public std::enable_shared_from_this< Inlet >
 	{
@@ -56,9 +58,25 @@ namespace _2Real
 
 		std::shared_ptr< const TMetainfo > getTypeMetainfo() const;
 
+		template< typename TCallable >
+		void registerToValueUpdated( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const InstanceId > ) )
+		{
+			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< const InstanceId > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const InstanceId > >( callable, callback ) );
+			mValueUpdatedEvent.addListener( listener );
+		}
+
+		template< typename TCallable >
+		void unregisterFromValueUpdated( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const InstanceId > ) )
+		{
+			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< const InstanceId > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const InstanceId > >( callable, callback ) );
+			mValueUpdatedEvent.removeListener( listener );
+		}
+
 	private:
 
-		std::shared_ptr< Link >	mLink;
+		std::shared_ptr< const InstanceId >				mId;
+		std::shared_ptr< Link >							mLink;
+		Event_T< std::shared_ptr< const InstanceId > >	mValueUpdatedEvent;
 
 	};
 }

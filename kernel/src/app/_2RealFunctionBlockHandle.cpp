@@ -75,6 +75,12 @@ namespace _2Real
 			return block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger > >( handle ) );
 		}
 
+		std::future< BlockState > FunctionBlockHandle::startUpdating()
+		{
+			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
+			return block->startUpdating();
+		}
+
 		std::future< BlockState > FunctionBlockHandle::stopUpdating()
 		{
 			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );

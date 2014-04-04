@@ -48,8 +48,6 @@ namespace _2Real
 			void getInletMetainfos( std::vector< InletMetainfo > & );
 			void getOutletMetainfos( std::vector< OutletMetainfo > & );
 			void getParameterMetainfos( std::vector< ParameterMetainfo > & );
-
-			void getDefaultUpdatePolicy( std::vector< std::vector< std::string > > & ) const;
 			
 		private:
 

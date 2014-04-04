@@ -25,7 +25,9 @@ void Counter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< s
 
 	counterinfo.setBlockClass< Counter >();
 	counterinfo.setDescription( "test block - some simple counters" );
-	//counterinfo.setDefaultUpdatePolicy( _2Real::bundle::VALUES_NEW( _2Real::bundle::VALUES_NEW::ANY ) );
+
+	_2Real::bundle::DefaultUpdatePolicy policy = counterinfo.getDefaultUpdatePolicy();
+	policy.set( _2Real::DefaultPolicy::ALL );
 
 	_2Real::bundle::InletMetainfo inA = counterinfo.getInletMetainfo( "inA" );
 	inA.setDescription( "int increment" );

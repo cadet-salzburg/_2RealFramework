@@ -19,7 +19,6 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealCloneableMetainfo.h"
 #include "engine/_2RealData.h"
 #include "engine/_2RealCustomData.h"
 

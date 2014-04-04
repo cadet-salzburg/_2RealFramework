@@ -38,6 +38,7 @@ namespace _2Real
 	void Inlet::receiveData( std::shared_ptr< const DataItem > data )
 	{
 		InSlot::setTmpValue( data );
+		mValueUpdatedEvent.notify( mId );
 	}
 
 	std::shared_ptr< Link > Inlet::linkTo( std::shared_ptr< DataSource > source )
