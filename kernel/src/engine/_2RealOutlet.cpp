@@ -17,23 +17,40 @@
 */
 
 #include "engine/_2RealOutlet.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealBlock.h"
+#include "engine/_2RealIoSlotMetainfo.h"
+#include "engine/_2RealId.h"
 
 namespace _2Real
 {
 
-	Outlet::Outlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
+	std::shared_ptr< Outlet > Outlet::createFromMetainfo( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta )
+	{
+		std::shared_ptr< const InstanceId > outletId = InstanceId::create( meta->getId(), parent->getId(), InstanceType::IOSLOT, meta->getId()->getName() );
+		std::shared_ptr< Outlet > outlet( new Outlet( parent, meta, outletId ) );
+
+		return outlet;
+	}
+
+	Outlet::Outlet( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta, std::shared_ptr< const InstanceId > id ) :
 		DataSource(),
 		std::enable_shared_from_this< Outlet >(),
+		mParent( parent ),
 		mMetainfo( meta ),
+		mId( id ),
 		mTmpValue( new DataItem( meta->getInitialValue() ) ),
 		mValue( new DataItem( meta->getInitialValue() ) )
 	{
 	}
 
-	std::string Outlet::getName() const
+	std::shared_ptr< const InstanceId > Outlet::getId() const
 	{
-		return mMetainfo->getName();
+		return mId;
+	}
+
+	std::shared_ptr< Block > Outlet::getParent()
+	{
+		return mParent.lock();
 	}
 
 	DataItem & Outlet::getValue()
@@ -45,7 +62,7 @@ namespace _2Real
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 		mTmpValue = mValue;
-		mValue.reset( new DataItem( mMetainfo->getInitialValue() ) );
+		mValue.reset( new DataItem( mMetainfo.lock()->getInitialValue() ) );
 		DataSource::notify( mTmpValue );
 	}
 }

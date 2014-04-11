@@ -25,28 +25,42 @@
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
+	class InstanceId;
+	class Block;
 
 	class Outlet : public DataSource, public std::enable_shared_from_this< Outlet >
 	{
 
 	public:
 
-		explicit Outlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
+		static std::shared_ptr< Outlet > createFromMetainfo( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo > );
 
-		std::string getName() const;
+		Outlet() = delete;
+		Outlet( Outlet const& other ) = delete;
+		Outlet( Outlet && other ) = delete;
+		Outlet& operator=( Outlet const& other ) = delete;
+		Outlet& operator=( Outlet && other ) = delete;
+
+		~Outlet() = default;
 
 		DataItem & getValue();
-
 		void update();
+
+		std::shared_ptr< const InstanceId > getId() const;
+		std::shared_ptr< Block >			getParent();
 
 	private:
 
-		std::shared_ptr< const SharedServiceIoSlotMetainfo >  mMetainfo;
+		Outlet( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo >, std::shared_ptr< const InstanceId > );
 
-		mutable std::mutex					mMutex;
-		std::shared_ptr< DataItem >			mTmpValue;
-		std::shared_ptr< DataItem >			mValue;
+		std::weak_ptr< Block >						mParent;
+		std::weak_ptr< const IoSlotMetainfo >		mMetainfo;
+		std::shared_ptr< const InstanceId >			mId;
+
+		mutable std::mutex							mMutex;
+		std::shared_ptr< DataItem >					mTmpValue;
+		std::shared_ptr< DataItem >					mValue;
 
 	};
 }

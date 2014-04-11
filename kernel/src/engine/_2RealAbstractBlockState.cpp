@@ -57,7 +57,6 @@ namespace _2Real
 		response->action = action;
 		response->followupState = state;
 		response->shouldWait = wait;
-		//response->onFininshed = nullptr;
 		response->updateTrigger = nullptr;
 		return response;
 	}

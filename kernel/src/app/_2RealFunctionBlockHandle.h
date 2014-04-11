@@ -19,48 +19,29 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
-#include "app/_2RealCallback.h"
+#include "app/_2RealBlockHandle.h"
 #include "enums/_2RealBlockState.h"
 
 #include <future>
 
 namespace _2Real
 {
-	class Block;
-
 	namespace app
 	{
 		class TimerHandle;
 		class UpdatePolicyHandle;
 		class BlockIo;
 
-		class FunctionBlockHandle
+		class FunctionBlockHandle : public BlockHandle
 		{
 
 		public:
 
-			FunctionBlockHandle();
 			explicit FunctionBlockHandle( std::shared_ptr< Block > );
 
-			bool				isValid() const;
-
-			/*
-			*	none of the following functions should be called while
-			*	there's still an unfulfilled std::future object around
-			*	( from the same block, of course: different blocks are fine )
-			*/
-
-			/*
-			*	the functions here are not finalized yet
-			*	personally, i really like the std::future based approach
-			*	as it allows programmers to block whenever it makes sense for their applications
-			*	- yet without further testing it's impossible to tell how useful it is in practice
-			*/
-
-			/*
-			*	on the subject of futures, maybe a boolean success / failure result would be more useful
-			*	than the block state: from the enum, you can't tell if anything was done to the block...
-			*/
+			using BlockHandle::isValid;
+			using BlockHandle::isSingleton;
+			using BlockHandle::getBundle;
 
 			std::future< BlockState >		setup();
 			std::future< BlockState >		singlestep();
@@ -76,10 +57,6 @@ namespace _2Real
 			// --------- io slots
 
 			BlockIo getBlockIo();
-
-		private:
-
-			std::weak_ptr< Block >		mImpl;
 
 		};
 	}

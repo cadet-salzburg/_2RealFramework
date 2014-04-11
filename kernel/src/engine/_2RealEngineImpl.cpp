@@ -68,7 +68,7 @@ namespace _2Real
 		mThreadpoolCollection.reset();
 	}
 
-	std::shared_ptr< Bundle > EngineImpl::loadLibrary( std::string const& filename )
+	std::pair< std::shared_ptr< Bundle >, std::shared_ptr< const SharedLibraryMetainfo > > EngineImpl::loadLibrary( std::string const& filename )
 	{
 		std::string file = filename;
 		if ( file.find( Constants::SharedLibrarySuffix ) == std::string::npos )

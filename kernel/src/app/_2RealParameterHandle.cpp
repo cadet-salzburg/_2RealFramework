@@ -24,11 +24,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		ParameterHandle::ParameterHandle() :
-			mImpl()
-		{
-		}
-
 		ParameterHandle::ParameterHandle( std::shared_ptr< Parameter > inlet ) :
 			mImpl( inlet )
 		{
@@ -38,12 +33,6 @@ namespace _2Real
 		{
 			std::shared_ptr< Parameter > param = mImpl.lock();
 			return ( nullptr != param.get() );
-		}
-
-		std::string ParameterHandle::getName() const
-		{
-			std::shared_ptr< Parameter > parameter = checkValidity< Parameter >( mImpl, "parameter" );
-			return parameter->getName();
 		}
 
 		//DataItem ParameterHandle::getValue() const

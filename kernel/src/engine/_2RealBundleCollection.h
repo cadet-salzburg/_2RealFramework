@@ -31,13 +31,13 @@ namespace _2Real
 
 	class BundleCollection : public std::enable_shared_from_this< BundleCollection >
 	{
-	
+
 	public:
 
 		BundleCollection( std::shared_ptr< TypeCollection > registry, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
 		~BundleCollection();
 
-		std::shared_ptr< Bundle > 					loadBundle( Path const& pathToBundle, std::shared_ptr< TypeCollection > );
+		std::pair< std::shared_ptr< Bundle >, std::shared_ptr< const SharedLibraryMetainfo > >	loadBundle( Path const& pathToBundle, std::shared_ptr< TypeCollection > );
 		Path const&									getBundleDirectory() const;
 
 		void										clear( const unsigned long timeout );
@@ -58,8 +58,6 @@ namespace _2Real
 		Path										mBundleDirectory;
 		// the bundles
 		Bundles										mBundles;
-
-		// ? not sure where these should be handled ?
 		// currently, these 2 threadpools are managed by the engine...
 		std::weak_ptr< Threadpool >					mStdThreads;
 		std::weak_ptr< Threadpool >					mCtxtThreads;

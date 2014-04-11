@@ -59,7 +59,6 @@ namespace _2Real
 	std::future< BlockState > StateMachine::setup()
 	{
 		mMutex.lock();
-		//std::cout << "SM: setup" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onSetupSignalReceived();
 		return carryOut( response );
 	}
@@ -67,7 +66,6 @@ namespace _2Real
 	std::future< BlockState > StateMachine::singlestep()
 	{	
 		mMutex.lock();
-		//std::cout << "SM: update" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onSingleUpdateSignalReceived();
 		return carryOut( response );
 	}
@@ -75,7 +73,6 @@ namespace _2Real
 	std::future< BlockState > StateMachine::shutdown()
 	{
 		mMutex.lock();
-		//std::cout << "SM: shutdown" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onShutdownSignalReceived();
 		return carryOut( response );
 	}
@@ -86,7 +83,6 @@ namespace _2Real
 		assert( trigger );
 #endif
 		mMutex.lock();
-		//std::cout << "SM: start running" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onStartRunning();
 		response->updateTrigger = trigger; // store trigger for later
 		return carryOut( response );
@@ -95,7 +91,6 @@ namespace _2Real
 	std::future< BlockState > StateMachine::stopRunning()
 	{
 		mMutex.lock();
-		//std::cout << "SM: stop running" << std::endl;
 		std::shared_ptr< SignalResponse > response = mState->onStopRunning();
 		return carryOut( response );
 	}
@@ -157,6 +152,8 @@ namespace _2Real
 		// which i could have integrated into the state machine...
 		// however, i prefer the way it's currently done, for ease of debugging
 
+		// ... which might bite me in the ass just about now
+
 		if ( mIsActionInProcess )
 		{
 			// store for later, if the shouldWait flag is set
@@ -170,7 +167,6 @@ namespace _2Real
 				if ( response->action == Action::DO_UPDATE && mState->getId() == BlockState::POST_SETUP_RUNNING )
 				{
 					++mSkippedCounter;
-					//std::cout << "SM: skipped " << mSkippedCounter << std::endl;
 				}
 
 				response->isFinished.set_value( mState->getId() );
@@ -189,7 +185,6 @@ namespace _2Real
 			if ( response->action == Action::DO_UPDATE && mState->getId() == BlockState::POST_SETUP_RUNNING )
 			{
 				++mUpdatedCounter;
-				//std::cout << "SM: skipped " << mUpdatedCounter << std::endl;
 			}
 
 			mMutex.unlock();
@@ -233,55 +228,44 @@ namespace _2Real
 		BlockState current = mState->getId();
 		BlockState next = mResponse->followupState;
 
-		//switch ( current )
-		//{
-		//case _2Real::BlockState::PRE_SETUP:
-		//	std::cout << "current is pre setup state" << std::endl;
-		//	break;
-		//case _2Real::BlockState::POST_SETUP:
-		//	std::cout << "current is post setup state" << std::endl;
-		//	break;
-		//case _2Real::BlockState::POST_SETUP_RUNNING:
-		//	std::cout << "current is post setup - running state" << std::endl;
-		//	break;
-		//case _2Real::BlockState::POST_SHUTDOWN:
-		//	std::cout << "current is post shutdown state" << std::endl;
-		//	break;
-		//}
-
-		//switch ( next )
-		//{
-		//case _2Real::BlockState::PRE_SETUP:
-		//	std::cout << "next is pre setup state" << std::endl;
-		//	break;
-		//case _2Real::BlockState::POST_SETUP:
-		//	std::cout << "next is post setup state" << std::endl;
-		//	break;
-		//case _2Real::BlockState::POST_SETUP_RUNNING:
-		//	std::cout << "next is post setup - running state" << std::endl;
-		//	break;
-		//case _2Real::BlockState::POST_SHUTDOWN:
-		//	std::cout << "next is post shutdown state" << std::endl;
-		//	break;
-		//}
-
-		if ( current == next )
+		if ( current == next && current == BlockState::POST_SETUP_RUNNING )
 		{
-			// of both states are the same, nothing needs to be done
+			// check if they're the same?
+
+			// need to handle this pretty much as if it were a signal coming in
+			bool wasAlreadyFulfilled = mUpdateTrigger->reset();
+
+			if ( wasAlreadyFulfilled )
+			{
+				// so now i'd have to do a new update;
+				// however, only queue if absolutely no other signals are stored ( only other signals are stops sigs )
+				if ( mQueuedResponses.empty() )
+				{
+					std::shared_ptr< SignalResponse > response( new SignalResponse );
+					response->action = Action::DO_UPDATE;
+					response->followupState = BlockState::POST_SETUP_RUNNING;
+					response->shouldWait = true;
+					mQueuedResponses.push_back( response );
+				}
+			}
 		}
 		else
 		{
+			// if an update trigger is stored, reset ( receive no more update signals )
 			if ( mUpdateTrigger )
 			{
+				mUpdateTrigger->disable();		// disconnects from all inlets
 				std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< StateMachine, void >( this, &StateMachine::update ) );
 				mUpdateTrigger->unregisterFromUpdate( cb );
 				mUpdateTrigger.reset();
 			}
 
+			// register to new update trigger ( receive update signals )
 			if ( mResponse->updateTrigger )
 			{
-				std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< StateMachine, void >( this, &StateMachine::update ) );
 				mUpdateTrigger = mResponse->updateTrigger;
+				mUpdateTrigger->enable();
+				std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< StateMachine, void >( this, &StateMachine::update ) );
 				mUpdateTrigger->registerToUpdate( cb );
 			}
 

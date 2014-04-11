@@ -22,16 +22,12 @@
 #include "app/_2RealHandleValidity.h"
 #include "engine/_2RealSharedLibraryMetainfo.h"
 #include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealDeclarations.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		BundleMetainfo::BundleMetainfo() :
-			mImpl()
-		{
-		}
-
 		BundleMetainfo::BundleMetainfo( std::shared_ptr< const SharedLibraryMetainfo > meta ) :
 			mImpl( meta )
 		{
@@ -41,18 +37,6 @@ namespace _2Real
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = mImpl.lock();
 			return ( meta.get() != nullptr );
-		}
-
-		std::string BundleMetainfo::getName() const
-		{
-			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
-			return meta->getName();
-		}
-
-		Path BundleMetainfo::getFilepath() const
-		{
-			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
-			return meta->getFilePath();
 		}
 
 		std::string BundleMetainfo::getDescription() const
@@ -85,22 +69,34 @@ namespace _2Real
 			return meta->getVersion();
 		}
 
-		void BundleMetainfo::getExportedBlocks( std::vector< BlockMetainfo > &blocks ) const
+		std::vector< BlockMetainfo > BundleMetainfo::getExportedBlocks() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
-			auto tmp = meta->getServiceMetainfos();
-			for ( auto it : tmp )
-			{
-				std::shared_ptr< const SharedServiceMetainfo > s = it;
-				blocks.push_back( BlockMetainfo( s ) );
-			}
+			std::vector< BlockMetainfo > result;
+			for ( auto it : meta->getServiceMetainfos() )
+				result.push_back( BlockMetainfo( it ) );
+			return result;
 		}
 
-		void BundleMetainfo::getExportedTypes( std::vector< CustomTypeMetainfo > &types ) const
+		std::vector< CustomTypeMetainfo > BundleMetainfo::getExportedTypes() const
 		{
 			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
-			auto tmp = meta->getTypeMetainfos();
-			for ( auto it : tmp ) types.push_back( CustomTypeMetainfo( it ) );
+			std::vector< CustomTypeMetainfo > result;
+			for ( auto it : meta->getTypeMetainfos() )
+				result.push_back( CustomTypeMetainfo( it ) );
+			return result;
+		}
+
+		BlockMetainfo BundleMetainfo::getExportedBlock( std::string const& name )
+		{
+			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
+			return BlockMetainfo( meta->getServiceMetainfo( name ) );
+		}
+
+		CustomTypeMetainfo BundleMetainfo::getExportedType( std::string const& name )
+		{
+			std::shared_ptr< const SharedLibraryMetainfo > meta = checkValidity< const SharedLibraryMetainfo >( mImpl, "bundle metainfo" );
+			return CustomTypeMetainfo( meta->getTypeMetainfo( name ) );
 		}
 	}
 }

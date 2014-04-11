@@ -17,55 +17,53 @@
 */
 
 #include "app/_2RealIoSlotMetainfo.h"
+#include "app/_2RealTypeMetainfo.h"
 #include "app/_2RealHandleValidity.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		IoSlotMetainfo::IoSlotMetainfo() :
-			mImpl()
-		{
-		}
-
-		IoSlotMetainfo::IoSlotMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
+		IoSlotMetainfo::IoSlotMetainfo( std::shared_ptr< const _2Real::IoSlotMetainfo > meta ) :
 			mImpl( meta )
-		{
-		}
-
-		IoSlotMetainfo::~IoSlotMetainfo()
 		{
 		}
 
 		bool IoSlotMetainfo::isValid() const
 		{
-			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = mImpl.lock();
+			std::shared_ptr< const _2Real::IoSlotMetainfo > meta = mImpl.lock();
 			return ( meta.get() != nullptr );
 		}
 
 		std::string IoSlotMetainfo::getName() const
 		{
-			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
+			std::shared_ptr< const _2Real::IoSlotMetainfo > meta = checkValidity< const _2Real::IoSlotMetainfo >( mImpl, "io slot metainfo" );
 			return meta->getName();
 		}
 
 		std::string IoSlotMetainfo::getDescription() const
 		{
-			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
+			std::shared_ptr< const _2Real::IoSlotMetainfo > meta = checkValidity< const _2Real::IoSlotMetainfo >( mImpl, "io slot metainfo" );
 			return meta->getDescription();
 		}
 
-		std::string IoSlotMetainfo::getDatatype() const
+		TypeMetainfo IoSlotMetainfo::getTypeMetainfo() const
 		{
-			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
-			return meta->getDatatype();
+			std::shared_ptr< const _2Real::IoSlotMetainfo > meta = checkValidity< const _2Real::IoSlotMetainfo >( mImpl, "io slot metainfo" );
+			return TypeMetainfo( meta->getTypeMetainfo() );
 		}
 
 		DataItem IoSlotMetainfo::getInitialValue() const
 		{
-			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "io slot metainfo" );
+			std::shared_ptr< const _2Real::IoSlotMetainfo > meta = checkValidity< const _2Real::IoSlotMetainfo >( mImpl, "io slot metainfo" );
 			return meta->getInitialValue();
+		}
+
+		bool IoSlotMetainfo::isMulti() const
+		{
+			std::shared_ptr< const _2Real::IoSlotMetainfo > meta = checkValidity< const _2Real::IoSlotMetainfo >( mImpl, "io slot metainfo" );
+			return meta->isMulti();
 		}
 	}
 }

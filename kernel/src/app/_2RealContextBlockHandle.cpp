@@ -25,26 +25,9 @@ namespace _2Real
 {
 	namespace app
 	{
-		ContextBlockHandle::ContextBlockHandle() :
-			mImpl()
-		{
-		}
-
 		ContextBlockHandle::ContextBlockHandle( std::shared_ptr< Block > block ) :
-			mImpl( block )
+			BlockHandle( block )
 		{
-		}
-
-		bool ContextBlockHandle::isValid() const
-		{
-			std::shared_ptr< Block > block = mImpl.lock();
-			return ( nullptr != block.get() );
-		}
-
-		BlockMetainfo ContextBlockHandle::getMetainfo() const
-		{
-			std::shared_ptr< Block > block = mImpl.lock();
-			return BlockMetainfo( block->getMetainfo() );
 		}
 	}
 }

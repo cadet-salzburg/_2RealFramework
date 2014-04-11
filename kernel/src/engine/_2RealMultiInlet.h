@@ -21,39 +21,76 @@
 
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealAbstractInlet.h"
-#include "engine/_2RealIoSlot.h"
+#include "helpers/_2RealEvent_T.h"
 
 namespace _2Real
 {
 	class Inlet;
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
+	class InstanceId;
 
 	class MultiInlet : public AbstractInlet, public std::enable_shared_from_this< MultiInlet >
 	{
 
-		typedef std::deque< std::shared_ptr< Inlet > > Inlets;
-
 	public:
 
-		explicit MultiInlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
+		static std::shared_ptr< AbstractInlet > createFromMetainfo( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo > );
 
-		uint32_t getSize() const;
+		MultiInlet() = delete;
+		MultiInlet( MultiInlet const& other ) = delete;
+		MultiInlet( MultiInlet && other ) = delete;
+		MultiInlet& operator=( MultiInlet const& other ) = delete;
+		MultiInlet& operator=( MultiInlet && other ) = delete;
+
+		~MultiInlet() = default;
+
+		std::deque< std::shared_ptr< Inlet > >::size_type getSize() const;
 		bool isEmpty() const;
 		std::shared_ptr< Inlet > operator[]( const uint32_t );
 		std::shared_ptr< Inlet > add_front();
 		std::shared_ptr< Inlet > add_back();
 
-		using AbstractInlet::getName;
-		using AbstractInlet::isMultiInlet;
-		//using AbstractInlet::getMetainfo;
+		void remove( std::shared_ptr< Inlet > );
 
 		void update();
 
+		template< typename TCallable >
+		void registerToSubinletAdded( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< Inlet > ) )
+		{
+			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< Inlet > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< Inlet > >( callable, callback ) );
+			mInletAdded.addListener( listener );
+		}
+
+		template< typename TCallable >
+		void unregisterFromSubinletAdded( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< Inlet > ) )
+		{
+			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< Inlet > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< Inlet > >( callable, callback ) );
+			mInletAdded.removeListener( listener );
+		}
+
+		template< typename TCallable >
+		void registerToSubinletRemoved( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< Inlet > ) )
+		{
+			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< Inlet > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< Inlet > >( callable, callback ) );
+			mInletRemoved.addListener( listener );
+		}
+
+		template< typename TCallable >
+		void unregisterFromSubinletRemoved( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< Inlet > ) )
+		{
+			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< Inlet > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< Inlet > >( callable, callback ) );
+			mInletRemoved.removeListener( listener );
+		}
+
 	private:
 
+		MultiInlet( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo >, std::shared_ptr< const InstanceId > );
+
 		mutable std::mutex									mMutex;
-		Inlets												mInlets;
-		std::shared_ptr< SharedServiceIoSlotMetainfo >		mInfo;
+		std::deque< std::shared_ptr< Inlet > >				mInlets;
+
+		Event_T< std::shared_ptr< Inlet > >					mInletAdded;
+		Event_T< std::shared_ptr< Inlet > >					mInletRemoved;
 
 	};
 

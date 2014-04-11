@@ -28,10 +28,10 @@ namespace _2Real
 		{
 		}
 
-		std::string OutletHandle::getName() const
-		{
-			return mImpl->getName();
-		}
+		//std::string OutletHandle::getName() const
+		//{
+		//	return mImpl->getName();
+		//}
 		
 		DataItem & OutletHandle::getValue()
 		{

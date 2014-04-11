@@ -24,11 +24,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		UpdatePolicyHandle::UpdatePolicyHandle() :
-			mImpl()
-		{
-		}
-
 		UpdatePolicyHandle::UpdatePolicyHandle( std::shared_ptr< UpdatePolicy > policy ) :
 			mImpl( policy )
 		{
@@ -36,8 +31,14 @@ namespace _2Real
 
 		bool UpdatePolicyHandle::isValid() const
 		{
-			std::shared_ptr< UpdatePolicy > timer = mImpl.lock();
-			return ( nullptr != timer.get() );
+			std::shared_ptr< UpdatePolicy > policy = mImpl.lock();
+			return ( nullptr != policy.get() );
+		}
+
+		void UpdatePolicyHandle::set( const DefaultPolicy code )
+		{
+			std::shared_ptr< UpdatePolicy > policy = checkValidity< UpdatePolicy >( mImpl, "update policy" );
+			policy->set( code );
 		}
 	}
 }

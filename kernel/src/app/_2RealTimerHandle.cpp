@@ -24,11 +24,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		TimerHandle::TimerHandle() :
-			mImpl()
-		{
-		}
-
 		TimerHandle::TimerHandle( std::shared_ptr< Timer > timer ) :
 			mImpl( timer )
 		{

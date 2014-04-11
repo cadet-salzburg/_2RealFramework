@@ -29,18 +29,14 @@ namespace _2Real
 {
 	namespace app
 	{
-		/*
-		*	holds all io slot handles, in the same order they were added to the block
-		*/
-
 		class BlockIo
 		{
 
 		public:
 
-			std::vector< ParameterHandle * >		mParameters;
-			std::vector< AbstractInletHandle * >	mInlets;
-			std::vector< OutletHandle * >			mOutlets;
+			std::vector< std::shared_ptr< ParameterHandle > >		mParameters;
+			std::vector< std::shared_ptr< AbstractInletHandle > >	mInlets;
+			std::vector< std::shared_ptr< OutletHandle > >			mOutlets;
 
 		};
 	}

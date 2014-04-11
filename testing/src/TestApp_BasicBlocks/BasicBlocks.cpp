@@ -91,100 +91,84 @@ int main( int argc, char *argv[] )
 	{
 		_2Real::app::Engine testEngine;
 
-		_2Real::app::BundleHandle bundle = testEngine.loadBundle( "TestBundle_BasicBlocks" );
+		std::cout << "loading bundle" << std::endl;
+		auto loadedBundle = testEngine.loadBundle( "TestBundle_BasicBlocks" );
+		std::cout << "bundle loaded" << std::endl;
 
 	// -------print the block metainfo---------
 
-		_2Real::app::BundleMetainfo bundleinfo = bundle.getMetainfo();
+		_2Real::app::BundleMetainfo bundleinfo = loadedBundle.second;
 
 		std::cout << "basic bundle info" << std::endl;
-		std::cout << "name " << bundleinfo.getName() << std::endl;
 		std::cout << "description " << bundleinfo.getDescription() << std::endl;
 		std::cout << "category " << bundleinfo.getCategory() << std::endl;
 		std::cout << "author " << bundleinfo.getAuthor() << std::endl;
 		std::cout << "contact " << bundleinfo.getContact() << std::endl;
 		std::cout << "version " << bundleinfo.getVersion() << std::endl;
-		std::cout << "filepath " << bundleinfo.getFilepath() << std::endl;
 
-		std::vector< _2Real::app::BlockMetainfo > blockinfos;
-		bundleinfo.getExportedBlocks( blockinfos );
+		std::vector< _2Real::app::BlockMetainfo > blockinfos = bundleinfo.getExportedBlocks();
 		_2Real::app::BlockMetainfo blockinfo = blockinfos.front();
 		std::cout << "exported blocks " << blockinfos.size() << std::endl;
 		for ( auto it : blockinfos )
 		{
 			std::cout << "\t" << it.getName() << std::endl;
 			std::cout << "\t" << it.getDescription() << std::endl;
-			std::cout << "\tis singleton " << std::boolalpha << it.isContext() << std::endl;
-			std::vector< std::string > dependencies;
-			it.getDependencies( dependencies );
+			std::cout << "\tis singleton " << std::boolalpha << it.isSingleton() << std::endl;
+			std::vector< std::string > dependencies = it.getDependenciesByName();
 			std::cout << "\tdependencies\t";
 			for ( auto it : dependencies ) std::cout << it << " ";
 			std::cout << std::endl;
 
-			std::vector< _2Real::app::InletMetainfo > inletinfos;
-			it.getInletMetainfos( inletinfos );
+			std::vector< _2Real::app::InletMetainfo > inletinfos = it.getInlets();
 
 			std::cout << "\tinlets " << inletinfos.size() << std::endl;
 			for ( auto it : inletinfos )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
-				std::cout << "\t\tis multi " << std::boolalpha << it.isMultiInlet() << std::endl;
+				std::cout << "\t\tis multi " << std::boolalpha << it.isMulti() << std::endl;
 			}
 
-			std::vector< _2Real::app::OutletMetainfo > outletinfos;
-			it.getOutletMetainfos( outletinfos );
+			std::vector< _2Real::app::OutletMetainfo > outletinfos = it.getOutlets();
 
 			std::cout << "\toutlets "  << outletinfos.size() << std::endl;
 			for ( auto it : outletinfos )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 
-			std::vector< _2Real::app::ParameterMetainfo > paraminfos;
-			it.getParameterMetainfos( paraminfos );
+			std::vector< _2Real::app::ParameterMetainfo > paraminfos = it.getParameters();
 
 			std::cout << "\tparameters " << paraminfos.size() << std::endl;
 			for ( auto it : paraminfos )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 		}
 
 		//// -------create block instances---------
 
-		//std::map< std::string, _2Real::app::FunctionBlockHandle > blocks;
-		//for ( auto it : blockinfos )
-		//{
-		//	if ( !it.isContext() )
-		//	{
-		//		auto handle = bundle.createBlock( it.getName() );
-		//		blocks[ it.getName() ] = handle;
-		//	}
-		//}
-
-		//if ( blocks.empty() )
-		//	return 0;
-
 		_2Real::app::TimerHandle timer = testEngine.createTimer( 5.0 );
 
-		_2Real::app::FunctionBlockHandle aCounter = bundle.createBlock( "counterBlock" );
-		_2Real::app::BlockIo aCounterIo = aCounter.getBlockIo();
-		_2Real::app::InletHandle *anIncInlet = dynamic_cast< _2Real::app::InletHandle * >( aCounterIo.mInlets[ 0 ] );
-		_2Real::app::ParameterHandle *anInitParam = aCounterIo.mParameters[ 0 ];
+		_2Real::app::BundleHandle bundle = loadedBundle.first;
 
-		_2Real::app::FunctionBlockHandle otherCounter = bundle.createBlock( "counterBlock" );
-		_2Real::app::BlockIo otherCounterIo = otherCounter.getBlockIo();
-		_2Real::app::InletHandle *otherIncInlet = dynamic_cast< _2Real::app::InletHandle * >( otherCounterIo.mInlets[ 0 ] );
-		_2Real::app::ParameterHandle *otherInitParam = otherCounterIo.mParameters[ 0 ];
+		auto aCounter = bundle.createBlock( "counterBlock" );
+		auto aCounterIo = aCounter.getBlockIo();
+		auto anIncInlet = std::dynamic_pointer_cast< _2Real::app::InletHandle >( aCounterIo.mInlets[ 0 ] );
+		auto anInitParam = aCounterIo.mParameters[ 0 ];
+
+		auto otherCounter = bundle.createBlock( "counterBlock" );
+		auto otherCounterIo = otherCounter.getBlockIo();
+		auto otherIncInlet = std::dynamic_pointer_cast< _2Real::app::InletHandle >( otherCounterIo.mInlets[ 0 ] );
+		auto otherInitParam = otherCounterIo.mParameters[ 0 ];
 
 		{	
 			std::future< _2Real::BlockState > setup = aCounter.setup();

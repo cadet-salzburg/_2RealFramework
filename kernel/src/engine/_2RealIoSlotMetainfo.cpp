@@ -16,7 +16,7 @@
 	limitations under the License.
 */
 
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
 #include "engine/_2RealSharedTypeMetainfo.h"
 #include "engine/_2RealTypeCollection.h"
 #include "engine/_2RealTypeMetainfoVisitor.h"
@@ -26,15 +26,15 @@
 namespace _2Real
 {
 
-	std::shared_ptr< SharedServiceIoSlotMetainfo > SharedServiceIoSlotMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types, std::string const& name )
+	std::shared_ptr< IoSlotMetainfo > IoSlotMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types, const std::string name )
 	{
 		std::shared_ptr< const MetainfoId > ioslotId = MetainfoId::create( id, MetainfoType::IOSLOT, name );
-		std::shared_ptr< SharedServiceIoSlotMetainfo > ioslotInfo( new SharedServiceIoSlotMetainfo( ioslotId, types ) );
+		std::shared_ptr< IoSlotMetainfo > ioslotInfo( new IoSlotMetainfo( ioslotId, types ) );
 
 		return ioslotInfo;
 	}
 
-	SharedServiceIoSlotMetainfo::SharedServiceIoSlotMetainfo( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types ) :
+	IoSlotMetainfo::IoSlotMetainfo( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types ) :
 		mId( id ),
 		mDescription( "" ),
 		mInitialValue(),
@@ -44,47 +44,52 @@ namespace _2Real
 		
 	}
 
-	void SharedServiceIoSlotMetainfo::setMulti( const bool isMulti )
+	std::shared_ptr< const MetainfoId > IoSlotMetainfo::getId() const
 	{
-		mIsMulti = isMulti;
+		return mId;
 	}
 
-	void SharedServiceIoSlotMetainfo::setDescription( std::string const& description )
-	{
-		mDescription = description;
-	}
-
-	void SharedServiceIoSlotMetainfo::setDatatypeAndInitialValue( DataItem const& initialValue )
-	{
-		mInitialValue = initialValue;
-	}
-
-	std::string SharedServiceIoSlotMetainfo::getName() const
+	std::string IoSlotMetainfo::getName() const
 	{
 		return mId->getName();
 	}
 
-	std::string SharedServiceIoSlotMetainfo::getDescription() const
+	void IoSlotMetainfo::setMulti( const bool isMulti )
+	{
+		mIsMulti = isMulti;
+	}
+
+	void IoSlotMetainfo::setDescription( std::string const& description )
+	{
+		mDescription = description;
+	}
+
+	void IoSlotMetainfo::setDatatypeAndInitialValue( DataItem const& initialValue )
+	{
+		mInitialValue = initialValue;
+	}
+
+	std::string IoSlotMetainfo::getDescription() const
 	{
 		return mDescription;
 	}
 
-	DataItem const& SharedServiceIoSlotMetainfo::getInitialValue() const
+	DataItem const& IoSlotMetainfo::getInitialValue() const
 	{
 		return mInitialValue;
 	}
 
-	bool SharedServiceIoSlotMetainfo::isMulti() const
+	bool IoSlotMetainfo::isMulti() const
 	{
 		return mIsMulti;
 	}
 
-	std::string SharedServiceIoSlotMetainfo::getDatatype() const
+	std::string IoSlotMetainfo::getDatatype() const
 	{
 		return boost::apply_visitor( HumanReadableNameVisitor(), mInitialValue );
 	}
 
-	std::shared_ptr< const TMetainfo > SharedServiceIoSlotMetainfo::getTypeMetainfo() const
+	std::shared_ptr< const TMetainfo > IoSlotMetainfo::getTypeMetainfo() const
 	{
 		return boost::apply_visitor( TypeMetainfoVisitor( mTypes.lock() ), mInitialValue );
 	}

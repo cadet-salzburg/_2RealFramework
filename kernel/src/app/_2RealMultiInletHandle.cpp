@@ -25,13 +25,6 @@ namespace _2Real
 {
 	namespace app
 	{
-
-		MultiInletHandle::MultiInletHandle() :
-			AbstractInletHandle(),
-			mImpl()
-		{
-		}
-
 		MultiInletHandle::MultiInletHandle( std::shared_ptr< MultiInlet > inlet ) :
 			AbstractInletHandle( inlet ),
 			mImpl( inlet )
@@ -56,5 +49,17 @@ namespace _2Real
 			return inlet->isEmpty();
 		}
 
+		InletHandle MultiInletHandle::add()
+		{
+			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			return InletHandle( inlet->add_back() );
+		}
+
+		void MultiInletHandle::remove( InletHandle subinlet )
+		{
+			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			std::shared_ptr< Inlet > sub = subinlet.mImpl.lock();
+			inlet->remove( sub );
+		}
 	}
 }

@@ -22,6 +22,7 @@
 #include "app/_2RealBlockIo.h"
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealParameterHandle.h"
+#include "app/_2RealUpdatePolicyHandle.h"
 
 #include "engine/_2RealBlock.h"
 #include "engine/_2RealTimer.h"
@@ -35,20 +36,9 @@ namespace _2Real
 {
 	namespace app
 	{
-		FunctionBlockHandle::FunctionBlockHandle() :
-			mImpl()
-		{
-		}
-
 		FunctionBlockHandle::FunctionBlockHandle( std::shared_ptr< Block > block ) :
-			mImpl( block )
+			BlockHandle( block )
 		{
-		}
-
-		bool FunctionBlockHandle::isValid() const
-		{
-			std::shared_ptr< Block > block = mImpl.lock();
-			return ( nullptr != block.get() );
 		}
 
 		std::future< BlockState > FunctionBlockHandle::setup()
@@ -93,12 +83,18 @@ namespace _2Real
 			std::shared_ptr< _2Real::BlockIo > io = block->getBlockIo();
 			BlockIo result;
 			for ( auto it : io->mInlets )
-				result.mInlets.push_back( it->isMultiInlet() ? ( AbstractInletHandle * )new MultiInletHandle( std::dynamic_pointer_cast< MultiInlet >( it ) ) : new InletHandle( std::dynamic_pointer_cast< Inlet >( it ) ) );
+				result.mInlets.push_back( it->isMultiInlet() ? std::shared_ptr< AbstractInletHandle >( new MultiInletHandle( std::dynamic_pointer_cast< MultiInlet >( it ) ) ) : std::shared_ptr< AbstractInletHandle >( new InletHandle( std::dynamic_pointer_cast< Inlet >( it ) ) ) );
 			for ( auto it : io->mParameters )
-				result.mParameters.push_back( new ParameterHandle( it ) );
+				result.mParameters.push_back( std::shared_ptr< ParameterHandle >( new ParameterHandle( it ) ) );
 			for ( auto it : io->mOutlets )
-				result.mOutlets.push_back( new OutletHandle( it ) );
+				result.mOutlets.push_back( std::shared_ptr< OutletHandle >( new OutletHandle( it ) ) );
 			return result;
+		}
+
+		UpdatePolicyHandle FunctionBlockHandle::getUpdatePolicy()
+		{
+			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
+			return UpdatePolicyHandle( block->getUpdatePolicy() );
 		}
 	}
 }

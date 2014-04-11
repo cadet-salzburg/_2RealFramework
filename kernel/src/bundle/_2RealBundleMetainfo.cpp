@@ -33,22 +33,22 @@ namespace _2Real
 		}
 
 
-		void BundleMetainfo::setAuthor( std::string const& author )
+		void BundleMetainfo::setAuthor( const std::string author )
 		{
 			mImpl.lock()->setAuthor( author );
 		}
 
-		void BundleMetainfo::setDescription( std::string const& description )
+		void BundleMetainfo::setDescription( const std::string description )
 		{
 			mImpl.lock()->setDescription( description );
 		}
 
-		void BundleMetainfo::setContact( std::string const& contact )
+		void BundleMetainfo::setContact( const std::string contact )
 		{
 			mImpl.lock()->setContact( contact );
 		}
 
-		void BundleMetainfo::setCategory( std::string const& category )
+		void BundleMetainfo::setCategory( const std::string category )
 		{
 			mImpl.lock()->setCategory( category );
 		}
@@ -58,12 +58,12 @@ namespace _2Real
 			mImpl.lock()->setVersion( Version( major, minor, revision ) );
 		}
 	
-		void BundleMetainfo::exportType( std::string const& name )
+		void BundleMetainfo::exportsType( const std::string name, const std::vector< FieldDeclaration > fields )
 		{
-			mImpl.lock()->exportType( name );
+			mImpl.lock()->exportType( name, fields );
 		}
 
-		void BundleMetainfo::exportBlock( std::string const& name, bool isSingleton, std::vector< std::string > const& inlets, std::vector< std::string > const& outlets, std::vector< std::string > const& parameters )
+		void BundleMetainfo::exportsBlock( const std::string name, const bool isSingleton, const std::vector< InletDeclaration > inlets,  const std::vector< OutletDeclaration > outlets, const std::vector< ParameterDeclaration > parameters )
 		{
 			mImpl.lock()->exportBlock( name, isSingleton, inlets, outlets, parameters );
 		}

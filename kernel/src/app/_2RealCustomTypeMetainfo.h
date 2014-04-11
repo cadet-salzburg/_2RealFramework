@@ -32,11 +32,9 @@ namespace _2Real
 
 		public:
 
-			CustomTypeMetainfo() = default;
 			explicit CustomTypeMetainfo( std::shared_ptr< const SharedTypeMetainfo > );
 
-			std::string getDescription() const;
-
+			std::string		getDescription() const;
 			CustomDataItem	makeCustomData() const;
 
 			std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo > > > getDataFields() const;

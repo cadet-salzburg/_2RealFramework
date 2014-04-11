@@ -33,27 +33,28 @@ namespace _2Real
 	class Block;
 	class BundleCollection;
 	class Threadpool;
+	class InstanceId;
 
 	class Bundle : public std::enable_shared_from_this< Bundle >
 	{
 
 	public:
 
-		Bundle( std::shared_ptr< BundleCollection >, std::shared_ptr< const SharedLibraryMetainfo >, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
+		static std::shared_ptr< Bundle > createFromMetainfo( std::shared_ptr< const SharedLibraryMetainfo >, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool >, Path const& );
 
-		~Bundle();
+		Bundle() = delete;
+		Bundle( Bundle const& other ) = delete;
+		Bundle( Bundle && other ) = delete;
+		Bundle operator=( Bundle const& other ) = delete;
+		Bundle operator=( Bundle && other ) = delete;
 
-		void init();
-		void initServices();
+		~Bundle() = default;
 
-		// return file path ( from metainfo )
+		std::shared_ptr< const InstanceId >			getId() const;
+
 		Path 										getFilePath() const;
-		// unload function, via app::bundle handle
 		void										unload( const long timeout );
-
 		std::shared_ptr< Block >					createBlock( std::string const& name );
-
-		std::shared_ptr< const SharedLibraryMetainfo >	getMetainfo() const;
 
 		// unload listener.... bundle collection registers here
 		///////////////////////////////////////////////////////
@@ -73,25 +74,19 @@ namespace _2Real
 
 	private:
 
-		Bundle( Bundle const& other );
-		Bundle operator=( Bundle const& other );
-
-		std::weak_ptr< BundleCollection >						mBundleCollection;
+		Bundle( std::shared_ptr< const SharedLibraryMetainfo >, std::shared_ptr< const InstanceId >, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool >, Path const& );
 
 		std::shared_ptr< const SharedLibraryMetainfo >			mMetainfo;
+		std::shared_ptr< const InstanceId >						mId;
+
+		Path													mPath;
 		Event_T< std::shared_ptr< const Bundle > >				mUnloadNotifier;
 
-		typedef std::pair< std::shared_ptr< AbstractSharedServiceLifetimeManager >, std::shared_ptr< const SharedServiceMetainfo > > ServiceInfo;
-		typedef std::map< std::string, ServiceInfo >			ServiceMap;
+		std::map< std::string, std::shared_ptr< AbstractSharedServiceLifetimeManager > >			mServiceLifetimeMgrs;
+		std::vector< std::shared_ptr< Block > >														mServiceInstances;
 
-		ServiceMap												mServices;
-
-		typedef std::vector< std::shared_ptr< Block > >			ServiceInstances;
-
-		ServiceInstances										mServiceInstances;
-
-		std::weak_ptr< Threadpool >					mStdThreads;
-		std::weak_ptr< Threadpool >					mCtxtThreads;
+		std::weak_ptr< Threadpool >								mStdThreads;
+		std::weak_ptr< Threadpool >								mCtxtThreads;
 
 	};
 

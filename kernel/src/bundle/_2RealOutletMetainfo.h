@@ -23,7 +23,7 @@
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
 
 	namespace bundle
 	{
@@ -32,7 +32,7 @@ namespace _2Real
 
 		public:
 
-			explicit OutletMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > );
+			explicit OutletMetainfo( std::shared_ptr< _2Real::IoSlotMetainfo > );
 
 			using IoSlotMetainfo::setDescription;
 			using IoSlotMetainfo::setDatatypeAndInitialValue;

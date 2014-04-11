@@ -24,17 +24,8 @@ namespace _2Real
 {
 	namespace app
 	{
-		AbstractInletHandle::AbstractInletHandle() :
-			mImpl()
-		{
-		}
-
 		AbstractInletHandle::AbstractInletHandle( std::shared_ptr< AbstractInlet > inlet ) :
 			mImpl( inlet )
-		{
-		}
-
-		AbstractInletHandle::~AbstractInletHandle()
 		{
 		}
 
@@ -42,12 +33,6 @@ namespace _2Real
 		{
 			std::shared_ptr< AbstractInlet > inlet = mImpl.lock();
 			return ( nullptr != inlet.get() );
-		}
-
-		std::string AbstractInletHandle::getName() const
-		{
-			std::shared_ptr< AbstractInlet > inlet = checkValidity< AbstractInlet >( mImpl, "inlet" );
-			return inlet->getName();
 		}
 
 		bool AbstractInletHandle::isMultiInlet() const

@@ -71,28 +71,23 @@ int main( int argc, char *argv[] )
 	try
 	{
 		_2Real::app::Engine engine;
-		_2Real::app::BundleHandle bundle = engine.loadBundle( "TestBundle_CustomTypes" );
+		auto loadedBundle = engine.loadBundle( "TestBundle_CustomTypes" );
 
 	// -------print the metainfos---------
 
-		_2Real::app::BundleMetainfo bundleinfo = bundle.getMetainfo();
+		_2Real::app::BundleMetainfo bundleinfo = loadedBundle.second;
 
 		std::cout << "basic bundle info" << std::endl;
-		std::cout << "name " << bundleinfo.getName() << std::endl;
 		std::cout << "description " << bundleinfo.getDescription() << std::endl;
 		std::cout << "category " << bundleinfo.getCategory() << std::endl;
 		std::cout << "author " << bundleinfo.getAuthor() << std::endl;
 		std::cout << "contact " << bundleinfo.getContact() << std::endl;
 		std::cout << "version " << bundleinfo.getVersion() << std::endl;
-		std::cout << "filepath " << bundleinfo.getFilepath() << std::endl;
 
-		std::vector< _2Real::app::CustomTypeMetainfo > typeinfos;
-		bundleinfo.getExportedTypes( typeinfos );
+		auto typeinfos = bundleinfo.getExportedTypes();
 		std::cout << "number of exported types : " << typeinfos.size() << std::endl;
 		for ( auto it : typeinfos )
-		{
 			printTypeMetainfo( it );
-		}
 
 	// -------print the metainfos---------
 
@@ -114,7 +109,7 @@ int main( int argc, char *argv[] )
 
 		std::cout << "------" << std::endl;
 
-		//aSimple.set( "int_field", ( int32_t )10005 );
+		aSimple.set( "int_field", ( int32_t )10005 );
 		aComplex.set( "simple_field1", aSimple );
 
 		std::cout << "------" << std::endl;

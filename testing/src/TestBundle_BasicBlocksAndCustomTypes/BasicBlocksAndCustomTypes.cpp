@@ -28,9 +28,9 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.setContact( "fhs33223@fh-salzburg.ac.at" );
 	info.setVersion( 0, 0, 0 );
 
-	info.exportType( "simpleType" );
-	info.exportType( "complexType" );
-	info.exportBlock( "counter", false, { "increment" }, { "value" }, { "init" } );
+	info.exportsType( "simpleType", {} );
+	info.exportsType( "complexType", {} );
+	info.exportsBlock( "counter", false, { _2Real::declareInlet( "increment" ), _2Real::declareInlet( "stringy" ), _2Real::declareMultiInlet( "multi" ), }, { _2Real::declareOutlet( "value" ) }, { _2Real::declareParameter( "init" ) } );
 }
 
 void getTypeMetainfo( _2Real::bundle::TypeMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& previousTypes )
@@ -40,8 +40,8 @@ void getTypeMetainfo( _2Real::bundle::TypeMetainfo &info, std::map< std::string,
 		info.setDescription( "testing simple types, that is, types where all fields are not custom types" );
 		info.addField( "uchar_field", ( uint8_t )5 );
 		info.addField( "uint_field", ( uint32_t )0 );
-		info.addField( "ulong_field", ( uint64_t )0 );
-		info.addField( "double_field", 0.0 );
+		info.addField( "ulong_field", ( uint64_t )23 );
+		info.addField( "double_field", -1.50 );
 		info.addField( "float_field", 0.1f );
 	}
 	else if ( info.getName() == "complexType" )

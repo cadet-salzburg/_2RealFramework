@@ -18,6 +18,9 @@
 
 #pragma once
 
+#include "enums/_2RealDefaultPolicy.h"
+#include "enums/_2RealBlockState.h"
+
 #include "app/_2RealEngine.h"
 #include "engine/_2RealData.h"
 #include "engine/_2RealCustomData.h"

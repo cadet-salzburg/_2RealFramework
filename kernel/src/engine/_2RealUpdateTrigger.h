@@ -38,6 +38,10 @@ namespace _2Real
 		void registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > );
 		void unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > );
 
+		virtual void enable() = 0;
+		virtual void disable() = 0;
+		virtual bool reset() = 0;
+
 	protected:
 
 		UpdateTrigger();

@@ -32,6 +32,7 @@ namespace _2Real
 	namespace app
 	{
 		class BundleHandle;
+		class BundleMetainfo;
 		class TimerHandle;
 		class SystemHandle;
 
@@ -49,7 +50,7 @@ namespace _2Real
 			// returns the absolute path to the bundle directory
 			Path		 getBundleDirectory() const;
 			// loads a bundle, path must be relative to bundle dir, with or without the suffix
-			BundleHandle loadBundle( std::string const& libname );
+			std::pair< BundleHandle, BundleMetainfo > loadBundle( std::string const& libname );
 	//--------------------- bundle
 
 	//--------------------- threadpool

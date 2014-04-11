@@ -19,10 +19,11 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "engine/_2RealDeclarations.h"
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
 
 	class UpdatePolicyMetainfo;
 	class AbstractSharedServiceFactory;
@@ -34,7 +35,15 @@ namespace _2Real
 
 	public:
 
-		static std::shared_ptr< SharedServiceMetainfo > make( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection >, std::string const&, const bool, std::vector< std::string >, std::vector< std::string >, std::vector< std::string > );
+		static std::shared_ptr< SharedServiceMetainfo > make( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection >, BlockDeclaration const& );
+
+		SharedServiceMetainfo() = delete;
+		SharedServiceMetainfo( SharedServiceMetainfo const& other ) = delete;
+		SharedServiceMetainfo( SharedServiceMetainfo && other ) = delete;
+		SharedServiceMetainfo& operator=( SharedServiceMetainfo const& other ) = delete;
+		SharedServiceMetainfo& operator=( SharedServiceMetainfo && other ) = delete;
+
+		~SharedServiceMetainfo() = default;
 
 		void setDescription( std::string const& );
 		void setDependencies( std::vector< std::string > const& );
@@ -44,16 +53,16 @@ namespace _2Real
 		std::string					getDescription() const;
 		std::vector< std::string >	getDependencies() const;
 
-		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > getInletMetainfos() const;
-		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > getOutletMetainfos() const;
-		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > getParameterMetainfos() const;
+		std::vector< std::shared_ptr< const IoSlotMetainfo > > getInletMetainfos() const;
+		std::vector< std::shared_ptr< const IoSlotMetainfo > > getOutletMetainfos() const;
+		std::vector< std::shared_ptr< const IoSlotMetainfo > > getParameterMetainfos() const;
 
-		std::shared_ptr< SharedServiceIoSlotMetainfo > getInletMetainfo( std::string const& );
-		std::shared_ptr< SharedServiceIoSlotMetainfo > getOutletMetainfo( std::string const& );
-		std::shared_ptr< SharedServiceIoSlotMetainfo > getParameterMetainfo( std::string const& );
-		std::shared_ptr< const SharedServiceIoSlotMetainfo > getInletMetainfo( std::string const& ) const;
-		std::shared_ptr< const SharedServiceIoSlotMetainfo > getOutletMetainfo( std::string const& ) const;
-		std::shared_ptr< const SharedServiceIoSlotMetainfo > getParameterMetainfo( std::string const& ) const;
+		std::shared_ptr< IoSlotMetainfo > getInletMetainfo( std::string const& );
+		std::shared_ptr< IoSlotMetainfo > getOutletMetainfo( std::string const& );
+		std::shared_ptr< IoSlotMetainfo > getParameterMetainfo( std::string const& );
+		std::shared_ptr< const IoSlotMetainfo > getInletMetainfo( std::string const& ) const;
+		std::shared_ptr< const IoSlotMetainfo > getOutletMetainfo( std::string const& ) const;
+		std::shared_ptr< const IoSlotMetainfo > getParameterMetainfo( std::string const& ) const;
 
 		std::shared_ptr< UpdatePolicyMetainfo > getDefaultUpdatePolicy();
 		std::shared_ptr< const UpdatePolicyMetainfo > getDefaultUpdatePolicy() const;
@@ -61,13 +70,13 @@ namespace _2Real
 		void setFactory( std::shared_ptr< AbstractSharedServiceFactory > factory );
 		std::shared_ptr< const AbstractSharedServiceFactory > getFactory() const;
 
+		std::shared_ptr< const MetainfoId > getId() const;
+
 	private:
 
 		SharedServiceMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection >, const bool );
-		SharedServiceMetainfo( SharedServiceMetainfo const& other ) = delete;
-		SharedServiceMetainfo& operator=( SharedServiceMetainfo const& ) = delete;
 
-		typedef std::map< std::string, std::shared_ptr< SharedServiceIoSlotMetainfo > >		IoSlots;
+		typedef std::vector< std::shared_ptr< IoSlotMetainfo > >		IoSlots;
 
 		std::shared_ptr< const MetainfoId >					mId;
 		std::weak_ptr< const TypeCollection >				mTypes;

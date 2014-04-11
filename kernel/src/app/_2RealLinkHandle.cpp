@@ -24,11 +24,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		LinkHandle::LinkHandle() :
-			mImpl()
-		{
-		}
-
 		LinkHandle::LinkHandle( std::shared_ptr< Link > link ) :
 			mImpl( link )
 		{

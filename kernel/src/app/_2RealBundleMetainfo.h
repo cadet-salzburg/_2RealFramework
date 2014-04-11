@@ -36,21 +36,22 @@ namespace _2Real
 
 		public:
 
-			BundleMetainfo();
 			explicit BundleMetainfo( std::shared_ptr< const SharedLibraryMetainfo > );
 
-			bool isValid() const;
+			// bundle unload -> invalid
+			bool			isValid() const;
 
-			std::string				getName() const;
-			std::string				getDescription() const;
-			std::string				getAuthor() const;
-			std::string				getContact() const;
-			std::string				getCategory() const;
-			Path					getFilepath() const;
-			Version					getVersion() const;
+			std::string		getDescription() const;
+			std::string		getAuthor() const;
+			std::string		getContact() const;
+			std::string		getCategory() const;
+			Version			getVersion() const;
 
-			void getExportedBlocks( std::vector< BlockMetainfo > & ) const;
-			void getExportedTypes( std::vector< CustomTypeMetainfo > & ) const;
+			std::vector< BlockMetainfo >		getExportedBlocks() const;
+			std::vector< CustomTypeMetainfo >	getExportedTypes() const;
+
+			BlockMetainfo						getExportedBlock( std::string const& );
+			CustomTypeMetainfo					getExportedType( std::string const& );
 
 		private:
 

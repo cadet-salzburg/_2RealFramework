@@ -24,7 +24,6 @@ namespace _2Real
 {
 	namespace app
 	{
-
 		TypeMetainfo::TypeMetainfo( std::shared_ptr< const TMetainfo > meta ) :
 			mImpl( meta )
 		{
@@ -53,6 +52,5 @@ namespace _2Real
 			std::shared_ptr< const TMetainfo > meta = checkValidity< const TMetainfo >( mImpl, "type metainfo" );
 			return meta->getName();
 		}
-
 	}
 }

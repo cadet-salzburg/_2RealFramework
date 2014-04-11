@@ -63,6 +63,6 @@ namespace _2Real
 
 	std::shared_ptr< SignalResponse > PostSetupState_Running::onEngineShutdownReceived()
 	{
-		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
 	}
 }

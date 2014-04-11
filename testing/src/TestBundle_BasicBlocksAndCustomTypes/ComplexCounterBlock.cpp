@@ -20,6 +20,8 @@
 #include "ComplexCounterBlock.h"
 #include "engine/_2RealData.h"
 
+#include <Windows.h>
+
 void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& types )
 {
 	_2Real::bundle::FunctionBlockMetainfo &counterinfo = dynamic_cast< _2Real::bundle::FunctionBlockMetainfo & >( info );
@@ -31,12 +33,19 @@ void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std:
 	counterinfo.setDescription( "counter" );
 
 	_2Real::bundle::DefaultUpdatePolicy policy = counterinfo.getDefaultUpdatePolicy();
-	policy.set( _2Real::bundle::DefaultUpdatePolicy::Code::ALL );
+	policy.set( _2Real::DefaultPolicy::DISABLED );
 
 	_2Real::bundle::InletMetainfo in = counterinfo.getInletMetainfo( "increment" );
 	in.setDescription( "counter increment" );
-	in.setMultiInlet( false );
 	in.setDatatypeAndInitialValue( simpleInfo.makeData() );
+
+	_2Real::bundle::InletMetainfo stringy = counterinfo.getInletMetainfo( "stringy" );
+	stringy.setDescription( "test string inlet" );
+	stringy.setDatatypeAndInitialValue( std::string( "yay" ) );
+
+	_2Real::bundle::InletMetainfo multi = counterinfo.getInletMetainfo( "multi" );
+	multi.setDescription( "test multi inlet" );
+	multi.setDatatypeAndInitialValue( ( uint32_t )0 );
 
 	_2Real::bundle::ParameterMetainfo param = counterinfo.getParameterMetainfo( "init" );
 	param.setDescription( "counter initial value" );
@@ -58,17 +67,15 @@ ComplexCounter::~ComplexCounter()
 
 void ComplexCounter::setup()
 {	
-	_2Real::bundle::ParameterHandle *parameter = mIo.mParameters[ 0 ];
-	_2Real::bundle::OutletHandle *outlet = mIo.mOutlets[ 0 ];
+	auto parameter = mIo.mParameters[ 0 ];
+	auto outlet = mIo.mOutlets[ 0 ];
 	boost::get< _2Real::CustomDataItem >( outlet->getValue() ) = boost::get< _2Real::CustomDataItem >( parameter->getValue() );
-
-	//std::cout << boost::get< _2Real::CustomDataItem >( outlet->getValue() ) << std::endl;
 }
 
 void ComplexCounter::update()
 {
-	_2Real::bundle::InletHandle *inlet = dynamic_cast< _2Real::bundle::InletHandle * >( mIo.mInlets[ 0 ] );
-	_2Real::bundle::OutletHandle *outlet = mIo.mOutlets[ 0 ];
+	auto inlet = std::dynamic_pointer_cast< _2Real::bundle::InletHandle >( mIo.mInlets[ 0 ] );
+	auto outlet = mIo.mOutlets[ 0 ];
 
 	// extract a reference to the simple field in the outlet data
 	_2Real::CustomDataItem & counter = boost::get< _2Real::CustomDataItem >( outlet->getValue() );
@@ -86,7 +93,10 @@ void ComplexCounter::update()
 	val_out.getValue< float >( "float_field" ) += val_in.getValue< float >( "float_field" );
 	val_out.getValue< double >( "double_field" ) += val_in.getValue< double >( "double_field" );
 
+	std::cout << "UPDATE" << std::endl;
 	std::cout << counter << std::endl;
+
+	Sleep( 1000 );
 }
 
 void ComplexCounter::shutdown()

@@ -27,6 +27,8 @@
 
 namespace _2Real
 {
+	class BlockIo;
+
 	namespace bundle
 	{
 		/*
@@ -38,9 +40,9 @@ namespace _2Real
 
 		public:
 
-			std::vector< ParameterHandle * >		mParameters;
-			std::vector< AbstractInletHandle * >	mInlets;
-			std::vector< OutletHandle *>			mOutlets;
+			std::vector< std::shared_ptr< ParameterHandle > >		mParameters;
+			std::vector< std::shared_ptr< AbstractInletHandle > >	mInlets;
+			std::vector< std::shared_ptr< OutletHandle > >			mOutlets;
 
 		};
 	}

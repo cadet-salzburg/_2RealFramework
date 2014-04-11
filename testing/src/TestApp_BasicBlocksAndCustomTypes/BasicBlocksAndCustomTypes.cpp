@@ -60,93 +60,73 @@ int main( int argc, char *argv[] )
 	{
 		_2Real::app::Engine testEngine;
 
-		_2Real::app::BundleHandle bundle = testEngine.loadBundle( "TestBundle_BasicBlocksAndCustomTypes" );
+		auto loadedBundle = testEngine.loadBundle( "TestBundle_BasicBlocksAndCustomTypes" );
 
 	// -------print the block metainfo---------
 
-		_2Real::app::BundleMetainfo bundleinfo = bundle.getMetainfo();
+		_2Real::app::BundleMetainfo bundleinfo = loadedBundle.second;
 
 		std::cout << "basic bundle info" << std::endl;
-		std::cout << "name " << bundleinfo.getName() << std::endl;
 		std::cout << "description " << bundleinfo.getDescription() << std::endl;
 		std::cout << "category " << bundleinfo.getCategory() << std::endl;
 		std::cout << "author " << bundleinfo.getAuthor() << std::endl;
 		std::cout << "contact " << bundleinfo.getContact() << std::endl;
 		std::cout << "version " << bundleinfo.getVersion() << std::endl;
-		std::cout << "filepath " << bundleinfo.getFilepath() << std::endl;
 
-		std::vector< _2Real::app::BlockMetainfo > blockinfos;
-		bundleinfo.getExportedBlocks( blockinfos );
+		std::vector< _2Real::app::BlockMetainfo > blockinfos = bundleinfo.getExportedBlocks();
 		std::cout << "exported blocks " << blockinfos.size() << std::endl;
 		for ( auto it : blockinfos )
 		{
 			std::cout << "\t" << it.getName() << std::endl;
 			std::cout << "\t" << it.getDescription() << std::endl;
-			std::cout << "\tis singleton " << std::boolalpha << it.isContext() << std::endl;
-			std::vector< std::string > dependencies;
-			it.getDependencies( dependencies );
+			std::cout << "\tis singleton " << std::boolalpha << it.isSingleton() << std::endl;
+			std::vector< std::string > dependencies = it.getDependenciesByName();
 			std::cout << "\tdependencies\t";
 			for ( auto it : dependencies ) std::cout << it << " ";
 			std::cout << std::endl;
 
-			std::vector< _2Real::app::InletMetainfo > inletinfos;
-			it.getInletMetainfos( inletinfos );
+			std::vector< _2Real::app::InletMetainfo > inletinfos = it.getInlets();
 
 			std::cout << "\tinlets " << inletinfos.size() << std::endl;
 			for ( auto it : inletinfos )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
-				std::cout << "\t\tis multi " << std::boolalpha << it.isMultiInlet() << std::noboolalpha << std::endl;
+				std::cout << "\t\tis multi " << std::boolalpha << it.isMulti() << std::endl;
 			}
 
-			std::vector< _2Real::app::OutletMetainfo > outletinfos;
-			it.getOutletMetainfos( outletinfos );
+			std::vector< _2Real::app::OutletMetainfo > outletinfos = it.getOutlets();
 
 			std::cout << "\toutlets "  << outletinfos.size() << std::endl;
 			for ( auto it : outletinfos )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 
-			std::vector< _2Real::app::ParameterMetainfo > paraminfos;
-			it.getParameterMetainfos( paraminfos );
+			std::vector< _2Real::app::ParameterMetainfo > paraminfos = it.getParameters();
 
 			std::cout << "\tparameters " << paraminfos.size() << std::endl;
 			for ( auto it : paraminfos )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getDatatype() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 		}
 
 		// -------create block instances---------
 
-		std::map< std::string, _2Real::app::FunctionBlockHandle > blocks;
-		for ( auto it : blockinfos )
-		{
-			if ( !it.isContext() )
-			{
-				auto handle = bundle.createBlock( it.getName() );
-				blocks[ it.getName() ] = handle;
-			}
-		}
-
-		if ( blocks.empty() )
-			return 0;
-
 		_2Real::app::TimerHandle timer = testEngine.createTimer( 5.0 );
-		_2Real::app::FunctionBlockHandle counter = blocks[ "counter" ];
+		_2Real::app::FunctionBlockHandle counter = loadedBundle.first.createBlock( "counter" );
 
 		_2Real::app::BlockIo counterio = counter.getBlockIo();
-		_2Real::app::InletHandle *incInlet = dynamic_cast< _2Real::app::InletHandle * >( counterio.mInlets[ 0 ] );
+		auto incInlet = std::dynamic_pointer_cast< _2Real::app::InletHandle >( counterio.mInlets[ 0 ] );
 
 		// should io slots really hand out type metainfo?
 		//_2Real::app::TypeMetainfo info = incInlet->getTypeMetainfo();
@@ -205,13 +185,10 @@ int main( int argc, char *argv[] )
 			}
 		}
 
-		for ( auto it : blocks )
-		{
-			std::future< _2Real::BlockState > stop = it.second.stopUpdating();
-			handleFuture( stop );
-			std::future< _2Real::BlockState > shutdown = it.second.shutdown();
-			handleFuture( shutdown );
-		}
+		std::future< _2Real::BlockState > stop = counter.stopUpdating();
+		handleFuture( stop );
+		std::future< _2Real::BlockState > shutdown = counter.shutdown();
+		handleFuture( shutdown );
 
 		while( 1 )
 		{

@@ -17,6 +17,7 @@
 */
 
 #include "engine/_2RealInSlot.h"
+#include "engine/_2RealCustomdata.h"
 
 namespace _2Real
 {
@@ -34,17 +35,17 @@ namespace _2Real
 		mTmpValue = value;
 	}
 
-	//void InSlot::setTmpValue( DataItem &&value )
-	//{
-	//	std::lock_guard< std::mutex > lock( mMutex );
+	void InSlot::setTmpValueExt( DataItem value )
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
 
-	//	// can't move the value directly into mTmpValue, as this would overwrite
-	//	// a value that might be shared by several inlets
-	//	// -> create a new shared ptr and move the data in there instead!
-	//	std::shared_ptr< DataItem > tmp( new DataItem );
-	//	*tmp.get() = std::move( value );
-	//	mTmpValue = tmp;
-	//}
+		// can't move the value directly into mTmpValue, as this would overwrite
+		// a value that might be shared by several inlets
+		// -> create a new shared ptr and move the data in there instead!
+		std::shared_ptr< DataItem > tmp( new DataItem );
+		*tmp.get() = std::move( value );
+		mTmpValue = tmp;
+	}
 
 	DataItem const& InSlot::getValue() const
 	{

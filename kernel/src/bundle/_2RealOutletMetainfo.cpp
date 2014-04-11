@@ -22,7 +22,7 @@ namespace _2Real
 {
 	namespace bundle
 	{
-		OutletMetainfo::OutletMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > info ) :
+		OutletMetainfo::OutletMetainfo( std::shared_ptr< _2Real::IoSlotMetainfo > info ) :
 			IoSlotMetainfo( info )
 		{
 		}

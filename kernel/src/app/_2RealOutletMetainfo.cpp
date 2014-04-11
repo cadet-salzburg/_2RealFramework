@@ -23,12 +23,7 @@ namespace _2Real
 {
 	namespace app
 	{
-		OutletMetainfo::OutletMetainfo() :
-			IoSlotMetainfo()
-		{
-		}
-
-		OutletMetainfo::OutletMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
+		OutletMetainfo::OutletMetainfo( std::shared_ptr< const _2Real::IoSlotMetainfo > meta ) :
 			IoSlotMetainfo( meta )
 		{
 		}

@@ -23,7 +23,7 @@
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
 
 	namespace bundle
 	{
@@ -39,8 +39,8 @@ namespace _2Real
 
 		protected:
 
-			explicit IoSlotMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > );
-			std::weak_ptr< SharedServiceIoSlotMetainfo >		mImpl;
+			explicit IoSlotMetainfo( std::shared_ptr< _2Real::IoSlotMetainfo > );
+			std::weak_ptr< _2Real::IoSlotMetainfo >		mImpl;
 
 		};
 	}

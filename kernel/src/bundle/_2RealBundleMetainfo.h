@@ -23,6 +23,10 @@
 namespace _2Real
 {
 	class SharedLibraryMetainfo;
+	class InletDeclaration;
+	class OutletDeclaration;
+	class ParameterDeclaration;
+	class FieldDeclaration;
 
 	namespace bundle
 	{
@@ -37,14 +41,14 @@ namespace _2Real
 
 			explicit BundleMetainfo( std::shared_ptr< SharedLibraryMetainfo > );
 
-			void setAuthor( std::string const& );
-			void setDescription( std::string const& );
-			void setContact( std::string const& );
-			void setCategory( std::string const& );
+			void setAuthor( const std::string );
+			void setDescription( const std::string );
+			void setContact( const std::string  );
+			void setCategory( const std::string );
 			void setVersion( const unsigned int, const unsigned int, const unsigned int );
 
-			void exportType( std::string const& name );
-			void exportBlock( std::string const& name, bool isSingleton, std::vector< std::string > const& inlets, std::vector< std::string > const& outlets, std::vector< std::string > const& parameters );
+			void exportsType( const std::string name, const std::vector< FieldDeclaration > fields );
+			void exportsBlock( const std::string name, const bool isSingleton, const std::vector< InletDeclaration > inlets, const std::vector< OutletDeclaration > outlets, const std::vector< ParameterDeclaration > parameters );
 
 		private:
 
@@ -53,7 +57,3 @@ namespace _2Real
 		};
 	}
 }
-
-/*
-*	TODO: name checking
-*/

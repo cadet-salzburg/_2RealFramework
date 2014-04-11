@@ -28,11 +28,6 @@ namespace _2Real
 		{
 		}
 
-		std::string ParameterHandle::getName() const
-		{
-			return mImpl->getName();
-		}
-
 		DataItem const& ParameterHandle::getValue() const
 		{
 			return mImpl->getValue();

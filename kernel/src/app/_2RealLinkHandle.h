@@ -31,7 +31,6 @@ namespace _2Real
 
 		public:
 
-			LinkHandle();
 			explicit LinkHandle( std::shared_ptr< Link > );
 
 			bool isValid() const;

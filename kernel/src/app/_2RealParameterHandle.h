@@ -31,13 +31,15 @@ namespace _2Real
 		class ParameterHandle
 		{
 
+			class FunctionBlockHandle;
+
 		public:
 
-			ParameterHandle();
 			explicit ParameterHandle( std::shared_ptr< Parameter > );
 
 			bool					isValid() const;
-			std::string				getName() const;
+
+			FunctionBlockHandle		getBlock();
 
 			//DataItem				getValue() const;
 			//DataItem				getCurrentValue() const;

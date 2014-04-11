@@ -18,16 +18,38 @@
 
 #include "engine/_2RealMultiInlet.h"
 #include "engine/_2RealInlet.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealBlock.h"
+#include "engine/_2RealIoSlotMetainfo.h"
+#include "engine/_2RealId.h"
 
 namespace _2Real
 {
 
-	MultiInlet::MultiInlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
-		AbstractInlet( meta ), std::enable_shared_from_this< MultiInlet >(), mInfo( nullptr )
+	struct PtrCmp : public std::unary_function< std::string, bool >
 	{
-		//mInfo = clone( mMetainfo, meta.)
-		//mInfo->setMultiInlet( false );
+		explicit PtrCmp( std::shared_ptr< Inlet > inlet ) : mInlet( inlet ) { assert( mInlet ); }
+
+		bool operator()( std::shared_ptr< Inlet > other )
+		{
+			assert( other );
+			return mInlet.get() == other.get();
+		}
+
+		std::shared_ptr< Inlet > mInlet;
+	};
+
+	std::shared_ptr< AbstractInlet > MultiInlet::createFromMetainfo( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta )
+	{
+		std::shared_ptr< const InstanceId > inletId = InstanceId::create( meta->getId(), parent->getId(), InstanceType::IOSLOT, meta->getId()->getName() );
+		std::shared_ptr< MultiInlet > inlet( new MultiInlet( parent, meta, inletId ) );
+
+		return inlet;
+	}
+
+	MultiInlet::MultiInlet( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta, std::shared_ptr< const InstanceId > id ) :
+		AbstractInlet( parent, meta, id ),
+		std::enable_shared_from_this< MultiInlet >()
+	{
 	}
 
 	void MultiInlet::update()
@@ -40,35 +62,52 @@ namespace _2Real
 		}
 	}
 
-	uint32_t MultiInlet::getSize() const
+	std::vector< std::shared_ptr< Inlet > >::size_type MultiInlet::getSize() const
 	{
+		std::lock_guard< std::mutex > lock( mMutex );
 		return mInlets.size();
 	}
 
 	bool MultiInlet::isEmpty() const
 	{
+		std::lock_guard< std::mutex > lock( mMutex );
 		return mInlets.empty();
 	}
 
-	std::shared_ptr< Inlet > MultiInlet::operator[]( const uint32_t index )
+	std::shared_ptr< Inlet > MultiInlet::operator[]( const uint32_t idx )
 	{
-		return mInlets[ index ];
+		std::lock_guard< std::mutex > lock( mMutex );
+		return mInlets[ idx ];
 	}
 
 	std::shared_ptr< Inlet > MultiInlet::add_front()
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
-
-		mInlets.push_front( std::shared_ptr< Inlet >( new Inlet( mInfo ) ) );
+		std::shared_ptr< Inlet > inlet = Inlet::createFromMetainfo( shared_from_this(), AbstractInlet::mMetainfo.lock() );
+		mInlets.push_front( inlet );
+		mInletAdded.notify( inlet );
 		return mInlets.front();
 	}
 
 	std::shared_ptr< Inlet > MultiInlet::add_back()
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
-
-		mInlets.push_back( std::shared_ptr< Inlet >( new Inlet( mInfo ) ) );
+		std::shared_ptr< Inlet > inlet = Inlet::createFromMetainfo( shared_from_this(), AbstractInlet::mMetainfo.lock() );
+		mInlets.push_back( inlet );
+		mInletAdded.notify( inlet );
 		return mInlets.back();
+	}
+
+	void MultiInlet::remove( std::shared_ptr< Inlet > inlet )
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+
+		auto it = std::find_if( mInlets.begin(), mInlets.end(), PtrCmp( inlet ) );
+		if ( it == mInlets.end() )
+			throw NotFound( inlet->getId()->getName() );
+
+		mInlets.erase( it );
+		mInletRemoved.notify( inlet );
 	}
 
 }

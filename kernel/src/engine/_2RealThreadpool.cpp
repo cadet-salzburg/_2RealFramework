@@ -67,7 +67,6 @@ namespace _2Real
 		}
 		catch( std::system_error const& e )
 		{
-			std::cout << "SYSERROR" << std::endl;
 		}
 	}
 

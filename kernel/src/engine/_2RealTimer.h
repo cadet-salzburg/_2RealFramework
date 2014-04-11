@@ -41,6 +41,10 @@ namespace _2Real
 
 		void update();
 
+		void enable() {}
+		void disable() {}
+		bool reset() { return false; }
+
 	private:
 
 		uint64_t						mPeriod;

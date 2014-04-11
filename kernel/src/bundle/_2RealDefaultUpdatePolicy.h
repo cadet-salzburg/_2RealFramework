@@ -36,7 +36,7 @@ namespace _2Real
 			DefaultUpdatePolicy( std::shared_ptr< UpdatePolicyMetainfo > );
 
 			void set( const DefaultPolicy );
-			void set( std::vector< std::vector< InletPolicy > > );
+			//void set( std::vector< std::vector< InletPolicy > > );
 
 		private:
 

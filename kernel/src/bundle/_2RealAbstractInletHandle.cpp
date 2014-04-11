@@ -23,19 +23,9 @@ namespace _2Real
 {
 	namespace bundle
 	{
-
-		AbstractInletHandle::~AbstractInletHandle()
-		{
-		}
-
 		AbstractInletHandle::AbstractInletHandle( std::shared_ptr< AbstractInlet > inlet ) :
 			mImpl( inlet )
 		{
-		}
-
-		std::string AbstractInletHandle::getName() const
-		{
-			return mImpl->getName();
 		}
 
 		bool AbstractInletHandle::isMultiInlet() const

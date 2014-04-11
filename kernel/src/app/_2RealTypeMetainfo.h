@@ -32,14 +32,15 @@ namespace _2Real
 
 		public:
 
-			TypeMetainfo() = default;
 			explicit TypeMetainfo( std::shared_ptr< const TMetainfo > );
+
+			TypeMetainfo() = default;
 			virtual ~TypeMetainfo() = default;
 
-			bool isValid() const;
-			bool isBasicType() const;
-			std::string getName() const;
-			DataItem makeData() const;
+			bool			isValid() const;
+			bool			isBasicType() const;
+			std::string		getName() const;
+			DataItem		makeData() const;
 
 		private:
 

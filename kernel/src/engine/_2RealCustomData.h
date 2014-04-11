@@ -146,11 +146,11 @@ namespace _2Real
 						return boost::get< TData >( it.getValue() );
 				}
 
-				throw _2Real::NotFoundException( fieldName );
+				throw _2Real::NotFound( fieldName );
 			}
 			catch ( boost::bad_get const& e )
 			{
-				throw _2Real::TypeMismatchException( fieldName );
+				throw _2Real::TypeMismatch( fieldName );
 			}
 		}
 
@@ -165,11 +165,11 @@ namespace _2Real
 						return boost::get< TData >( it.getValue() );
 				}
 
-				throw _2Real::NotFoundException( fieldName );
+				throw _2Real::NotFound( fieldName );
 			}
 			catch ( boost::bad_get const& e )
 			{
-				throw _2Real::TypeMismatchException( fieldName );
+				throw _2Real::TypeMismatch( fieldName );
 			}
 		}
 

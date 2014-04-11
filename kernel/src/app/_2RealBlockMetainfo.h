@@ -35,19 +35,24 @@ namespace _2Real
 
 		public:
 
-			BlockMetainfo();
 			explicit BlockMetainfo( std::shared_ptr< const SharedServiceMetainfo > );
 
-			bool isValid() const;
+			// bundle unload -> invalid
+			bool			isValid() const;
 
-			bool isContext() const;
-			std::string getName() const;
-			std::string getDescription() const;
-			void getDependencies( std::vector< std::string > & ) const;
-			
-			void getInletMetainfos( std::vector< InletMetainfo > & );
-			void getOutletMetainfos( std::vector< OutletMetainfo > & );
-			void getParameterMetainfos( std::vector< ParameterMetainfo > & );
+			bool			isSingleton() const;
+			std::string		getName() const;
+			std::string		getDescription() const;
+
+			std::vector< std::string >			getDependenciesByName() const;
+
+			std::vector< InletMetainfo >		getInlets() const;
+			std::vector< OutletMetainfo >		getOutlets() const;
+			std::vector< ParameterMetainfo >	getParameters() const;
+
+			InletMetainfo		getInlet( std::string const& );
+			OutletMetainfo		getOutlet( std::string const& );
+			ParameterMetainfo	getParameter( std::string const& );
 			
 		private:
 

@@ -17,24 +17,31 @@
 */
 
 #include "engine/_2RealAbstractInlet.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
 
 namespace _2Real
 {
 
-	AbstractInlet::AbstractInlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
-		mMetainfo( meta )
+	AbstractInlet::AbstractInlet( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta, std::shared_ptr< const InstanceId > id ) :
+		mParent( parent ),
+		mMetainfo( meta ),
+		mId( id )
 	{
 	}
 
 	bool AbstractInlet::isMultiInlet() const
 	{
-		return mMetainfo->isMulti();
+		return mMetainfo.lock()->isMulti();
 	}
 
-	std::string AbstractInlet::getName() const
+	std::shared_ptr< const InstanceId > AbstractInlet::getId() const
 	{
-		return mMetainfo->getName();
+		return mId;
+	}
+
+	std::shared_ptr< Block > AbstractInlet::getParent()
+	{
+		return mParent.lock();
 	}
 
 }

@@ -24,7 +24,6 @@ namespace _2Real
 {
 	namespace app
 	{
-
 		CustomTypeMetainfo::CustomTypeMetainfo( std::shared_ptr< const SharedTypeMetainfo > meta ) :
 			TypeMetainfo( meta ),
 			mImpl( meta )
@@ -64,6 +63,5 @@ namespace _2Real
 			}
 			return result;
 		}
-
 	}
 }

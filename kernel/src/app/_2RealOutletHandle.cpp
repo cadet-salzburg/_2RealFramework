@@ -25,11 +25,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		OutletHandle::OutletHandle() :
-			mImpl()
-		{
-		}
-
 		OutletHandle::OutletHandle( std::shared_ptr< Outlet > outlet ) :
 			mImpl( outlet )
 		{
@@ -39,12 +34,6 @@ namespace _2Real
 		{
 			std::shared_ptr< Outlet > outlet = mImpl.lock();
 			return ( nullptr != outlet.get() );
-		}
-
-		std::string OutletHandle::getName() const
-		{
-			std::shared_ptr< Outlet > outlet = checkValidity< Outlet >( mImpl, "outlet" );
-			return outlet->getName();
 		}
 
 		OutletHandle::operator std::shared_ptr< DataSource > ()

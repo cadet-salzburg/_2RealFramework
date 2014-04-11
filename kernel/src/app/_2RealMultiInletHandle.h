@@ -34,12 +34,18 @@ namespace _2Real
 
 		public:
 
-			MultiInletHandle();
 			explicit MultiInletHandle( std::shared_ptr< MultiInlet > );
+
+			using AbstractInletHandle::isValid;
+			using AbstractInletHandle::isMultiInlet;
+			using AbstractInletHandle::getBlock;
 
 			InletHandle			operator[]( const uint32_t );
 			uint32_t			getSize() const;
 			bool				isEmpty() const;
+
+			InletHandle			add();
+			void				remove( InletHandle );
 
 		private:
 

@@ -24,22 +24,38 @@
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
+	class InstanceId;
+	class Block;
 
 	class Parameter : private InSlot, public std::enable_shared_from_this< Parameter >
 	{
 
 	public:
 
-		explicit Parameter( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
+		static std::shared_ptr< Parameter > createFromMetainfo( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo > );
 
-		std::string getName() const;
+		Parameter() = delete;
+		Parameter( Parameter const& other ) = delete;
+		Parameter( Parameter && other ) = delete;
+		Parameter& operator=( Parameter const& other ) = delete;
+		Parameter& operator=( Parameter && other ) = delete;
+
+		~Parameter() = default;
+
+		std::shared_ptr< const InstanceId > getId() const;
+		std::shared_ptr< Block >			getParent();
+
 		using InSlot::update;
 		using InSlot::getValue;
 
 	private:
 
-		std::shared_ptr< const SharedServiceIoSlotMetainfo >	mMetainfo;
+		Parameter( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo >, std::shared_ptr< const InstanceId > );
+
+		std::weak_ptr< Block >						mParent;
+		std::weak_ptr< const IoSlotMetainfo >		mMetainfo;
+		std::shared_ptr< const InstanceId >			mId;
 
 	};
 }

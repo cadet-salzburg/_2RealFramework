@@ -1,65 +1,11 @@
 todo list
 
-dlls
+state handler needs refactoring
 
-get dll loading working on MSW ( just going to take some code from poco )
-get bundle loading working
-write test bundle ( without datatypes ) & get bundle metatdata working
-
-open question: bundle dir ( env variable ), relative paths etc?
-
-datatypes
-
-write test bundle + datatypes
-
-Metainfo Id:
-
-bundle ( unique path on pc, name not necessarily )
-block ( unique name in bundle )
-type ( unique name in bundle )
-io slot ( unique name in block )
-
-ONCE THE ENGINE IS DEAD, EVERYTHING, INCLUDING CUSTOM TYPES, BECOMES INVALID :)
-
-custom type:
-
-getName -> name
-getBundleName -> bundle name
-
--> call getTypemetainfo in bundle
-
-createTypeMetainfo -> place request in bundle metainfo, ctor thread creates this shit?
-make custom data: always problematic
-
-clone: clones all subfields -> i need the fucking new metainfo id to clone
-
-so:
-
-makeData mainly called from application, which controls engine
-
-getBundleMetainfo: shared_ptr auf bundle metainfo created by engine
-
--> tell engine which types exist ( names )
-
-getTypeMetainfo: shared_ptr auf type metainfo created by engine
--> fields which themselves are custom types? -> bundle handle, can grab handle to metainfo
-
-getBlockMetainfo: same as above
-
-tell engine which blocks exist: name, number of inlets, number of outlets, number of parameters
-each block: update policy
-
-setDescription
-setUpdatePolicy -> allocated, copy
-setInlet( )
+queue -> to state? i need to know if i can update some shit
 
 
-getTypeMetainfo
 
-TypeMetainfo::
-std::vector< std::pair< std::string, TypeMetainfo > >
 
-@ type metainfo: one big type collection, contains basic types ( on init! )
-bundle: on unload removes all types -> no more shitty export needed
 
 

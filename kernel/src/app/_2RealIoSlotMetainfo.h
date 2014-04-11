@@ -23,29 +23,30 @@
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
 
 	namespace app
 	{
+		class TypeMetainfo;
+
 		class IoSlotMetainfo
 		{
 
 		public:
 
-			virtual ~IoSlotMetainfo();
+			explicit IoSlotMetainfo( std::shared_ptr< const _2Real::IoSlotMetainfo > );
+			virtual ~IoSlotMetainfo() = default;
 
-			bool isValid() const;
-
+			bool			isValid() const;
 			std::string		getName() const;
 			std::string		getDescription() const;
-			std::string		getDatatype() const;
+			TypeMetainfo	getTypeMetainfo() const;
 			DataItem		getInitialValue() const;
+			bool			isMulti() const;
 	
-		protected:
+		private:
 
-			IoSlotMetainfo();
-			explicit IoSlotMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
-			std::weak_ptr< const SharedServiceIoSlotMetainfo >		mImpl;
+			std::weak_ptr< const _2Real::IoSlotMetainfo >		mImpl;
 
 		};
 	}

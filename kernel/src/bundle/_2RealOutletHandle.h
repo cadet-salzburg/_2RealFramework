@@ -36,8 +36,6 @@ namespace _2Real
 
 			explicit OutletHandle( std::shared_ptr< Outlet > );
 
-			std::string getName() const;
-
 			DataItem & getValue();
 
 		private:

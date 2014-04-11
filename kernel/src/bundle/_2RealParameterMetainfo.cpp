@@ -22,7 +22,7 @@ namespace _2Real
 {
 	namespace bundle
 	{
-		ParameterMetainfo::ParameterMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > info ) :
+		ParameterMetainfo::ParameterMetainfo( std::shared_ptr< _2Real::IoSlotMetainfo > info ) :
 			IoSlotMetainfo( info )
 		{
 		}

@@ -27,7 +27,7 @@ void Counter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< s
 	counterinfo.setDescription( "test block - some simple counters" );
 
 	_2Real::bundle::DefaultUpdatePolicy policy = counterinfo.getDefaultUpdatePolicy();
-	policy.set( _2Real::DefaultPolicy::ALL );
+	policy.set( _2Real::DefaultPolicy::DISABLED );
 
 	_2Real::bundle::InletMetainfo inA = counterinfo.getInletMetainfo( "inA" );
 	inA.setDescription( "int increment" );
@@ -82,8 +82,8 @@ void Counter::setup()
 {	
 	{
 
-		_2Real::bundle::ParameterHandle *parameter = mIo.mParameters[ 0 ];
-		_2Real::bundle::OutletHandle *outlet = mIo.mOutlets[ 0 ];
+		auto parameter = mIo.mParameters[ 0 ];
+		auto outlet = mIo.mOutlets[ 0 ];
 
 		int32_t& val = boost::get< int32_t >( outlet->getValue() );
 		int32_t const& init = boost::get< int32_t >( parameter->getValue() );
@@ -95,8 +95,8 @@ void Counter::setup()
 
 	{
 
-		_2Real::bundle::ParameterHandle *parameter = mIo.mParameters[ 1 ];
-		_2Real::bundle::OutletHandle *outlet = mIo.mOutlets[ 1 ];
+		auto parameter = mIo.mParameters[ 1 ];
+		auto outlet = mIo.mOutlets[ 1 ];
 
 		float & val = boost::get< float >( outlet->getValue() );
 		float const& init = boost::get< float >( parameter->getValue() );
@@ -108,8 +108,8 @@ void Counter::setup()
 
 	{
 
-		_2Real::bundle::ParameterHandle *parameter = mIo.mParameters[ 2 ];
-		_2Real::bundle::OutletHandle *outlet = mIo.mOutlets[ 2 ];
+		auto parameter = mIo.mParameters[ 2 ];
+		auto outlet = mIo.mOutlets[ 2 ];
 
 		uint64_t & val = boost::get< uint64_t >( outlet->getValue() );
 		uint64_t const& init = boost::get< uint64_t >( parameter->getValue() );
@@ -124,8 +124,8 @@ void Counter::update()
 {
 	{
 
-		_2Real::bundle::InletHandle *inlet = dynamic_cast< _2Real::bundle::InletHandle * >( mIo.mInlets[ 0 ] );
-		_2Real::bundle::OutletHandle *outlet = mIo.mOutlets[ 0 ];
+		auto inlet = std::dynamic_pointer_cast< _2Real::bundle::InletHandle >( mIo.mInlets[ 0 ] );
+		auto outlet = mIo.mOutlets[ 0 ];
 
 		int32_t & val = boost::get< int32_t >( outlet->getValue() );
 		int32_t const& inc = boost::get< int32_t >( inlet->getValue() );
@@ -137,8 +137,8 @@ void Counter::update()
 
 	{
 
-		_2Real::bundle::InletHandle *inlet = dynamic_cast< _2Real::bundle::InletHandle * >( mIo.mInlets[ 1 ] );
-		_2Real::bundle::OutletHandle *outlet = mIo.mOutlets[ 1 ];
+		auto inlet = std::dynamic_pointer_cast< _2Real::bundle::InletHandle >( mIo.mInlets[ 1 ] );
+		auto outlet = mIo.mOutlets[ 1 ];
 
 		float & val = boost::get< float >( outlet->getValue() );
 		float const& inc = boost::get< float >( inlet->getValue() );
@@ -150,8 +150,8 @@ void Counter::update()
 
 	{
 
-		_2Real::bundle::InletHandle *inlet = dynamic_cast< _2Real::bundle::InletHandle * >( mIo.mInlets[ 2 ] );
-		_2Real::bundle::OutletHandle *outlet = mIo.mOutlets[ 2 ];
+		auto inlet = std::dynamic_pointer_cast< _2Real::bundle::InletHandle >( mIo.mInlets[ 2 ] );
+		auto outlet = mIo.mOutlets[ 2 ];
 
 		uint64_t & val = boost::get< uint64_t >( outlet->getValue() );
 		uint64_t const& inc = boost::get< uint64_t >( inlet->getValue() );

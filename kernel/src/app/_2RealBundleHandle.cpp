@@ -26,11 +26,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		BundleHandle::BundleHandle() :
-			mImpl()
-		{
-		}
-
 		BundleHandle::BundleHandle( std::shared_ptr< Bundle > bundle ) :
 			mImpl( bundle )
 		{
@@ -40,18 +35,6 @@ namespace _2Real
 		{
 			std::shared_ptr< Bundle > bundle = mImpl.lock();
 			return ( nullptr != bundle.get() );
-		}
-
-		//void BundleHandle::unload( const long blockTimeout )
-		//{
-		//	std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-		//	bundle->unload( blockTimeout );
-		//}
-
-		BundleMetainfo BundleHandle::getMetainfo() const
-		{
-			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			return BundleMetainfo( bundle->getMetainfo() );
 		}
 
 		FunctionBlockHandle BundleHandle::createBlock( std::string const& name )

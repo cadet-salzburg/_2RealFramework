@@ -20,11 +20,12 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include <ostream>
 
 namespace _2Real
 {
 
-	enum class MetainfoType { BUNDLE, BLOCK, IOSLOT, TYPE, POLICY, UNKNOWN };
+	enum class MetainfoType { BUNDLE, BLOCK, IOSLOT, BASICTYPE, CUSTOMTYPE, POLICY, UNKNOWN };
 
 	std::string typeToString( const MetainfoType );
 
@@ -84,5 +85,75 @@ namespace _2Real
 		uint64_t								mId;
 
 	};
+
+	//class Id
+	//{
+
+	//public:
+
+	//	virtual ~Id() = default;
+
+	//	virtual std::string toString() const = 0;
+	//	virtual std::string getName() const = 0;
+
+	//	virtual bool operator<( Id const& other ) const = 0;
+	//	virtual bool operator==( Id const& other ) const = 0;
+	//
+	//	virtual std::ostream & print( std::ostream & ) const = 0;
+	//	friend std::ostream& operator<<( std::ostream &, Id const& );
+
+	//private:
+
+	//	static uint64_t	sCounter;
+
+	//	explicit Id( const uint64_t );
+
+	//	uint64_t	mId;
+
+	//};
+
+	//class BundleId : public Id
+	//{
+
+	//public:
+
+	//	static std::shared_ptr< Id > create( Path const& );
+
+	//	std::ostream & print( std::ostream & ) const;
+
+	//private:
+
+	//	std::string		mName;
+
+	//};
+
+	//class BlockId : public Id
+	//{
+
+	//public:
+
+	//	static std::shared_ptr< InstanceId > create( std::shared_ptr< BundleId >, const std::string, const uint64_t );
+
+	//private:
+
+	//	std::string					mName;
+	//	uint64_t					mCreationCount;
+	//	std::weak_ptr< BundleId >	mParent;
+
+	//};
+
+	//class IoSlotId : public Id
+	//{
+
+	//public:
+
+	//	static std::shared_ptr< InstanceId > create( std::shared_ptr< BundleId >, const std::string, const uint64_t );
+
+	//private:
+
+	//	std::string					mName;
+	//	std::weak_ptr< BlockId >	mParent;
+
+	//};
 
 }

@@ -17,17 +17,68 @@
 */
 
 #include "engine/_2RealInlet.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
+#include "engine/_2RealBlock.h"
 #include "engine/_2RealLink.h"
+#include "engine/_2RealId.h"
+#include "engine/_2RealMultiInlet.h"
 
 namespace _2Real
 {
-
-	Inlet::Inlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
-		InSlot(), AbstractInlet( meta ), DataSink(), std::enable_shared_from_this< Inlet >()
+	std::shared_ptr< Inlet > Inlet::createFromMetainfo( std::shared_ptr< MultiInlet > parentInlet, std::shared_ptr< const IoSlotMetainfo > meta )
 	{
+		std::shared_ptr< Block > block = parentInlet->getParent();
+		std::shared_ptr< const InstanceId >	inletId =  InstanceId::create( meta->getId(), block->getId(), InstanceType::IOSLOT, meta->getId()->getName() );
+		std::shared_ptr< Inlet > inlet( new Inlet( block, parentInlet, meta, inletId ) );
+
 		std::shared_ptr< DataItem > initValue( new DataItem( meta->getInitialValue() ) );
-		InSlot::setTmpValue( initValue );
+		inlet->InSlot::setTmpValue( initValue );
+
+		return inlet;
+	}
+
+	std::shared_ptr< AbstractInlet > Inlet::createFromMetainfo( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta )
+	{
+		std::shared_ptr< const InstanceId >	inletId =  InstanceId::create( meta->getId(), parent->getId(), InstanceType::IOSLOT, meta->getId()->getName() );
+		std::shared_ptr< Inlet > inlet( new Inlet( parent, meta, inletId ) );
+
+		std::shared_ptr< DataItem > initValue( new DataItem( meta->getInitialValue() ) );
+		inlet->InSlot::setTmpValue( initValue );
+
+		return inlet;
+	}
+
+	std::shared_ptr< AbstractInlet > Inlet::createFromMetainfo( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta, const uint64_t count )
+	{
+		std::shared_ptr< const InstanceId >	inletId = InstanceId::create( meta->getId(), parent->getId(), InstanceType::IOSLOT, meta->getId()->getName() + std::to_string( count ) );
+		std::shared_ptr< Inlet > inlet( new Inlet( parent, meta, inletId ) );
+
+		std::shared_ptr< DataItem > initValue( new DataItem( meta->getInitialValue() ) );
+		inlet->InSlot::setTmpValue( initValue );
+
+		return inlet;
+	}
+
+	Inlet::Inlet( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta, std::shared_ptr< const InstanceId > id ) :
+		InSlot(),
+		AbstractInlet( parent, meta, id ),
+		DataSink(),
+		std::enable_shared_from_this< Inlet >()
+	{
+	}
+
+	Inlet::Inlet( std::shared_ptr< Block > parent, std::shared_ptr< MultiInlet > parentInlet, std::shared_ptr< const IoSlotMetainfo > meta, std::shared_ptr< const InstanceId > id ) :
+		InSlot(),
+		AbstractInlet( parent, meta, id ),
+		DataSink(),
+		std::enable_shared_from_this< Inlet >(),
+		mParentInlet( parentInlet )
+	{
+	}
+
+	std::shared_ptr< MultiInlet > Inlet::getParentInlet()
+	{
+		return mParentInlet.lock();
 	}
 
 	void Inlet::update()
@@ -38,7 +89,13 @@ namespace _2Real
 	void Inlet::receiveData( std::shared_ptr< const DataItem > data )
 	{
 		InSlot::setTmpValue( data );
-		mValueUpdatedEvent.notify( mId );
+		mUpdateEvent.notify( shared_from_this() );
+	}
+
+	void Inlet::setData( DataItem data )
+	{
+		InSlot::setTmpValueExt( data );
+		mUpdateEvent.notify( shared_from_this() );
 	}
 
 	std::shared_ptr< Link > Inlet::linkTo( std::shared_ptr< DataSource > source )
@@ -47,10 +104,5 @@ namespace _2Real
 		// ? might be problematic if the load - save thing comes back ?
 		mLink.reset( new Link( source, std::static_pointer_cast< DataSink >( shared_from_this() ) ) );
 		return mLink;
-	}
-
-	std::shared_ptr< const TMetainfo > Inlet::getTypeMetainfo() const
-	{
-		return mMetainfo->getTypeMetainfo();
 	}
 }

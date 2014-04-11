@@ -23,12 +23,7 @@ namespace _2Real
 {
 	namespace app
 	{
-		ParameterMetainfo::ParameterMetainfo() :
-			IoSlotMetainfo()
-		{
-		}
-
-		ParameterMetainfo::ParameterMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
+		ParameterMetainfo::ParameterMetainfo( std::shared_ptr< const _2Real::IoSlotMetainfo > meta ) :
 			IoSlotMetainfo( meta )
 		{
 		}

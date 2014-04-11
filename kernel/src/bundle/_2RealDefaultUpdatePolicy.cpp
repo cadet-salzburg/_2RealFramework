@@ -33,9 +33,9 @@ namespace _2Real
 			mImpl.lock()->set( p );
 		}
 
-		void DefaultUpdatePolicy::set( std::vector< std::vector< InletPolicy > > settings )
-		{
-			mImpl.lock()->set( settings );
-		}
+		//void DefaultUpdatePolicy::set( std::vector< std::vector< InletPolicy > > settings )
+		//{
+		//	mImpl.lock()->set( settings );
+		//}
 	}
 }

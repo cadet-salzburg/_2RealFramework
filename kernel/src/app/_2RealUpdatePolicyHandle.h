@@ -19,6 +19,7 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "enums/_2RealDefaultPolicy.h"
 
 namespace _2Real
 {
@@ -26,15 +27,19 @@ namespace _2Real
 
 	namespace app
 	{
+		class FunctionBlockHandle;
+
 		class UpdatePolicyHandle
 		{
 
 		public:
 
-			UpdatePolicyHandle();
 			explicit UpdatePolicyHandle( std::shared_ptr< UpdatePolicy > );
 
-			bool isValid() const;
+			bool					isValid() const;
+
+			FunctionBlockHandle		getBlock();
+			void					set( const DefaultPolicy );
 
 		private:
 

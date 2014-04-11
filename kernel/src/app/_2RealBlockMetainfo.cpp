@@ -28,11 +28,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		BlockMetainfo::BlockMetainfo() :
-			mImpl()
-		{
-		}
-
 		BlockMetainfo::BlockMetainfo( std::shared_ptr< const SharedServiceMetainfo > meta ) :
 			mImpl( meta )
 		{
@@ -44,7 +39,7 @@ namespace _2Real
 			return ( meta.get() != nullptr );
 		}
 
-		bool BlockMetainfo::isContext() const
+		bool BlockMetainfo::isSingleton() const
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
 			return meta->isSingleton();
@@ -62,40 +57,55 @@ namespace _2Real
 			return meta->getDescription();
 		}
 
-		void BlockMetainfo::getDependencies( std::vector< std::string > &dependencies ) const
+		std::vector< std::string > BlockMetainfo::getDependenciesByName() const
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
-			dependencies = meta->getDependencies();
+			return meta->getDependencies();
 		}
 
-		void BlockMetainfo::getInletMetainfos( std::vector< InletMetainfo > &inlets )
+		std::vector< InletMetainfo > BlockMetainfo::getInlets() const
 		{
-			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
-			
-			auto tmp = meta->getInletMetainfos();
-
-			for ( auto it : tmp )
-				inlets.push_back( InletMetainfo( it ) );
+			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );		
+			std::vector< InletMetainfo > result;
+			for ( auto it : meta->getInletMetainfos() )
+				result.push_back( InletMetainfo( it ) );
+			return result;
 		}
 
-		void BlockMetainfo::getOutletMetainfos( std::vector< OutletMetainfo > &outlets )
+		std::vector< OutletMetainfo > BlockMetainfo::getOutlets() const
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
-
-			auto tmp = meta->getOutletMetainfos();
-
-			for ( auto it : tmp )
-				outlets.push_back( OutletMetainfo( it ) );
+			std::vector< OutletMetainfo > result;
+			for ( auto it : meta->getOutletMetainfos() )
+				result.push_back( OutletMetainfo( it ) );
+			return result;
 		}
 
-		void BlockMetainfo::getParameterMetainfos( std::vector< ParameterMetainfo > &parameters )
+		std::vector< ParameterMetainfo > BlockMetainfo::getParameters() const
 		{
 			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
+			std::vector< ParameterMetainfo > result;
+			for ( auto it : meta->getParameterMetainfos() )
+				result.push_back( ParameterMetainfo( it ) );
+			return result;
+		}
 
-			auto tmp = meta->getParameterMetainfos();
+		InletMetainfo BlockMetainfo::getInlet( std::string const& name )
+		{
+			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
+			return InletMetainfo( meta->getInletMetainfo( name ) );
+		}
 
-			for ( auto it : tmp )
-				parameters.push_back( ParameterMetainfo( it ) );
+		OutletMetainfo BlockMetainfo::getOutlet( std::string const& name )
+		{
+			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
+			return OutletMetainfo( meta->getOutletMetainfo( name ) );
+		}
+
+		ParameterMetainfo BlockMetainfo::getParameter( std::string const& name )
+		{
+			std::shared_ptr< const SharedServiceMetainfo > meta = checkValidity< const SharedServiceMetainfo >( mImpl, "block metainfo" );
+			return ParameterMetainfo( meta->getParameterMetainfo( name ) );
 		}
 
 		//std::shared_ptr< const UpdatePolicyMetainfo > BlockMetainfo::getDefaultUpdatePolicy() const

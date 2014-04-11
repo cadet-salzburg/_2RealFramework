@@ -35,8 +35,7 @@ namespace _2Real
 		InSlot();
 		virtual ~InSlot();
 
-		// used by client app setter -> move
-		//void setTmpValue( DataItem && );
+		void setTmpValueExt( DataItem );
 
 		// used internally to avoid copies
 		void setTmpValue( std::shared_ptr< const DataItem > );

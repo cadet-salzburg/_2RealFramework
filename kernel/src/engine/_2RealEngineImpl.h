@@ -34,6 +34,7 @@ namespace _2Real
 	class Threadpool;
 	class Timer;
 	class Bundle;
+	class SharedLibraryMetainfo;
 
 	class EngineImpl : public std::enable_shared_from_this< EngineImpl >
 	{
@@ -45,7 +46,7 @@ namespace _2Real
 
 		void clear();
 
-		std::shared_ptr< Bundle > 			loadLibrary( std::string const& filename );
+		std::pair< std::shared_ptr< Bundle >, std::shared_ptr< const SharedLibraryMetainfo > > loadLibrary( std::string const& filename );
 		Path const&							getBundleDirectory() const;
 
 		std::shared_ptr< Timer >			createTimer( const double fps );

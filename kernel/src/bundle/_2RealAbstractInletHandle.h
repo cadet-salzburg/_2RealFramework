@@ -33,10 +33,9 @@ namespace _2Real
 		public:
 
 			explicit AbstractInletHandle( std::shared_ptr< AbstractInlet > );
-			virtual ~AbstractInletHandle();
+			virtual ~AbstractInletHandle() = default;
 
 			bool isMultiInlet() const;
-			std::string getName() const;
 
 		private:
 

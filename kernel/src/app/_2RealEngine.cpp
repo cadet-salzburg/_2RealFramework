@@ -18,6 +18,7 @@
 
 #include "app/_2RealEngine.h"
 #include "app/_2RealBundleHandle.h"
+#include "app/_2RealBundleMetainfo.h"
 #include "app/_2RealTimerHandle.h"
 #include "app/_2RealSystemHandle.h"
 #include "enums/_2RealThreadpoolPolicy.h"
@@ -49,10 +50,10 @@ namespace _2Real
 			return mImpl->getBundleDirectory();
 		}
 
-		BundleHandle Engine::loadBundle( std::string const& libname )
+		std::pair< BundleHandle, BundleMetainfo > Engine::loadBundle( std::string const& libname )
 		{
-			auto bundle = mImpl->loadLibrary( libname );
-			return BundleHandle( bundle );
+			auto result = mImpl->loadLibrary( libname );
+			return std::make_pair( BundleHandle( result.first ), BundleMetainfo( result.second ) );
 		}
 
 	// ---------------------------------- bundle

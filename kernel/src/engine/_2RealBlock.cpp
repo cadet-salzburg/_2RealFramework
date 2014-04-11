@@ -18,7 +18,7 @@
 
 #include "engine/_2RealBlock.h"
 #include "engine/_2RealSharedServiceMetainfo.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
 #include "engine/_2RealAbstractSharedServiceFactory.h"
 #include "engine/_2RealInlet.h"
 #include "engine/_2RealOutlet.h"
@@ -26,6 +26,8 @@
 #include "engine/_2RealMultiInlet.h"
 #include "engine/_2RealId.h"
 #include "engine/_2RealStateMachine.h"
+#include "engine/_2RealBundle.h"
+#include "engine/_2RealUpdatePolicy.h"
 
 namespace _2Real
 {
@@ -59,92 +61,120 @@ namespace _2Real
 
 	/////////////////////////
 
-	std::shared_ptr< Block > Block::createFromMetainfo( std::shared_ptr< const SharedServiceMetainfo > meta, std::shared_ptr< const InstanceId > id, std::shared_ptr< Threadpool > threads, const std::string name )
+	std::shared_ptr< Block > Block::createFromMetainfo( std::shared_ptr< Bundle > parent, std::shared_ptr< const SharedServiceMetainfo > meta, std::shared_ptr< Threadpool > threads, const uint64_t count )
 	{
-		auto blockId = InstanceId::create( meta->getId(), id, InstanceType::BLOCK, name );
-		auto factory = meta->getFactory();
+		std::vector< std::shared_ptr< AbstractSharedService > > dependencies;
+		std::vector< std::string > dependenciesByName = meta->getDependencies();
+		for ( auto dependency : dependenciesByName )
+		{
+			//dependencies.push_back( owner->createBlock( dependency ) );
+		}
 
-		// block io for the service
+		auto blockId = InstanceId::create( meta->getId(), parent->getId(), InstanceType::BLOCK, meta->getId()->getName() + std::to_string( count ) );
+		std::shared_ptr< Block > block( new Block( parent, meta, blockId, threads ) );
+
+
 		std::shared_ptr< BlockIo > blockIo( new BlockIo );
-
 		for ( auto it : meta->getInletMetainfos() )
-			blockIo->mInlets.push_back( it->isMulti() ? std::shared_ptr< AbstractInlet >( new MultiInlet( it ) ) : std::shared_ptr< AbstractInlet >( new Inlet( it ) ) );
+			blockIo->mInlets.push_back( it->isMulti() ? MultiInlet::createFromMetainfo( block, it ) : Inlet::createFromMetainfo( block, it ) );
 		for ( auto it : meta->getOutletMetainfos() )
-			blockIo->mOutlets.push_back( std::shared_ptr< Outlet >( new Outlet( it ) ) );
+			blockIo->mOutlets.push_back( Outlet::createFromMetainfo( block, it ) );
 		for ( auto it : meta->getParameterMetainfos() )
-			blockIo->mParameters.push_back( std::shared_ptr< Parameter >( new Parameter( it ) ) );
+			blockIo->mParameters.push_back( Parameter::createFromMetainfo( block, it ) );
 
-		_2Real::bundle::BlockIo ioHandle( blockIo );
-		blockIo->mBlockObj = meta->getFactory()->create( ioHandle, );
+		_2Real::bundle::BlockIo ioHandle;
+		for ( auto it : blockIo->mInlets )
+		{
+			if ( it->isMultiInlet() )
+				ioHandle.mInlets.push_back( std::shared_ptr< bundle::AbstractInletHandle >( new bundle::MultiInletHandle( std::dynamic_pointer_cast< MultiInlet >( it ) ) ) );
+			else
+				ioHandle.mInlets.push_back( std::shared_ptr< bundle::AbstractInletHandle >( new bundle::InletHandle( std::dynamic_pointer_cast< Inlet >( it ) ) ) );
+		}
+
+		for ( auto it : blockIo->mOutlets )
+			ioHandle.mOutlets.push_back( std::shared_ptr< bundle::OutletHandle >( new bundle::OutletHandle( it ) ) );
+
+		for ( auto it : blockIo->mParameters )
+			ioHandle.mParameters.push_back( std::shared_ptr< bundle::ParameterHandle >( new bundle::ParameterHandle( it ) ) );
+
+		auto factory = meta->getFactory();
+		blockIo->mBlockObj = meta->getFactory()->create( ioHandle, dependencies );
+
+		block->mIo = blockIo;
+
+		std::shared_ptr< UpdatePolicy > policy = UpdatePolicy::createFromMetainfo( block, meta->getDefaultUpdatePolicy(), blockIo->mInlets );
+		
+		block->mUpdatePolicy = policy;
+		
+		block->mStateHandler.reset( new StateMachine( threads, blockIo ) );
+
+		return block;
 	}
 
-	Block::Block( std::shared_ptr< const InstanceId > id, std::shared_ptr< Threadpool > threads, std::shared_ptr< BlockIo > io ) :
+	Block::Block( std::shared_ptr< Bundle > parent, std::shared_ptr< const SharedServiceMetainfo > meta, std::shared_ptr< const InstanceId > id, std::shared_ptr< Threadpool > threads ) :
 		enable_shared_from_this< Block >(),
+		mParent( parent ),
+		mMetainfo( meta ),
 		mId( id ),
-		mStateHandler( new StateMachine( threads, io ) ),
-		mIo( io )
+		mUpdatePolicy( nullptr ),
+		mStateHandler( nullptr ),
+		mIo( nullptr )
 	{
 	}
 
-	//void Block::createIo( std::shared_ptr< const SharedServiceMetainfo > info, std::vector< std::shared_ptr< Parameter > > &parameters, std::vector< std::shared_ptr< AbstractInlet > > &inlets, std::vector< std::shared_ptr< Outlet > > &outlets )
-	//{
-	//	auto inletinfos = info->getInletMetainfos();
-	//	auto outletinfos = info->getOutletMetainfos();
-	//	auto parameterinfos = info->getParameterMetainfos();
-
-	//	for ( auto it : inletinfos )
-	//		inlets.push_back( it->isMulti() ? std::shared_ptr< AbstractInlet >( new MultiInlet( it ) ) : std::shared_ptr< AbstractInlet >( new Inlet( it ) ) );
-
-	//	for ( auto it : outletinfos )
-	//		outlets.push_back( std::shared_ptr< Outlet >( new Outlet( it ) ) );
-
-	//	for ( auto it : parameterinfos )
-	//		parameters.push_back( std::shared_ptr< Parameter >( new Parameter( it ) ) );
-	//}
-
-	/*
-	void Block::destroy( std::function< void() > const& cb )
+	std::shared_ptr< const InstanceId > Block::getId() const
 	{
-		// TODO: immediately unregister the state machine from
-		// all triggers
-
-		// mUpdateTrigger->unregisterFromSignal()
-	}
-	*/
-
-	std::future< BlockState > Block::setup()
-	{
-		return mStateMachine->setup();
+		return mId;
 	}
 
-	std::future< BlockState > Block::singlestep()
+	std::shared_ptr< Bundle > Block::getParent()
 	{
-		return mStateMachine->singlestep();
+		return mParent.lock();
 	}
 
-	std::future< BlockState > Block::shutdown()
+	bool Block::isSingleton() const
 	{
-		return mStateMachine->shutdown();
-	}
-
-	std::future< BlockState > Block::startUpdating( std::shared_ptr< UpdateTrigger > trigger )
-	{
-		return mStateMachine->startRunning( trigger );
-	}
-
-	std::future< BlockState > Block::startUpdating()
-	{
-		return mStateMachine->startRunning( mUpdatePolicy );
-	}
-
-	std::future< BlockState > Block::stopUpdating()
-	{
-		return mStateMachine->stopRunning();
+		return mMetainfo.lock()->isSingleton();
 	}
 
 	std::shared_ptr< BlockIo > Block::getBlockIo()
 	{
 		return mIo;
+	}
+
+	std::shared_ptr< UpdatePolicy > Block::getUpdatePolicy()
+	{
+		return mUpdatePolicy;
+	}
+
+	std::future< BlockState > Block::setup()
+	{
+		return mStateHandler->setup();
+	}
+
+	std::future< BlockState > Block::singlestep()
+	{
+		return mStateHandler->singlestep();
+	}
+
+	std::future< BlockState > Block::shutdown()
+	{
+		return mStateHandler->shutdown();
+	}
+
+	std::future< BlockState > Block::startUpdating( std::shared_ptr< UpdateTrigger > trigger )
+	{
+		return mStateHandler->startRunning( trigger );
+	}
+
+	std::future< BlockState > Block::startUpdating()
+	{
+		return mStateHandler->startRunning( std::dynamic_pointer_cast< UpdateTrigger >( mUpdatePolicy ) );
+	}
+
+	std::future< BlockState > Block::stopUpdating()
+	{
+		return mStateHandler->stopRunning();
 	}
 
 }

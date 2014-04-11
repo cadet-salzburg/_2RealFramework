@@ -19,30 +19,22 @@
 #pragma once
 
 #include "helpers/_2RealStdIncludes.h"
+#include "app/_2RealBlockHandle.h"
 
 namespace _2Real
 {
-	class Block;
-
 	namespace app
 	{
-		class OutletHandle;
-		class BlockMetainfo;
-
-		class ContextBlockHandle
+		class ContextBlockHandle : public BlockHandle
 		{
 
 		public:
 
-			ContextBlockHandle();
 			explicit ContextBlockHandle( std::shared_ptr< Block > );
 
-			bool				isValid() const;
-			BlockMetainfo		getMetainfo() const;
-
-		private:
-
-			std::weak_ptr< Block >		mImpl;
+			using BlockHandle::isValid;
+			using BlockHandle::isSingleton;
+			using BlockHandle::getBundle;
 
 		};
 	}

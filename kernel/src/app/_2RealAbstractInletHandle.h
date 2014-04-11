@@ -26,21 +26,21 @@ namespace _2Real
 
 	namespace app
 	{
+		class FunctionBlockHandle;
+
 		class AbstractInletHandle
 		{
 
 		public:
 
-			AbstractInletHandle();
 			explicit AbstractInletHandle( std::shared_ptr< AbstractInlet > );
-
-			virtual ~AbstractInletHandle();
+			virtual ~AbstractInletHandle() = default;
 
 			bool					isValid() const;
-			std::string				getName() const;
 			bool					isMultiInlet() const;
+			FunctionBlockHandle		getBlock();
 
-		private:
+		protected:
 
 			std::weak_ptr< AbstractInlet >		mImpl;
 

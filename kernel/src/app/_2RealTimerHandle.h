@@ -32,7 +32,6 @@ namespace _2Real
 
 		public:
 
-			TimerHandle();
 			explicit TimerHandle( std::shared_ptr< Timer > );
 
 			bool isValid() const;

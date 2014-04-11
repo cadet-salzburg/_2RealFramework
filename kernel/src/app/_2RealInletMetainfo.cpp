@@ -18,26 +18,15 @@
 
 #include "app/_2RealInletMetainfo.h"
 #include "app/_2RealHandleValidity.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		InletMetainfo::InletMetainfo() :
-			IoSlotMetainfo()
-		{
-		}
-
-		InletMetainfo::InletMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
+		InletMetainfo::InletMetainfo( std::shared_ptr< const _2Real::IoSlotMetainfo > meta ) :
 			IoSlotMetainfo( meta )
 		{
-		}
-
-		bool InletMetainfo::isMultiInlet() const
-		{
-			std::shared_ptr< const SharedServiceIoSlotMetainfo > meta = checkValidity< const SharedServiceIoSlotMetainfo >( mImpl, "inlet metainfo" );
-			return meta->isMulti();
 		}
 	}
 }

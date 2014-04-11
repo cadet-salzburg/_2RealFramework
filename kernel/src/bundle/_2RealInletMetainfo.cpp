@@ -17,20 +17,15 @@
 */
 
 #include "bundle/_2RealInletMetainfo.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		InletMetainfo::InletMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > info ) :
+		InletMetainfo::InletMetainfo( std::shared_ptr< _2Real::IoSlotMetainfo > info ) :
 			IoSlotMetainfo( info )
 		{
-		}
-
-		void InletMetainfo::setMultiInlet( const bool isMulti )
-		{
-			mImpl.lock()->setMulti( isMulti );
 		}
 	}
 }

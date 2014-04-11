@@ -17,28 +17,41 @@
 */
 
 #include "engine/_2RealParameter.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealBlock.h"
+#include "engine/_2RealIoSlotMetainfo.h"
+#include "engine/_2RealId.h"
 
 namespace _2Real
 {
 
-	Parameter::Parameter( std::shared_ptr< const SharedServiceIoSlotMetainfo > meta ) :
-		InSlot(), std::enable_shared_from_this< Parameter >(),
-		mMetainfo( meta )
+	std::shared_ptr< Parameter > Parameter::createFromMetainfo( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta )
 	{
-		// initialize the tmp value for the very first update
+		std::shared_ptr< const InstanceId > parameterId = InstanceId::create( meta->getId(), parent->getId(), InstanceType::IOSLOT, meta->getId()->getName() );
+		std::shared_ptr< Parameter > parameter( new Parameter( parent, meta, parameterId ) );
+
 		std::shared_ptr< DataItem > initValue( new DataItem( meta->getInitialValue() ) );
-		InSlot::setTmpValue( initValue );
+		parameter->InSlot::setTmpValue( initValue );
+
+		return parameter;
 	}
 
-	std::string Parameter::getName() const
+	Parameter::Parameter( std::shared_ptr< Block > parent, std::shared_ptr< const IoSlotMetainfo > meta, std::shared_ptr< const InstanceId > id ) :
+		InSlot(),
+		std::enable_shared_from_this< Parameter >(),
+		mParent( parent ),
+		mMetainfo( meta ),
+		mId( id )
 	{
-		return mMetainfo->getName();
 	}
 
-	//std::shared_ptr< const SharedServiceInletMetainfo > Parameter::getMetainfo() const
-	//{
-	//	return mMetainfo;
-	//}
+	std::shared_ptr< const InstanceId > Parameter::getId() const
+	{
+		return mId;
+	}
+
+	std::shared_ptr< Block > Parameter::getParent()
+	{
+		return mParent.lock();
+	}
 
 }

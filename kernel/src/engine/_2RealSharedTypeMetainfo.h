@@ -69,7 +69,7 @@ namespace _2Real
 
 	private:
 
-		explicit BasicTypeMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< TypeCollection >, DataItem );
+		BasicTypeMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< TypeCollection >, DataItem );
 
 		std::shared_ptr< const MetainfoId >			mId;
 		std::weak_ptr< const TypeCollection >		mTypes;
@@ -82,7 +82,7 @@ namespace _2Real
 
 	public:
 
-		static std::shared_ptr< SharedTypeMetainfo > make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, std::string const& );
+		static std::shared_ptr< SharedTypeMetainfo > make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, const std::string );
 
 		bool isBasicType() const;
 		std::string getDescription() const;

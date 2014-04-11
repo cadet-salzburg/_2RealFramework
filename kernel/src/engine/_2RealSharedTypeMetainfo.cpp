@@ -29,7 +29,7 @@ namespace _2Real
 	std::shared_ptr< BasicTypeMetainfo > BasicTypeMetainfo::make( std::shared_ptr< TypeCollection > types, const DataItem item )
 	{
 		std::string name = boost::apply_visitor( HumanReadableNameVisitor(), item );
-		std::shared_ptr< const MetainfoId > basictypeId = MetainfoId::create( nullptr, MetainfoType::TYPE, name );
+		std::shared_ptr< const MetainfoId > basictypeId = MetainfoId::create( nullptr, MetainfoType::BASICTYPE, name );
 		std::shared_ptr< BasicTypeMetainfo > basictypeInfo( new BasicTypeMetainfo( basictypeId, types, item ) );
 		return basictypeInfo;
 	}
@@ -63,9 +63,9 @@ namespace _2Real
 
 	////////////////////////////////////
 
-	std::shared_ptr< SharedTypeMetainfo > SharedTypeMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, std::string const& name )
+	std::shared_ptr< SharedTypeMetainfo > SharedTypeMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, const std::string name )
 	{
-		std::shared_ptr< const MetainfoId > sharedtypeId = MetainfoId::create( id, MetainfoType::TYPE, name );
+		std::shared_ptr< const MetainfoId > sharedtypeId = MetainfoId::create( id, MetainfoType::CUSTOMTYPE, name );
 		std::shared_ptr< SharedTypeMetainfo > sharedtypeInfo( new SharedTypeMetainfo( sharedtypeId, types ) );
 		sharedtypeInfo->mTemplate = CustomDataItem( sharedtypeId );
 		return sharedtypeInfo;

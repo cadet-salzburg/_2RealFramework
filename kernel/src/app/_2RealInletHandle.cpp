@@ -21,28 +21,23 @@
 #include "app/_2RealTypeMetainfo.h"
 #include "app/_2RealHandleValidity.h"
 #include "engine/_2RealInlet.h"
+#include "engine/_2RealCustomData.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		InletHandle::InletHandle() :
-			AbstractInletHandle(),
-			mImpl()
-		{
-		}
-
 		InletHandle::InletHandle( std::shared_ptr< Inlet > inlet ) :
 			AbstractInletHandle( inlet ),
 			mImpl( inlet )
 		{
 		}
 
-		//void InletHandle::setValue( DataItem && value )
-		//{
-		//	std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
-		//	inlet->setTmpValue( std::move( value ) );
-		//}
+		void InletHandle::setValue( DataItem value )
+		{
+			std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
+			inlet->setData( std::move( value ) );
+		}
 
 		//DataItem InletHandle::getValue() const
 		//{
@@ -66,12 +61,6 @@ namespace _2Real
 		{
 			std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
 			return LinkHandle( inlet->linkTo( source ) );
-		}
-
-		TypeMetainfo InletHandle::getTypeMetainfo() const
-		{
-			std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
-			return TypeMetainfo( inlet->getTypeMetainfo() );
 		}
 	}
 }

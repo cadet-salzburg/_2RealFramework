@@ -38,21 +38,24 @@ namespace _2Real
 
 		public:
 
-			InletHandle();
 			explicit InletHandle( std::shared_ptr< Inlet > );
+	
+			using AbstractInletHandle::isValid;
+			using AbstractInletHandle::isMultiInlet;
+			using AbstractInletHandle::getBlock;
 
 			// TODO: these should definitely throw an exception in case of a datatype mismatch
 			//void setValue( DataItem && value );
 			//void setValue( std::shared_ptr< DataItem > value );
-			//void setValue( DataItem const& value );
-
-			TypeMetainfo getTypeMetainfo() const;
+			void setValue( DataItem value );
 
 			LinkHandle linkTo( std::shared_ptr< DataSource > );
 
 			operator std::shared_ptr< DataSink > ();
 
 		private:
+
+			friend class MultiInletHandle;
 
 			std::weak_ptr< Inlet >		mImpl;
 

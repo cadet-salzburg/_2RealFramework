@@ -40,9 +40,9 @@ namespace _2Real
 			return mImpl->isEmpty();
 		}
 
-		InletHandle MultiInletHandle::operator[]( const uint32_t id )
-		{
-			return InletHandle( mImpl->operator[]( id ) );
-		}
+		//InletHandle MultiInletHandle::operator[]( const uint32_t id )
+		//{
+		//	return InletHandle( mImpl->operator[]( id ) );
+		//}
 	}
 }

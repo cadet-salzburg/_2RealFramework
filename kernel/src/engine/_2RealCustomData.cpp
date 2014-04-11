@@ -27,8 +27,7 @@ namespace _2Real
 	std::ostream& operator<<( std::ostream& out, CustomDataItem const& val )
 	{
 		for ( auto const& it : val.mDataFields )
-			// TODO: visitor for formatting
-			out << it.getName() << " : " << it.getValue() << std::endl;
+			out << it.getName() << " : " << it.getValue();
 		return out;
 	}
 
@@ -36,30 +35,30 @@ namespace _2Real
 		mDataFields(),
 		mTypeMetainfo()
 	{
-		std::cout << "custom data item  def ctor" << std::endl;
+		//std::cout << "custom data item  def ctor" << std::endl;
 	}
 
 	CustomDataItem::CustomDataItem( std::shared_ptr< const MetainfoId > type ) :
 		mDataFields(),
 		mTypeMetainfo( type )
 	{
-		std::cout << "custom data item init ctor" << std::endl;
+		//std::cout << "custom data item init ctor" << std::endl;
 	}
 
 	CustomDataItem::CustomDataItem( CustomDataItem const& other ) :
 		mDataFields( other.mDataFields ),
 		mTypeMetainfo( other.mTypeMetainfo )
 	{
-		std::cout << "custom data item copy ctor" << std::endl;
-		std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
+		//std::cout << "custom data item copy ctor" << std::endl;
+		//std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 	}
 
 	CustomDataItem::CustomDataItem( CustomDataItem && other ) :
 		mDataFields( std::move( other.mDataFields ) ),
 		mTypeMetainfo( std::move( other.mTypeMetainfo ) )
 	{
-		std::cout << "custom data item move ctor" << std::endl;
-		std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
+		//std::cout << "custom data item move ctor" << std::endl;
+		//std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 	}
 
 	CustomDataItem& CustomDataItem::operator=( CustomDataItem const& other )
@@ -69,8 +68,8 @@ namespace _2Real
 
 		mDataFields = other.mDataFields;
 		mTypeMetainfo = other.mTypeMetainfo;
-		std::cout << "custom data item copy assignment" << std::endl;
-		std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
+		//std::cout << "custom data item copy assignment" << std::endl;
+		//std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 
 		return *this;
 	}
@@ -82,8 +81,8 @@ namespace _2Real
 
 		mDataFields = std::move( other.mDataFields );
 		mTypeMetainfo = std::move( other.mTypeMetainfo );
-		std::cout << "custom data item move assignment" << std::endl;
-		std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
+		//std::cout << "custom data item move assignment" << std::endl;
+		//std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 
 		return *this;
 	}
@@ -108,8 +107,6 @@ namespace _2Real
 				// TODO: multi-visitation
 				std::string n0 = boost::apply_visitor( HumanReadableNameVisitor(), value );
 				std::string n1 = boost::apply_visitor( HumanReadableNameVisitor(), it.getValue() );
-
-				std::cout << n0 << " " << n1 << std::endl;
 
 				if ( n0 == n1 )
 				{

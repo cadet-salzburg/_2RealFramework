@@ -27,16 +27,17 @@ namespace _2Real
 
 	namespace app
 	{
+		class FunctionBlockHandle;
+
 		class OutletHandle
 		{
 
 		public:
 
-			OutletHandle();
 			explicit OutletHandle( std::shared_ptr< Outlet > );
 
 			bool					isValid() const;
-			std::string				getName() const;
+			FunctionBlockHandle		getBlock();
 
 			operator std::shared_ptr< DataSource > ();
 

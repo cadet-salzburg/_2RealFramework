@@ -21,6 +21,7 @@
 #include "helpers/_2RealStdIncludes.h"
 #include "engine/_2RealUpdateTrigger.h"
 #include "enums/_2RealDefaultPolicy.h"
+#include "engine/_2RealDeclarations.h"
 
 namespace _2Real
 {
@@ -29,65 +30,113 @@ namespace _2Real
 	class InstanceId;
 	class InletPolicy;
 	class AbstractInlet;
+	class Inlet;
+	class MultiInlet;
+	class Block;
+
+	enum class SubInletPolicy { ANY, ALL, DISABLED };
 
 	class UpdatePolicyMetainfo
 	{
 
 	public:
 
-		static std::shared_ptr< UpdatePolicyMetainfo > make( std::shared_ptr< const MetainfoId >, const std::vector< std::pair< std::string, bool > > );
+		static std::shared_ptr< UpdatePolicyMetainfo > make( std::shared_ptr< const MetainfoId >, const std::vector< InletDeclaration > );
 
-		struct InletPolicyMetainfo
+		UpdatePolicyMetainfo() = delete;
+		UpdatePolicyMetainfo( UpdatePolicyMetainfo const& other ) = delete;
+		UpdatePolicyMetainfo( UpdatePolicyMetainfo && other ) = delete;
+		UpdatePolicyMetainfo& operator=( UpdatePolicyMetainfo const& other ) = delete;
+		UpdatePolicyMetainfo& operator=( UpdatePolicyMetainfo && other ) = delete;
+
+		~UpdatePolicyMetainfo() = default;
+
+		class InletPolicyMetainfo
 		{
-			std::string	mName;
-			bool		mRequireAll;
+		public:
+			std::string			mName;
+			bool				mIsMulti;
+			SubInletPolicy		mPolicy;
 		};
 
 		std::shared_ptr< const MetainfoId >	getId() const;
-		std::vector< std::vector< InletPolicyMetainfo > > getInternalRep() const;
 
 		void set( const DefaultPolicy );
-		void set( std::vector< std::vector< InletPolicy > > );
+
+		std::vector< std::vector< InletPolicyMetainfo > > getInternalRep() const;
 
 	private:
 
 		UpdatePolicyMetainfo( std::shared_ptr< const MetainfoId > );
 
 		std::shared_ptr< const MetainfoId >					mId;
-		std::map< std::string, bool >						mInlets;
+		std::map< std::string, InletDeclaration >			mInlets;
 		std::vector< std::vector< InletPolicyMetainfo > >	mPolicy;
 
 	};
 
-	class UpdatePolicy : public UpdateTrigger
+	class UpdatePolicy : public UpdateTrigger, public std::enable_shared_from_this< UpdatePolicy >
 	{
 
 	public:
 
-		static std::shared_ptr< UpdatePolicy > makeFromMetainfo( std::shared_ptr< const UpdatePolicyMetainfo >, std::map< std::shared_ptr< const InstanceId >, std::shared_ptr< AbstractInlet > > );
+		static std::shared_ptr< UpdatePolicy > createFromMetainfo( std::shared_ptr< Block >, std::shared_ptr< const UpdatePolicyMetainfo >, std::vector< std::shared_ptr< AbstractInlet > > const& );
+
+		UpdatePolicy() = delete;
+		UpdatePolicy( UpdatePolicy const& other ) = delete;
+		UpdatePolicy( UpdatePolicy && other ) = delete;
+		UpdatePolicy& operator=( UpdatePolicy const& other ) = delete;
+		UpdatePolicy& operator=( UpdatePolicy && other ) = delete;
+
+		~UpdatePolicy();
 
 		void set( const DefaultPolicy );
-		//void set( ALL( ), inlets
 
-		void inletUpdated( std::shared_ptr< const InstanceId > );
-		void subinletAdded( std::shared_ptr< const InstanceId >, std::shared_ptr< const InstanceId > );
+		void inletUpdated( std::shared_ptr< Inlet > );
+		void subinletAdded( std::shared_ptr< Inlet > );
+		void subinletRemoved( std::shared_ptr< Inlet > );
+
+		void disable();
+		void enable();
+		bool reset();
+
+		std::shared_ptr< const InstanceId > getId() const;
+		std::shared_ptr< Block > getParent();
 
 	private:
 
-		UpdatePolicy( std::shared_ptr< const InstanceId > );
+		UpdatePolicy( std::shared_ptr< Block >, std::shared_ptr< const UpdatePolicyMetainfo >, std::shared_ptr< const InstanceId > );
 
-		struct InletPolicy
+		class InletPolicy
 		{
-			std::shared_ptr< const InstanceId >		mId;
-			std::vector< InletPolicy >				mSubInlets;	// empty if this is not a multiinlet
+		public:
+			std::shared_ptr< AbstractInlet >		mInlet;
 			bool									mWasUpdated;
-			bool									mRequireAll;
+			std::vector< InletPolicy >				mSubInlets;
+			SubInletPolicy							mSubInletPolicy;
 		};
 
+		struct PtrCmp : public std::unary_function< std::string, bool >
+		{
+			explicit PtrCmp( std::shared_ptr< AbstractInlet > obj ) : mObj( obj ) { assert( mObj ); }
+
+			bool operator()( UpdatePolicy::InletPolicy const& other )
+			{
+				return mObj.get() == other.mInlet.get();
+			}
+
+			std::shared_ptr< AbstractInlet > mObj;
+		};
+
+		std::weak_ptr< Block >																	mParent;
+		std::weak_ptr< const UpdatePolicyMetainfo >												mMetainfo;
 		std::shared_ptr< const InstanceId >														mId;
-		std::map< std::shared_ptr< const InstanceId >, std::shared_ptr< AbstractInlet > >		mInlets;
+		std::vector< std::shared_ptr< AbstractInlet > >											mInlets;
 		std::vector< std::vector< InletPolicy > >												mPolicy;
 		mutable	std::mutex																		mMutex;
+
+		bool																					mIsAlreadyFulfilled;
+		bool																					mIsEnabled;
 
 	};
 

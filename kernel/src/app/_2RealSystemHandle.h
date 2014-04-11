@@ -31,7 +31,6 @@ namespace _2Real
 
 		public:
 
-			SystemHandle();
 			explicit SystemHandle( std::shared_ptr< Threadpool > );
 
 			bool isValid() const;

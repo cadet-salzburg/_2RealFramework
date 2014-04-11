@@ -17,7 +17,7 @@
 */
 
 #include "engine/_2RealSharedServiceMetainfo.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
 #include "engine/_2RealAbstractSharedServiceFactory.h"
 #include "engine/_2RealUpdatePolicy.h"
 #include "engine/_2RealId.h"
@@ -43,38 +43,48 @@ namespace _2Real
 
 	//};
 
-	std::shared_ptr< SharedServiceMetainfo > SharedServiceMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types, std::string const& name, const bool isSingleton, std::vector< std::string > inlets, std::vector< std::string > outlets, std::vector< std::string > parameters )
+	struct NameCmp : public std::unary_function< std::string, bool >
+	{
+		explicit NameCmp( const std::string name ) : mName( name ) {}
+
+		bool operator()( std::shared_ptr< IoSlotMetainfo > arg )
+		{
+			return mName == arg->getName();
+		}
+
+		std::string mName;
+	};
+
+	std::shared_ptr< SharedServiceMetainfo > SharedServiceMetainfo::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types, BlockDeclaration const& decl )
 	{
 		try
 		{
-			std::shared_ptr< const MetainfoId > blockId = MetainfoId::create( id, MetainfoType::BLOCK, name );
-			std::shared_ptr< SharedServiceMetainfo > blockInfo( new SharedServiceMetainfo( blockId, types, isSingleton ) );
+			std::shared_ptr< const MetainfoId > blockId = MetainfoId::create( id, MetainfoType::BLOCK, decl.mName );
+			std::shared_ptr< SharedServiceMetainfo > blockInfo( new SharedServiceMetainfo( blockId, types, decl.mIsSingleton ) );
 
-			std::vector< std::pair< std::string, bool > > inletRep;
-
-			for ( auto it : inlets )
+			for ( auto const& it : decl.mInlets )
 			{
-				std::shared_ptr< SharedServiceIoSlotMetainfo > inletinfo = SharedServiceIoSlotMetainfo::make( blockId, types, it );
-				blockInfo->mInlets[ it ] = inletinfo;
-				inletRep.push_back( std::make_pair( it, false ) );
+				std::shared_ptr< IoSlotMetainfo > inletinfo = IoSlotMetainfo::make( blockId, types, it.mName );
+				inletinfo->setMulti( it.mIsMulti );
+				blockInfo->mInlets.push_back( inletinfo );
 			}
 
-			for ( auto it : outlets )
+			for ( auto const& it : decl.mOutlets )
 			{
-				std::shared_ptr< SharedServiceIoSlotMetainfo > outletinfo = SharedServiceIoSlotMetainfo::make( blockId, types, it );
-				blockInfo->mOutlets[ it ] = outletinfo;
+				std::shared_ptr< IoSlotMetainfo > outletinfo = IoSlotMetainfo::make( blockId, types, it.mName );
+				blockInfo->mOutlets.push_back( outletinfo );
 			}
 
-			for ( auto it : parameters )
+			for ( auto const& it : decl.mParameters )
 			{
-				std::shared_ptr< SharedServiceIoSlotMetainfo > parameterinfo = SharedServiceIoSlotMetainfo::make( blockId, types, it );
-				blockInfo->mParameters[ it ] = parameterinfo;
+				std::shared_ptr< IoSlotMetainfo > parameterinfo = IoSlotMetainfo::make( blockId, types, it.mName );
+				blockInfo->mParameters.push_back( parameterinfo );
 			}
 
-			blockInfo->mDefaultUpdatePolicy = UpdatePolicyMetainfo::make( blockId, inletRep );
+			blockInfo->mDefaultUpdatePolicy = UpdatePolicyMetainfo::make( blockId, decl.mInlets );
 
 			// this makes it impossible to detect if a user has not set the block class :/
-			// the only other option would be to actually announce the block class, the make a clone!?
+			// the only other option would be to actually announce the block class, the make a clone
 			// blockInfo->mFactory = std::shared_ptr< AbstractSharedServiceFactory >( new NullBlock( _2Real::bundle::BlockIo(), std::vector< std::shared_ptr< _2Real::bundle::AbstractBlock > >() ) );
 
 			return blockInfo;
@@ -97,6 +107,11 @@ namespace _2Real
 		mOutlets(),
 		mParameters()
 	{
+	}
+
+	std::shared_ptr< const MetainfoId > SharedServiceMetainfo::getId() const
+	{
+		return mId;
 	}
 
 	void SharedServiceMetainfo::setDescription( std::string const& description )
@@ -129,82 +144,82 @@ namespace _2Real
 		return mDependencies;
 	}
 
-	std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > SharedServiceMetainfo::getInletMetainfos() const
+	std::vector< std::shared_ptr< const IoSlotMetainfo > > SharedServiceMetainfo::getInletMetainfos() const
 	{
-		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > result;
+		std::vector< std::shared_ptr< const IoSlotMetainfo > > result;
 		for ( auto it : mInlets )
-			result.push_back( it.second );
+			result.push_back( it );
 		return result;
 	}
 
-	std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > SharedServiceMetainfo::getOutletMetainfos() const
+	std::vector< std::shared_ptr< const IoSlotMetainfo > > SharedServiceMetainfo::getOutletMetainfos() const
 	{
-		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > result;
+		std::vector< std::shared_ptr< const IoSlotMetainfo > > result;
 		for ( auto it : mOutlets )
-			result.push_back( it.second );
+			result.push_back( it );
 		return result;
 	}
 
-	std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > SharedServiceMetainfo::getParameterMetainfos() const
+	std::vector< std::shared_ptr< const IoSlotMetainfo > > SharedServiceMetainfo::getParameterMetainfos() const
 	{
-		std::vector< std::shared_ptr< const SharedServiceIoSlotMetainfo > > result;
+		std::vector< std::shared_ptr< const IoSlotMetainfo > > result;
 		for ( auto it : mParameters )
-			result.push_back( it.second );
+			result.push_back( it );
 		return result;
 	}
 
-	std::shared_ptr< const SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getInletMetainfo( std::string const& name ) const
+	std::shared_ptr< const IoSlotMetainfo > SharedServiceMetainfo::getInletMetainfo( std::string const& name ) const
 	{
-		auto it = mInlets.find( name );
+		auto it = std::find_if( mInlets.begin(), mInlets.end(), NameCmp( name ) );
 		if ( it == mInlets.end() )
 			throw NotFound( name );
 
-		return it->second;
+		return *it;
 	}
 
-	std::shared_ptr< const SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getOutletMetainfo( std::string const& name ) const
+	std::shared_ptr< const IoSlotMetainfo > SharedServiceMetainfo::getOutletMetainfo( std::string const& name ) const
 	{
-		auto it = mOutlets.find( name );
+		auto it = std::find_if( mOutlets.begin(), mOutlets.end(), NameCmp( name ) );
 		if ( it == mOutlets.end() )
 			throw NotFound( name );
 
-		return it->second;
+		return *it;
 	}
 
-	std::shared_ptr< const SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getParameterMetainfo( std::string const& name ) const
+	std::shared_ptr< const IoSlotMetainfo > SharedServiceMetainfo::getParameterMetainfo( std::string const& name ) const
 	{
-		auto it = mParameters.find( name );
+		auto it = std::find_if( mParameters.begin(), mParameters.end(), NameCmp( name ) );
 		if ( it == mParameters.end() )
 			throw NotFound( name );
 
-		return it->second;
+		return *it;
 	}
 
-	std::shared_ptr< SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getInletMetainfo( std::string const& name )
+	std::shared_ptr< IoSlotMetainfo > SharedServiceMetainfo::getInletMetainfo( std::string const& name )
 	{
-		auto it = mInlets.find( name );
+		auto it = std::find_if( mInlets.begin(), mInlets.end(), NameCmp( name ) );
 		if ( it == mInlets.end() )
 			throw NotFound( name );
 
-		return it->second;
+		return *it;
 	}
 
-	std::shared_ptr< SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getOutletMetainfo( std::string const& name )
+	std::shared_ptr< IoSlotMetainfo > SharedServiceMetainfo::getOutletMetainfo( std::string const& name )
 	{
-		auto it = mOutlets.find( name );
+		auto it = std::find_if( mOutlets.begin(), mOutlets.end(), NameCmp( name ) );
 		if ( it == mOutlets.end() )
 			throw NotFound( name );
 
-		return it->second;
+		return *it;
 	}
 
-	std::shared_ptr< SharedServiceIoSlotMetainfo > SharedServiceMetainfo::getParameterMetainfo( std::string const& name )
+	std::shared_ptr< IoSlotMetainfo > SharedServiceMetainfo::getParameterMetainfo( std::string const& name )
 	{
-		auto it = mParameters.find( name );
+		auto it = std::find_if( mParameters.begin(), mParameters.end(), NameCmp( name ) );
 		if ( it == mParameters.end() )
 			throw NotFound( name );
 
-		return it->second;
+		return *it;
 	}
 
 	std::shared_ptr< const UpdatePolicyMetainfo > SharedServiceMetainfo::getDefaultUpdatePolicy() const

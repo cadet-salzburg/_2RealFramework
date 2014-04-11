@@ -17,13 +17,13 @@
 */
 
 #include "bundle/_2RealIoSlotMetainfo.h"
-#include "engine/_2RealSharedServiceIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfo.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		IoSlotMetainfo::IoSlotMetainfo( std::shared_ptr< SharedServiceIoSlotMetainfo > info ) :
+		IoSlotMetainfo::IoSlotMetainfo( std::shared_ptr< _2Real::IoSlotMetainfo > info ) :
 			mImpl( info )
 		{
 		}

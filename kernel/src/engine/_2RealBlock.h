@@ -35,6 +35,7 @@ namespace _2Real
 	class UpdatePolicy;
 	class StateMachine;
 	class InstanceId;
+	class Bundle;
 
 	class BlockIo
 	{
@@ -58,9 +59,20 @@ namespace _2Real
 
 	public:
 
+		static std::shared_ptr< Block > createFromMetainfo( std::shared_ptr< Bundle >, std::shared_ptr< const SharedServiceMetainfo >, std::shared_ptr< Threadpool >, const uint64_t );
+
+		Block() = delete;
+		Block( Block const& other ) = delete;
+		Block operator=( Block const& other ) = delete;
+		Block( Block && other ) = delete;
+		Block& operator=( Block && other ) = delete;
+
 		~Block() = default;
 
-		static std::shared_ptr< Block > createFromMetainfo( std::shared_ptr< const SharedServiceMetainfo > meta, std::shared_ptr< const InstanceId > id, std::shared_ptr< Threadpool > threads, const std::string name );
+		std::shared_ptr< const InstanceId >			getId() const;
+		std::shared_ptr< Bundle >					getParent();
+
+		bool										isSingleton() const;
 
 		std::future< BlockState > setup();
 		std::future< BlockState > singlestep();
@@ -70,18 +82,15 @@ namespace _2Real
 		std::future< BlockState > startUpdating( std::shared_ptr< UpdateTrigger > );
 		std::future< BlockState > stopUpdating();
 
-		std::shared_ptr< BlockIo > getBlockIo();
+		std::shared_ptr< BlockIo >		getBlockIo();
+		std::shared_ptr< UpdatePolicy >	getUpdatePolicy();
 
 	private:
 
-		Block( std::shared_ptr< const InstanceId >, std::shared_ptr< Threadpool >, std::shared_ptr< BlockIo > );
+		Block( std::shared_ptr< Bundle >, std::shared_ptr< const SharedServiceMetainfo >, std::shared_ptr< const InstanceId >, std::shared_ptr< Threadpool > );
 
-		Block() = delete;
-		Block( Block const& other ) = delete;
-		Block operator=( Block const& other ) = delete;
-		Block( Block && other ) = delete;
-		Block& operator=( Block && other ) = delete;
-
+		std::weak_ptr< Bundle >								mParent;
+		std::weak_ptr< const SharedServiceMetainfo >		mMetainfo;
 		std::shared_ptr< const InstanceId >					mId;
 		std::shared_ptr< UpdatePolicy >						mUpdatePolicy;
 		std::shared_ptr< StateMachine >						mStateHandler;

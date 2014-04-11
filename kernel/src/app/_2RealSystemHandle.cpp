@@ -24,11 +24,6 @@ namespace _2Real
 {
 	namespace app
 	{
-		SystemHandle::SystemHandle() :
-			mImpl()
-		{
-		}
-
 		SystemHandle::SystemHandle( std::shared_ptr< Threadpool > timer ) :
 			mImpl( timer )
 		{

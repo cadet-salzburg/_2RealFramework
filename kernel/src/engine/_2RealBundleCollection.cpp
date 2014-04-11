@@ -74,13 +74,9 @@ namespace _2Real
 		char * dir = std::getenv( _2Real::Constants::BundleEnvName.c_str() );
 		if ( nullptr != dir )
 			mBundleDirectory = Path( dir );
-
-		std::ostringstream msg;
-		msg << "---- bundle directory: " << mBundleDirectory.string() << " ----";
-		std::cout << msg.str() << std::endl;
 	}
 
-	std::shared_ptr< Bundle > BundleCollection::loadBundle( Path const& path, std::shared_ptr< TypeCollection > types )
+	std::pair< std::shared_ptr< Bundle >, std::shared_ptr< const SharedLibraryMetainfo > > BundleCollection::loadBundle( Path const& path, std::shared_ptr< TypeCollection > types )
 	{
 		Path absPath = mBundleDirectory / path;
 
@@ -91,12 +87,13 @@ namespace _2Real
 			throw AlreadyExists( msg.str() );
 		}
 
-		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath, types );
-		std::shared_ptr< Bundle > bundle( new Bundle( shared_from_this(), info, mStdThreads.lock(), mCtxtThreads.lock() ) );
-		bundle->registerToUnload( this, &BundleCollection::bundleUnloaded );
-		bundle->init();
-		mBundles[ absPath ] = bundle;
-		return bundle;
+		std::shared_ptr< const SharedLibraryMetainfo > bundleMetainfo = mBundleImporter.importLibrary( absPath, types );
+		std::shared_ptr< Bundle > bundleInstance = Bundle::createFromMetainfo( bundleMetainfo, mStdThreads.lock(), mCtxtThreads.lock(), absPath );
+		bundleInstance->registerToUnload( this, &BundleCollection::bundleUnloaded );
+		auto result = std::make_pair( bundleInstance, bundleMetainfo );
+
+		mBundles[ absPath ] = result.first;
+		return result;
 	}
 
 	void BundleCollection::bundleUnloaded( std::shared_ptr< const Bundle > bundle )

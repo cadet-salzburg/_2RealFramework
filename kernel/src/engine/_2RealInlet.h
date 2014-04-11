@@ -27,56 +27,63 @@
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
 	class Link;
 	class DataSource;
 	class TMetainfo;
 	class InstanceId;
+	class MultiInlet;
 
 	class Inlet : private InSlot, public AbstractInlet, public DataSink, public std::enable_shared_from_this< Inlet >
 	{
 
 	public:
 
-		explicit Inlet( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
+		static std::shared_ptr< Inlet > createFromMetainfo( std::shared_ptr< MultiInlet >, std::shared_ptr< const IoSlotMetainfo > );
+		static std::shared_ptr< AbstractInlet > createFromMetainfo( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo > );
+		static std::shared_ptr< AbstractInlet > createFromMetainfo( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo >, const uint64_t );
 
-		// just for the sake of readability; these are public anyway
-		using AbstractInlet::getName;
-		using AbstractInlet::isMultiInlet;
+		Inlet() = delete;
+		Inlet( Inlet const& other ) = delete;
+		Inlet( Inlet && other ) = delete;
+		Inlet& operator=( Inlet const& other ) = delete;
+		Inlet& operator=( Inlet && other ) = delete;
 
-		// virtual method of AbstractInlet
+		~Inlet() = default;
+
 		void update();
 
-		// virtual method of DataSink
 		void receiveData( std::shared_ptr< const DataItem > );
+		void setData( DataItem );
 
-		// exposed methods of InSlot
-		using InSlot::getValue;
-
-		// linking, yay
 		std::shared_ptr< Link > linkTo( std::shared_ptr< DataSource > );
 
-		std::shared_ptr< const TMetainfo > getTypeMetainfo() const;
+		using InSlot::getValue;
 
 		template< typename TCallable >
-		void registerToValueUpdated( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const InstanceId > ) )
+		void registerToValueUpdated( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< Inlet > ) )
 		{
-			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< const InstanceId > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const InstanceId > >( callable, callback ) );
-			mValueUpdatedEvent.addListener( listener );
+			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< Inlet > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< Inlet > >( callable, callback ) );
+			mUpdateEvent.addListener( listener );
 		}
 
 		template< typename TCallable >
-		void unregisterFromValueUpdated( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const InstanceId > ) )
+		void unregisterFromValueUpdated( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< Inlet > ) )
 		{
-			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< const InstanceId > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const InstanceId > >( callable, callback ) );
-			mValueUpdatedEvent.removeListener( listener );
+			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< Inlet > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< Inlet > >( callable, callback ) );
+			mUpdateEvent.removeListener( listener );
 		}
+
+		std::shared_ptr< MultiInlet > getParentInlet();
 
 	private:
 
-		std::shared_ptr< const InstanceId >				mId;
+		Inlet( std::shared_ptr< Block >, std::shared_ptr< const IoSlotMetainfo >, std::shared_ptr< const InstanceId > );
+		Inlet( std::shared_ptr< Block >, std::shared_ptr< MultiInlet >, std::shared_ptr< const IoSlotMetainfo >, std::shared_ptr< const InstanceId > );
+
+		std::weak_ptr< MultiInlet >						mParentInlet;
 		std::shared_ptr< Link >							mLink;
-		Event_T< std::shared_ptr< const InstanceId > >	mValueUpdatedEvent;
+		Event_T< std::shared_ptr< Inlet > >				mUpdateEvent;
 
 	};
 }

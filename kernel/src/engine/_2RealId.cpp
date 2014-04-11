@@ -32,13 +32,15 @@ namespace _2Real
 		switch ( t )
 		{
 		case MetainfoType::BUNDLE:
-			return "bundle";
-		case MetainfoType::TYPE:
-			return "customtype";
+			return "bundle\\\\";
+		case MetainfoType::BASICTYPE:
+			return "";
+		case MetainfoType::CUSTOMTYPE:
+			return "type\\\\";
 		case MetainfoType::BLOCK:
-			return "block";
+			return "block\\\\";
 		case MetainfoType::IOSLOT:
-			return "ioslot";
+			return "ioslot\\\\";
 		default:
 			return "undefined";
 		}
@@ -56,7 +58,7 @@ namespace _2Real
 		if ( p != nullptr )
 			parent = p->toString() + "\\\\";
 
-		return parent + typeToString( mType ) + "\\\\" + mName;
+		return parent + typeToString( mType ) + mName;
 	}
 
 	std::string MetainfoId::getName() const

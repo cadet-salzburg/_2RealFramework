@@ -23,21 +23,20 @@
 
 namespace _2Real
 {
-	class SharedServiceIoSlotMetainfo;
+	class IoSlotMetainfo;
 
 	namespace app
 	{
-		class ParameterMetainfo : public IoSlotMetainfo
+		class ParameterMetainfo : private IoSlotMetainfo
 		{
 
 		public:
 
-			ParameterMetainfo();
-			explicit ParameterMetainfo( std::shared_ptr< const SharedServiceIoSlotMetainfo > );
+			explicit ParameterMetainfo( std::shared_ptr< const _2Real::IoSlotMetainfo > );
 
 			using IoSlotMetainfo::isValid;
 			using IoSlotMetainfo::getName;
-			using IoSlotMetainfo::getDatatype;
+			using IoSlotMetainfo::getTypeMetainfo;
 			using IoSlotMetainfo::getInitialValue;
 			using IoSlotMetainfo::getDescription;
 

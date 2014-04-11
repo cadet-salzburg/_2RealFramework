@@ -29,37 +29,42 @@ namespace _2Real
 	class TypeCollection;
 	class MetainfoId;
 
-	class SharedServiceIoSlotMetainfo
+	class IoSlotMetainfo
 	{
 
 	public:
 
-		static std::shared_ptr< SharedServiceIoSlotMetainfo > make( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection >, std::string const& );
+		static std::shared_ptr< IoSlotMetainfo > make( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection >, const std::string );
 
+		IoSlotMetainfo() = delete;
+		IoSlotMetainfo( IoSlotMetainfo const& other ) = delete;
+		IoSlotMetainfo( IoSlotMetainfo && other ) = delete;
+		IoSlotMetainfo& operator=( IoSlotMetainfo const& other ) = delete;
+		IoSlotMetainfo& operator=( IoSlotMetainfo && other ) = delete;
+
+		~IoSlotMetainfo() = default;
+
+		std::string getName() const;
 		void setDescription( std::string const& );
 		void setDatatypeAndInitialValue( DataItem const& value );
 		void setMulti( const bool );
 
-		std::string getName() const;
+		std::shared_ptr< const MetainfoId >	getId() const;
 		std::string getDescription() const;
 		std::string getDatatype() const;
 		DataItem const& getInitialValue() const;
 		std::shared_ptr< const TMetainfo >	getTypeMetainfo() const;
 		bool isMulti() const;
 
-	protected:
+	private:
+
+		IoSlotMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection > );
 
 		std::shared_ptr< const MetainfoId >				mId;
 		std::string										mDescription;
 		DataItem										mInitialValue;
 		bool											mIsMulti;
 		std::weak_ptr< const TypeCollection >			mTypes;
-
-	private:
-
-		SharedServiceIoSlotMetainfo( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection > );
-		SharedServiceIoSlotMetainfo( SharedServiceIoSlotMetainfo const& ) = delete;
-		SharedServiceIoSlotMetainfo& operator=( SharedServiceIoSlotMetainfo const& ) = delete;
 
 	};
 

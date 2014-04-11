@@ -24,52 +24,45 @@
 #include "engine/_2RealAbstractSharedServiceFactory.h"
 #include "engine/_2RealSharedServiceLifetimeMgr.h"
 #include "helpers/_2RealException.h"
-#include "engine/_2RealAbstractInlet.h"
 
-#include "bundle/_2RealBlockIo.h"
-
-#include "engine/_2RealAbstractInlet.h"
-#include "engine/_2RealInlet.h"
-#include "engine/_2RealMultiInlet.h"
+#include "engine/_2RealId.h"
 
 namespace _2Real
 {
 
-	Bundle::Bundle( std::shared_ptr< BundleCollection > bundles, std::shared_ptr< const SharedLibraryMetainfo > meta, std::shared_ptr< Threadpool > stdthreads, std::shared_ptr< Threadpool > ctxtthreads ) :
-		enable_shared_from_this< Bundle >(),
-		mBundleCollection( bundles ),
-		mMetainfo( meta ), mUnloadNotifier(),
-		mStdThreads( stdthreads ), mCtxtThreads( ctxtthreads )
+	std::shared_ptr< Bundle > Bundle::createFromMetainfo( std::shared_ptr< const SharedLibraryMetainfo > meta,  std::shared_ptr< Threadpool > stdthreads, std::shared_ptr< Threadpool > ctxtthreads, Path const& path )
 	{
-	}
+		std::shared_ptr< const InstanceId > bundleId = InstanceId::create( meta->getId(), nullptr, InstanceType::BUNDLE, path.string() );
+		std::shared_ptr< Bundle > bundle( new Bundle( meta, bundleId, stdthreads, ctxtthreads, path.string() ) );
 
-	Bundle::~Bundle()
-	{
-		mServices.clear();
-		mServiceInstances.clear();
-		mMetainfo.reset();
-	}
-
-	void Bundle::initServices()	
-	{
-		auto serviceMetainfos = mMetainfo->getServiceMetainfos();
-
-		for ( auto info : serviceMetainfos )
+		for ( auto serviceMeta : meta->getServiceMetainfos() )
 		{
-			std::shared_ptr< const AbstractSharedServiceFactory > factory = info->getFactory();
 			std::shared_ptr< AbstractSharedServiceLifetimeManager > manager;
-			if ( info->isSingleton() )
-				manager.reset( new SingletonLifetimeManager( factory ) );
+			if ( serviceMeta->isSingleton() )
+				manager.reset( new SingletonLifetimeManager( serviceMeta->getFactory() ) );
 			else
-				manager.reset( new ServiceLifetimeManager( factory ) );
+				manager.reset( new ServiceLifetimeManager( serviceMeta->getFactory() ) );
 
-			mServices[ info->getName() ] = ServiceInfo( manager, info );
+			bundle->mServiceLifetimeMgrs[ serviceMeta->getName() ] = manager;
 		}
+
+		return bundle;
 	}
 
-	void Bundle::init()
+	Bundle::Bundle( std::shared_ptr< const SharedLibraryMetainfo > meta, std::shared_ptr< const InstanceId > id, std::shared_ptr< Threadpool > stdthreads, std::shared_ptr< Threadpool > ctxtthreads, Path const& path ) :
+		enable_shared_from_this< Bundle >(),
+		mMetainfo( meta ),
+		mId( id ),
+		mPath( path ),
+		mUnloadNotifier(),
+		mStdThreads( stdthreads ),
+		mCtxtThreads( ctxtthreads )
 	{
-		initServices();
+	}
+
+	std::shared_ptr< const InstanceId > Bundle::getId() const
+	{
+		return mId;
 	}
 
 	void Bundle::unload( const long timeout )
@@ -91,69 +84,32 @@ namespace _2Real
 
 	Path Bundle::getFilePath() const
 	{
-		return mMetainfo->getFilePath();
-	}
-
-	std::shared_ptr< const SharedLibraryMetainfo > Bundle::getMetainfo() const
-	{
-		return mMetainfo;
+		return mPath;
 	}
 
 	std::shared_ptr< Block > Bundle::createBlock( std::string const& name )
 	{
-		auto it = mServices.find( name );
-		if ( it == mServices.end() )
+		auto it = mServiceLifetimeMgrs.find( name );
+		if ( it == mServiceLifetimeMgrs.end() )
 		{
 			std::ostringstream msg;
-			msg << "bundle " << mMetainfo->getName() << " does not export a block named " << name;
+			msg << mId << " does not export block " << name;
 			throw NotFound( msg.str() );
 		}
 
-		auto ctor = it->second.first;
-		auto info = it->second.second;
+		auto ctor = it->second;
+		auto metainfo = mMetainfo->getServiceMetainfo( name );
 
-		// get dependencies
-		// for all dependencies:	check if instance already was created
-		//							if not, create instance
-		std::vector< std::shared_ptr< AbstractSharedService > > dependencies;
-		std::vector< std::string > dependenciesByName = info->getDependencies();
-		for ( auto dependency : dependenciesByName )
-		{
-		//	if ( mServiceInstances.find( dependency ) == mServiceInstances.end() )
-		//		createBlock( dependency );
-		}
-
-		/*
-		*	TODO: io slots should know which block they belong to ( otherwise, how would i check for self links? ).
-		*	-> identifier or something?
-		*	-> or maybe 'setUnderlyingObj' on block ....
-		*/
-
-		_2Real::bundle::BlockIo bundleio;
-		std::shared_ptr< _2Real::BlockIo > io( new BlockIo );
-		Block::createIo( info, io->mParameters, io->mInlets, io->mOutlets );
-
-		for ( auto it : io->mInlets )
-			bundleio.mInlets.push_back( it->isMultiInlet() ? ( _2Real::bundle::AbstractInletHandle * )new _2Real::bundle::MultiInletHandle( std::dynamic_pointer_cast< MultiInlet >( it ) ) : new _2Real::bundle::InletHandle( std::dynamic_pointer_cast< Inlet >( it ) ) );
-		for ( auto it : io->mOutlets )
-			bundleio.mOutlets.push_back( new _2Real::bundle::OutletHandle( it ) );	
-		for ( auto it : io->mParameters )
-			bundleio.mParameters.push_back( new _2Real::bundle::ParameterHandle( it ) );	
-		
-		// acquire correct threadpool
 		std::shared_ptr< Threadpool > threads;
-		if ( info->isSingleton() )
+		if ( metainfo->isSingleton() )
 			threads = mCtxtThreads.lock();
 		else
 			threads = mStdThreads.lock();
 
-		// create the underlying object
-		io->mBlockObj = ctor->create( bundleio, dependencies );
-
-		std::shared_ptr< Block > instance( new Block( info, threads, io ) );
-		mServiceInstances.push_back( instance );
-
-		return instance;
+		std::shared_ptr< Block > block = Block::createFromMetainfo( shared_from_this(), metainfo, threads, 0 /* TODO instance */ );
+		// TODO: block -> nullptr?
+		mServiceInstances.push_back( block );
+		return block;
 	}
 
 }

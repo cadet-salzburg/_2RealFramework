@@ -27,7 +27,7 @@ void PrintInfo::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map<
 	printinfo.setDescription( "test block - prints the name/value of all io slots in setup, update & shutdown" );
 
 	_2Real::bundle::DefaultUpdatePolicy policy = printinfo.getDefaultUpdatePolicy();
-	policy.set( _2Real::DefaultPolicy::ANY );
+	policy.set( _2Real::DefaultPolicy::DISABLED );
 
 	_2Real::bundle::InletMetainfo inA = printinfo.getInletMetainfo( "inA" );
 	inA.setDescription( "the first inlet" );
@@ -74,7 +74,7 @@ void PrintInfo::setup()
 {		
 	for ( auto it : mIo.mParameters )
 	{
-		std::cout << "parameter " << it->getName() << " : " << it->getValue() << std::endl;
+		std::cout << "parameter " << /*it->getName() <<*/ " : " << it->getValue() << std::endl;
 	}
 }
 
@@ -84,21 +84,21 @@ void PrintInfo::update()
 	{
 		if ( it->isMultiInlet() )
 		{
-			_2Real::bundle::MultiInletHandle *inlet = dynamic_cast< _2Real::bundle::MultiInletHandle * >( it );
-			std::cout << "inlet " << inlet->getName() << " is a multiinlet, size " << inlet->getSize() << std::endl;
+			auto inlet = std::dynamic_pointer_cast< _2Real::bundle::MultiInletHandle >( it );
+			std::cout << "inlet " << /*inlet->getName() << */" is a multiinlet, size " << inlet->getSize() << std::endl;
 		}
 		else
 		{
-			_2Real::bundle::InletHandle *inlet = dynamic_cast< _2Real::bundle::InletHandle * >( it );
+			auto inlet = std::dynamic_pointer_cast< _2Real::bundle::InletHandle >( it );
 			_2Real::DataItem const& item = inlet->getValue();
-			std::cout << "inlet " << inlet->getName() << " : " << item << std::endl;
+			std::cout << "inlet " << /*inlet->getName() <<*/ " : " << item << std::endl;
 		}
 	}
 
 	for ( auto it : mIo.mOutlets )
 	{
 		_2Real::DataItem const& item = it->getValue();
-		std::cout << "outlet " << it->getName() << " : " << item << std::endl;
+		std::cout << "outlet " << /*it->getName() <<*/ " : " << item << std::endl;
 	}
 }
 

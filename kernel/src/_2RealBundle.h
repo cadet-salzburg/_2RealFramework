@@ -21,6 +21,7 @@
 #include "bundle/_2RealAbstractBlock.h"
 #include "engine/_2RealData.h"
 #include "engine/_2RealCustomData.h"
+#include "engine/_2RealDeclarations.h"
 
 #include "bundle/_2RealBlockIo.h"
 #include "bundle/_2RealBundleMetainfo.h"
