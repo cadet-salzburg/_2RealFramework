@@ -45,19 +45,7 @@ int main( int argc, char *argv[] )
 			try
 			{
 				std::cout << "testing empty bundle" << std::endl;
-				_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_NoMetainfo" );
-				std::cout << "testing malformed bundle: FAILED" << std::endl;
-			}
-			catch( _2Real::Exception &e )
-			{
-				std::cout << "testing malformed bundle: " << e.what() << " " << e.message() <<  std::endl;
-			}
-		}
-		{
-			try
-			{
-				std::cout << "testing bundle w. malformed metainfo" << std::endl;
-				_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_EmptyMetainfo" );
+				auto load = testEngine.loadBundle( "TestBundle_NoMetainfo" );
 				std::cout << "testing malformed bundle: FAILED" << std::endl;
 			}
 			catch( _2Real::Exception &e )
@@ -69,8 +57,21 @@ int main( int argc, char *argv[] )
 		{
 			try
 			{
+				std::cout << "testing bundle w. empty metainfo" << std::endl;
+				auto load = testEngine.loadBundle( "TestBundle_EmptyMetainfo" );
+				std::cout << "testing valid bundle: SUCCEEDED" << std::endl;
+			}
+			catch ( _2Real::Exception &e )
+			{
+				std::cout << "testing valid bundle: " << e.what() << " " << e.message() << std::endl;
+			}
+		}
+
+		{
+			try
+			{
 				std::cout << "testing bundle w. metainfo" << std::endl;
-				_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_FullMetainfo" );
+				auto load = testEngine.loadBundle( "TestBundle_FullMetainfo" );
 				std::cout << "testing valid bundle: SUCCEEDED" << std::endl;
 			}
 			catch ( _2Real::Exception &e )
@@ -83,7 +84,7 @@ int main( int argc, char *argv[] )
 			try
 			{
 				std::cout << "testing bundle w. types" << std::endl;
-				_2Real::app::BundleHandle handle = testEngine.loadBundle( "TestBundle_CustomTypes" );
+				auto load = testEngine.loadBundle( "TestBundle_CustomTypes" );
 				std::cout << "testing valid bundle: SUCCEEDED" << std::endl;
 			}
 			catch ( _2Real::Exception &e )
@@ -96,7 +97,7 @@ int main( int argc, char *argv[] )
 			try
 			{
 				std::cout << "testing bundle w. blocks" << std::endl;
-				_2Real::app::BundleHandle bundle = testEngine.loadBundle( "TestBundle_BasicBlocks" );
+				auto load = testEngine.loadBundle( "TestBundle_BasicBlocks" );
 				std::cout << "testing valid bundle: SUCCEEDED" << std::endl;
 			}
 			catch ( _2Real::Exception &e )

@@ -18,32 +18,30 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
+#include "common/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class Bundle;
+	class BundleImpl;
 
 	namespace app
 	{
-		class FunctionBlockHandle;
-		class BundleMetainfo;
+		class BlockHandle;
+		class ThreadpoolHandle;
 
 		class BundleHandle
 		{
 
 		public:
 
-			explicit BundleHandle( std::shared_ptr< Bundle > );
+			explicit BundleHandle( std::shared_ptr< BundleImpl > );
 
 			bool					isValid() const;
-
-			// creates a block instance; state: before setup
-			FunctionBlockHandle		createBlock( std::string const& name );
+			BlockHandle				createBlock( std::string const& name, ThreadpoolHandle threadpool, std::vector< BlockHandle > const& dependencies );
 
 		private:
 
-			std::weak_ptr< Bundle >		mImpl;
+			std::weak_ptr< BundleImpl >		mImpl;
 
 		};
 	}

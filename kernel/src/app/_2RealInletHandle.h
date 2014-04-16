@@ -18,46 +18,44 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "app/_2RealAbstractInletHandle.h"
-#include "engine/_2RealData.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
+#include "app/_2RealInletHandle_I.h"
 
 namespace _2Real
 {
-	class Inlet;
-	class DataSink;
-	class DataSource;
+	class InletImpl;
+	class DataSink_I;
+	class DataSource_I;
 
 	namespace app
 	{
 		class LinkHandle;
 		class TypeMetainfo;
 
-		class InletHandle : public AbstractInletHandle
+		class InletHandle : public InletHandle_I
 		{
 
 		public:
 
-			explicit InletHandle( std::shared_ptr< Inlet > );
+			explicit InletHandle( std::shared_ptr< InletImpl > );
 	
-			using AbstractInletHandle::isValid;
-			using AbstractInletHandle::isMultiInlet;
-			using AbstractInletHandle::getBlock;
+			bool isValid() const;
+			bool isMultiInlet() const;
+			BlockHandle getBlock();
 
 			// TODO: these should definitely throw an exception in case of a datatype mismatch
-			//void setValue( DataItem && value );
-			//void setValue( std::shared_ptr< DataItem > value );
 			void setValue( DataItem value );
 
-			LinkHandle linkTo( std::shared_ptr< DataSource > );
+			LinkHandle linkTo( std::shared_ptr< DataSource_I > );
 
-			operator std::shared_ptr< DataSink > ();
+			operator std::shared_ptr< DataSink_I > ();
 
 		private:
 
 			friend class MultiInletHandle;
 
-			std::weak_ptr< Inlet >		mImpl;
+			std::weak_ptr< InletImpl >		mImpl;
 
 		};
 	}

@@ -17,30 +17,45 @@
 */
 
 #include "app/_2RealBundleHandle.h"
-#include "app/_2RealFunctionBlockHandle.h"
-#include "app/_2RealBundleMetainfo.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealBundle.h"
+#include "app/_2RealBlockHandle.h"
+#include "app/_2RealThreadpoolHandle.h"
+
+#include "engine/_2RealBundleImpl.h"
+
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		BundleHandle::BundleHandle( std::shared_ptr< Bundle > bundle ) :
+		BundleHandle::BundleHandle( std::shared_ptr< BundleImpl > bundle ) :
 			mImpl( bundle )
 		{
 		}
 
 		bool BundleHandle::isValid() const
 		{
-			std::shared_ptr< Bundle > bundle = mImpl.lock();
+			std::shared_ptr< BundleImpl > bundle = mImpl.lock();
 			return ( nullptr != bundle.get() );
 		}
 
-		FunctionBlockHandle BundleHandle::createBlock( std::string const& name )
+		BlockHandle BundleHandle::createBlock( std::string const& name, ThreadpoolHandle system, std::vector< BlockHandle > const& dependencies )
 		{
-			std::shared_ptr< Bundle > bundle = checkValidity< Bundle >( mImpl, "bundle" );
-			return FunctionBlockHandle( bundle->createBlock( name ) );
+			std::shared_ptr< BundleImpl > bundle = checkValidity< BundleImpl >( mImpl, "bundle" );
+
+			std::shared_ptr< ThreadpoolImpl_I > threads = system.mImpl.lock();
+			if ( !threads.get() )
+				throw HandleAccessFailure( "threadpool" );
+
+			std::vector< std::shared_ptr< BlockImpl > > blocks;
+			for ( auto it : dependencies )
+			{
+				std::shared_ptr< BlockImpl > block = it.mImpl.lock();
+				if ( !block.get() )
+					throw HandleAccessFailure( "block" );
+			}
+
+			return BlockHandle( bundle->createBlock( name, threads, blocks ) );
 		}
 	}
 }

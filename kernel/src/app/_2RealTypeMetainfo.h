@@ -18,23 +18,23 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealData.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
+
+#include "app/_2RealTypeMetainfo_I.h"
 
 namespace _2Real
 {
-	class TMetainfo;
+	class BasicTypeMetainfoImpl;
 
 	namespace app
 	{
-		class TypeMetainfo
+		class TypeMetainfo : public TypeMetainfo_I
 		{
 
 		public:
 
-			explicit TypeMetainfo( std::shared_ptr< const TMetainfo > );
-
-			TypeMetainfo() = default;
+			explicit TypeMetainfo( std::shared_ptr< const BasicTypeMetainfoImpl > );
 			virtual ~TypeMetainfo() = default;
 
 			bool			isValid() const;
@@ -44,7 +44,7 @@ namespace _2Real
 
 		private:
 
-			std::weak_ptr< const TMetainfo >		mImpl;
+			std::weak_ptr< const BasicTypeMetainfoImpl >		mImpl;
 
 		};
 	}

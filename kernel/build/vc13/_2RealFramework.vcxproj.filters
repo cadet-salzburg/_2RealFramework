@@ -1,0 +1,626 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\engine">
+      <UniqueIdentifier>{3a1ea485-5de7-4c0f-9a1d-64cccfbcb676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{6b3e210b-deff-43a5-bd36-ceeedfe9d33b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\app">
+      <UniqueIdentifier>{269a365f-2de2-4817-b104-94de7535fdca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\app">
+      <UniqueIdentifier>{a63feb40-1a15-47cd-9679-3679bcc2e70b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\bundle">
+      <UniqueIdentifier>{68736fcd-01b8-4be1-9e00-fa1984ea0643}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\bundle">
+      <UniqueIdentifier>{3573c3ea-bdff-4b39-a887-aef4c10bd7ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\app\bundle exported metainfo">
+      <UniqueIdentifier>{63f4ae21-69ba-407d-a6cb-9e33851ce11b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\app\bundle exported objects">
+      <UniqueIdentifier>{c8086c84-c565-4951-b008-a7983bd89965}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\app\user created objects">
+      <UniqueIdentifier>{b6a5d18b-50e5-4d0b-b23f-18def9eaa832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\app\bundle exported metainfo">
+      <UniqueIdentifier>{2f78ee19-a339-4bb1-a341-6491dea563d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\app\bundle exported objects">
+      <UniqueIdentifier>{4c29037e-5fc6-4ef2-ad22-a5bb022bd8a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\app\user created objects">
+      <UniqueIdentifier>{ad5e5f19-fa76-414a-bc14-b2dbb2f8a481}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\bundle\metainfo">
+      <UniqueIdentifier>{9a4fd527-3e20-438b-bdc8-ca44784d4d61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\bundle\io handles">
+      <UniqueIdentifier>{7f6bb6e6-7e2b-44ec-8a05-d6eb4bf15fe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\bundle\metainfo">
+      <UniqueIdentifier>{c4d7e753-619f-407d-a7a5-0012ba21d099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\bundle\io handles">
+      <UniqueIdentifier>{83cd9b77-ee25-432c-8f76-00fcd2ed044b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\impl">
+      <UniqueIdentifier>{ba16f572-1ef0-47b8-8aec-de37538a4fe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\impl">
+      <UniqueIdentifier>{4e6f605b-8bb9-4378-be97-e6aa763f613e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\interfaces">
+      <UniqueIdentifier>{59c0e265-dc83-4977-8203-abd0b81504ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\interfaces">
+      <UniqueIdentifier>{11d30da8-a53b-4af1-8148-29202c776416}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\collections">
+      <UniqueIdentifier>{149f6c48-124b-48c5-b406-fff5c2c37124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\common">
+      <UniqueIdentifier>{f0300bad-25e9-41f0-adbb-fae32add4ab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{75e92035-44f0-43f1-9a22-ea84d4fcc940}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\collections">
+      <UniqueIdentifier>{0dbbc88c-26e7-4fa6-b9d7-7d452cfa8a64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\data visitors">
+      <UniqueIdentifier>{2d878e79-082d-441c-bd95-718d84781257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\data visitors">
+      <UniqueIdentifier>{f618923d-856c-4bd3-b87d-85ebadaac165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\block states">
+      <UniqueIdentifier>{e12a8afc-4d8b-4adf-918e-c0cfd58d35b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\shared library">
+      <UniqueIdentifier>{2b0a7fc8-6d6a-41d6-9f22-5cfaa25ac8d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\block states">
+      <UniqueIdentifier>{6993f03c-d668-4d3c-bcc4-48c9905a685c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\shared library">
+      <UniqueIdentifier>{cb821b1d-a977-4cc6-86fc-d9f8388ab36d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\engine\_2RealInSlot.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealEngine.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealId.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleMetainfo.cpp">
+      <Filter>Source Files\app\bundle exported metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBlockMetainfo.cpp">
+      <Filter>Source Files\app\bundle exported metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealCustomTypeMetainfo.cpp">
+      <Filter>Source Files\app\bundle exported metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealTypeMetainfo.cpp">
+      <Filter>Source Files\app\bundle exported metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealIoSlotMetainfo.cpp">
+      <Filter>Source Files\app\bundle exported metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBundleHandle.cpp">
+      <Filter>Source Files\app\bundle exported objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealInletHandle.cpp">
+      <Filter>Source Files\app\bundle exported objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealMultiInletHandle.cpp">
+      <Filter>Source Files\app\bundle exported objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealOutletHandle.cpp">
+      <Filter>Source Files\app\bundle exported objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealParameterHandle.cpp">
+      <Filter>Source Files\app\bundle exported objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealUpdatePolicyHandle.cpp">
+      <Filter>Source Files\app\bundle exported objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealLinkHandle.cpp">
+      <Filter>Source Files\app\user created objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealTimerHandle.cpp">
+      <Filter>Source Files\app\user created objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBundleMetainfo.cpp">
+      <Filter>Source Files\bundle\metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealUpdatePolicyMetainfo.cpp">
+      <Filter>Source Files\bundle\metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlockMetainfo.cpp">
+      <Filter>Source Files\bundle\metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealIoSlotMetainfo.cpp">
+      <Filter>Source Files\bundle\metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealInletHandle.cpp">
+      <Filter>Source Files\bundle\io handles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealMultiInletHandle.cpp">
+      <Filter>Source Files\bundle\io handles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealOutletHandle.cpp">
+      <Filter>Source Files\bundle\io handles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
+      <Filter>Source Files\bundle\io handles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBundleImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBlockImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealInletImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealMultiInletImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealOutletImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealParameterImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealIoSlotMetainfoImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealCustomTypeMetainfoImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealUpdatePolicyMetainfoImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealUpdatePolicyImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTimerImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBundleMetainfoImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBlockMetainfoImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealLink.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBasicTypeMetainfoImpl.cpp">
+      <Filter>Source Files\engine\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealCustomTypeMetainfo.cpp">
+      <Filter>Source Files\bundle\metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealBlockHandle.cpp">
+      <Filter>Source Files\app\bundle exported objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealBlock.cpp">
+      <Filter>Source Files\bundle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealFifoThreadpool.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealUniqueThreadpool.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\app\_2RealThreadpoolHandle.cpp">
+      <Filter>Source Files\app\user created objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBlockState_I.cpp">
+      <Filter>Source Files\engine\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealThreadpoolImpl_I.cpp">
+      <Filter>Source Files\engine\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealConstants.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealException.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealVersion.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBundleCollection.cpp">
+      <Filter>Source Files\engine\collections</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealThreadpoolCollection.cpp">
+      <Filter>Source Files\engine\collections</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTypeCollection.cpp">
+      <Filter>Source Files\engine\collections</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTimerCollection.cpp">
+      <Filter>Source Files\engine\collections</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealHumanReadableNameVisitor.cpp">
+      <Filter>Source Files\engine\data visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTypeMetainfoVisitor.cpp">
+      <Filter>Source Files\engine\data visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealCustomDataItem.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealDeclarations.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealPostSetupState.cpp">
+      <Filter>Source Files\engine\block states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealPostSetupState_Running.cpp">
+      <Filter>Source Files\engine\block states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealPostShutdownState.cpp">
+      <Filter>Source Files\engine\block states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealPreSetupState.cpp">
+      <Filter>Source Files\engine\block states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary.cpp">
+      <Filter>Source Files\engine\shared library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary_UNIX.cpp">
+      <Filter>Source Files\engine\shared library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealSharedLibrary_WIN.cpp">
+      <Filter>Source Files\engine\shared library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealInletPolicy.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBlockStateHandler.cpp">
+      <Filter>Source Files\engine\block states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealDataField.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\app\_2RealEngine.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\_2RealBundle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealInSlot.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealLink.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealId.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBundleMetainfo.h">
+      <Filter>Header Files\app\bundle exported metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBlockMetainfo.h">
+      <Filter>Header Files\app\bundle exported metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealCustomTypeMetainfo.h">
+      <Filter>Header Files\app\bundle exported metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealTypeMetainfo.h">
+      <Filter>Header Files\app\bundle exported metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealIoSlotMetainfo.h">
+      <Filter>Header Files\app\bundle exported metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealInletHandle.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealMultiInletHandle.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealTimerHandle.h">
+      <Filter>Header Files\app\user created objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealLinkHandle.h">
+      <Filter>Header Files\app\user created objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealOutletHandle.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealParameterHandle.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBundleHandle.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBlockIo.h">
+      <Filter>Header Files\bundle\io handles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h">
+      <Filter>Header Files\bundle\io handles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealMultiInletHandle.h">
+      <Filter>Header Files\bundle\io handles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealIoSlotMetainfo.h">
+      <Filter>Header Files\bundle\metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h">
+      <Filter>Header Files\bundle\io handles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h">
+      <Filter>Header Files\bundle\metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealParameterHandle.h">
+      <Filter>Header Files\bundle\io handles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealUpdatePolicyMetainfo.h">
+      <Filter>Header Files\bundle\metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBlockMetainfo.h">
+      <Filter>Header Files\bundle\metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBundleImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealEngineImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealInletImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealMultiInletImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealOutletImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealParameterImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBundleMetainfoImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockMetainfoImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealIoSlotMetainfoImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTimerImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealUpdatePolicyImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealUpdatePolicyMetainfoImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBasicTypeMetainfoImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealCustomTypeMetainfoImpl.h">
+      <Filter>Header Files\engine\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealCustomTypeMetainfo.h">
+      <Filter>Header Files\bundle\metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealInletImpl_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTypeMetainfoImpl_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBlockHandle.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealBlock.h">
+      <Filter>Header Files\bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealThreadpoolImpl_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealUniqueThreadpool.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealFifoThreadpool.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealThreadpoolHandle.h">
+      <Filter>Header Files\app\user created objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockState_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealHumanReadableNameVisitor.h">
+      <Filter>Header Files\engine\data visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTypeMetainfoVisitor.h">
+      <Filter>Header Files\engine\data visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBundleCollection.h">
+      <Filter>Header Files\engine\collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealThreadpoolCollection.h">
+      <Filter>Header Files\engine\collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTimerCollection.h">
+      <Filter>Header Files\engine\collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealTypeCollection.h">
+      <Filter>Header Files\engine\collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealVersion.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealBlockAction.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealBlockResult.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealBlockState.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealBoost.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealCallback_T.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealConstants.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealDefaultUpdatePolicy.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealEvent_T.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealException.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealPath.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealStdIncludes.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealSubinletPolicy.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealThreadpoolPolicy.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealData.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealDataSink_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealDataSource_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealIoSlot_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealCustomDataItem.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealDataItem.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealBlockIo.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealCallback.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealWeakPtrCheck.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealDeclarations.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealPostSetupState.h">
+      <Filter>Header Files\engine\block states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealPostSetupState_Running.h">
+      <Filter>Header Files\engine\block states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealPostShutdownState.h">
+      <Filter>Header Files\engine\block states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealPreSetupState.h">
+      <Filter>Header Files\engine\block states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealSignalResponse.h">
+      <Filter>Header Files\engine\block states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary.h">
+      <Filter>Header Files\engine\shared library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary_UNIX.h">
+      <Filter>Header Files\engine\shared library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealSharedLibrary_WIN.h">
+      <Filter>Header Files\engine\shared library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealInletPolicy.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockLifetimeMgr_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockFactory_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockLifetimeMgr.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockFactory_T.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealUpdateTrigger_I.h">
+      <Filter>Header Files\engine\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockStateHandler.h">
+      <Filter>Header Files\engine\block states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealBlockAccess.h">
+      <Filter>Header Files\engine\block states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealInletHandle_I.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealTypeMetainfo_I.h">
+      <Filter>Header Files\app\bundle exported metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealInletHandle_I.h">
+      <Filter>Header Files\bundle\io handles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealDataField.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="boost.txt" />
+  </ItemGroup>
+</Project>

@@ -17,13 +17,13 @@
 */
 
 #include "engine/_2RealLink.h"
-#include "engine/_2RealDataSource.h"
-#include "engine/_2RealDataSink.h"
-#include "helpers/_2RealException.h"
+#include "engine/_2RealDataSource_I.h"
+#include "engine/_2RealDataSink_I.h"
+#include "common/_2RealException.h"
 
 namespace _2Real
 {
-	Link::Link( std::shared_ptr< DataSource > source, std::shared_ptr< DataSink > sink ) :
+	Link::Link( std::shared_ptr< DataSource_I > source, std::shared_ptr< DataSink_I > sink ) :
 		std::enable_shared_from_this< Link >(),
 		mSource( source ),
 		mSink( sink )
@@ -46,12 +46,12 @@ namespace _2Real
 	{
 		// TODO: auto conversion?
 
-		std::shared_ptr< DataSink > sink = mSink.lock();
+		std::shared_ptr< DataSink_I > sink = mSink.lock();
 		if ( !sink.get() )
 		{
 			std::ostringstream msg;
 			msg << "data sink no longer exists" << std::endl;
-			throw _2Real::NotFound( msg.str() );
+			throw NotFound( msg.str() );
 		}
 
 		sink->receiveData( data );

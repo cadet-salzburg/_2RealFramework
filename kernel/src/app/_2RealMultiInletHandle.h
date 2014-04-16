@@ -18,27 +18,27 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "app/_2RealAbstractInletHandle.h"
+#include "common/_2RealStdIncludes.h"
+#include "app/_2RealInletHandle_I.h"
 
 namespace _2Real
 {
-	class MultiInlet;
+	class MultiInletImpl;
 
 	namespace app
 	{
 		class InletHandle;
 
-		class MultiInletHandle : public AbstractInletHandle
+		class MultiInletHandle : public InletHandle_I
 		{
 
 		public:
 
-			explicit MultiInletHandle( std::shared_ptr< MultiInlet > );
+			explicit MultiInletHandle( std::shared_ptr< MultiInletImpl > );
 
-			using AbstractInletHandle::isValid;
-			using AbstractInletHandle::isMultiInlet;
-			using AbstractInletHandle::getBlock;
+			bool isValid() const;
+			bool isMultiInlet() const;
+			BlockHandle getBlock();
 
 			InletHandle			operator[]( const uint32_t );
 			uint32_t			getSize() const;
@@ -49,7 +49,7 @@ namespace _2Real
 
 		private:
 
-			std::weak_ptr< MultiInlet >		mImpl;
+			std::weak_ptr< MultiInletImpl >		mImpl;
 
 		};
 	}

@@ -18,10 +18,8 @@
 
 #pragma once
 
-#include <vector>
-#include "bundle/_2RealAbstractInletHandle.h"
-#include "bundle/_2RealInletHandle.h"
-#include "bundle/_2RealMultiInletHandle.h"
+#include "common/_2RealStdIncludes.h"
+#include "bundle/_2RealInletHandle_I.h"
 #include "bundle/_2RealOutletHandle.h"
 #include "bundle/_2RealParameterHandle.h"
 
@@ -31,9 +29,6 @@ namespace _2Real
 
 	namespace bundle
 	{
-		/*
-		*	holds all io slot handles, in the same order they were added to the block
-		*/
 
 		class BlockIo
 		{
@@ -41,7 +36,7 @@ namespace _2Real
 		public:
 
 			std::vector< std::shared_ptr< ParameterHandle > >		mParameters;
-			std::vector< std::shared_ptr< AbstractInletHandle > >	mInlets;
+			std::vector< std::shared_ptr< InletHandle_I > >			mInlets;
 			std::vector< std::shared_ptr< OutletHandle > >			mOutlets;
 
 		};

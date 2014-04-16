@@ -27,3 +27,15 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.setContact( "fhs33223@fh-salzburg.ac.at" );
 	info.setVersion( 0, 0, 0 );
 }
+
+void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& types )
+{
+	( void )( info );
+	( void )( types );
+}
+
+void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& types )
+{
+	( void )( info );
+	( void )( types );
+}

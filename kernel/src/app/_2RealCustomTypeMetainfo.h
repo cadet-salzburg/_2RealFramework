@@ -18,30 +18,37 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "app/_2RealTypeMetainfo.h"
+#include "common/_2RealStdIncludes.h"
+#include "app/_2RealTypeMetainfo_I.h"
 
 namespace _2Real
 {
-	class SharedTypeMetainfo;
+	class CustomTypeMetainfoImpl;
 
 	namespace app
 	{
-		class CustomTypeMetainfo : public TypeMetainfo
+		class TypeMetainfo;
+
+		class CustomTypeMetainfo : public TypeMetainfo_I
 		{
 
 		public:
 
-			explicit CustomTypeMetainfo( std::shared_ptr< const SharedTypeMetainfo > );
+			explicit CustomTypeMetainfo( std::shared_ptr< const CustomTypeMetainfoImpl > );
+
+			bool			isValid() const;
+			bool			isBasicType() const;
+			std::string		getName() const;
+			DataItem		makeData() const;
 
 			std::string		getDescription() const;
 			CustomDataItem	makeCustomData() const;
 
-			std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo > > > getDataFields() const;
+			std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo_I > > > getDataFields() const;
 
 		private:
 
-			std::weak_ptr< const SharedTypeMetainfo >		mImpl;
+			std::weak_ptr< const CustomTypeMetainfoImpl >		mImpl;
 
 		};
 	}

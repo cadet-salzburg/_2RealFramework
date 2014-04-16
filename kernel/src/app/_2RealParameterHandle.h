@@ -18,40 +18,32 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "app/_2RealAbstractInletHandle.h"
-#include "engine/_2RealData.h"
+#include "common/_2RealStdIncludes.h"
+#include "app/_2RealInletHandle_I.h"
+#include "common/_2RealData.h"
 
 namespace _2Real
 {
-	class Parameter;
+	class ParameterImpl;
 
 	namespace app
 	{
 		class ParameterHandle
 		{
 
-			class FunctionBlockHandle;
+			class BlockHandle;
 
 		public:
 
-			explicit ParameterHandle( std::shared_ptr< Parameter > );
+			explicit ParameterHandle( std::shared_ptr< ParameterImpl > );
 
 			bool					isValid() const;
 
-			FunctionBlockHandle		getBlock();
-
-			//DataItem				getValue() const;
-			//DataItem				getCurrentValue() const;
-
-			// TODO: these should definitely throw an exception in case of a datatype mismatch
-			//void setValue( DataItem && value );
-			//void setValue( std::shared_ptr< DataItem > value );
-			//void setValue( DataItem const& value );
+			BlockHandle		getBlock();
 
 		private:
 
-			std::weak_ptr< Parameter >		mImpl;
+			std::weak_ptr< ParameterImpl >		mImpl;
 
 		};
 	}

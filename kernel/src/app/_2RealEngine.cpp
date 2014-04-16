@@ -20,10 +20,10 @@
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBundleMetainfo.h"
 #include "app/_2RealTimerHandle.h"
-#include "app/_2RealSystemHandle.h"
-#include "enums/_2RealThreadpoolPolicy.h"
+#include "app/_2RealThreadpoolHandle.h"
+
 #include "engine/_2RealEngineImpl.h"
-#include "helpers/_2RealBoost.h"
+#include "common/_2RealBoost.h"
 
 namespace _2Real
 {
@@ -36,6 +36,7 @@ namespace _2Real
 
 		Engine::~Engine()
 		{
+			clear();
 		}
 
 		void Engine::clear()
@@ -70,10 +71,10 @@ namespace _2Real
 
 	// ---------------------------------- threadpool
 
-		SystemHandle Engine::createSystem( const ThreadpoolPolicy policy )
+		ThreadpoolHandle Engine::createThreadpool( const ThreadpoolPolicy policy )
 		{
 			auto system = mImpl->createThreadpool( policy );
-			return SystemHandle( system );
+			return ThreadpoolHandle( system );
 		}
 
 	// ---------------------------------- threadpool

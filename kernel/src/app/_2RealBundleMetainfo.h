@@ -18,13 +18,12 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealVersion.h"
-#include "helpers/_2RealPath.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealVersion.h"
 
 namespace _2Real
 {
-	class SharedLibraryMetainfo;
+	class BundleMetainfoImpl;
 
 	namespace app
 	{
@@ -36,9 +35,8 @@ namespace _2Real
 
 		public:
 
-			explicit BundleMetainfo( std::shared_ptr< const SharedLibraryMetainfo > );
+			explicit BundleMetainfo( std::shared_ptr< const BundleMetainfoImpl > );
 
-			// bundle unload -> invalid
 			bool			isValid() const;
 
 			std::string		getDescription() const;
@@ -55,7 +53,7 @@ namespace _2Real
 
 		private:
 
-			std::weak_ptr< const SharedLibraryMetainfo >		mImpl;
+			std::weak_ptr< const BundleMetainfoImpl >		mImpl;
 
 		};
 	}

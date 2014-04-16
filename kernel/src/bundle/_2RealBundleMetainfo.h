@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
+#include "common/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class SharedLibraryMetainfo;
+	class BundleMetainfoImpl;
 	class InletDeclaration;
 	class OutletDeclaration;
 	class ParameterDeclaration;
@@ -30,17 +30,14 @@ namespace _2Real
 
 	namespace bundle
 	{
-		class TypeMetainfo;
-		class FunctionBlockMetainfo;
-		class ContextBlockMetainfo;
-
 		class BundleMetainfo
 		{
 
 		public:
 
-			explicit BundleMetainfo( std::shared_ptr< SharedLibraryMetainfo > );
+			explicit BundleMetainfo( std::shared_ptr< BundleMetainfoImpl > );
 
+			// setters for basic bundle info
 			void setAuthor( const std::string );
 			void setDescription( const std::string );
 			void setContact( const std::string  );
@@ -48,11 +45,12 @@ namespace _2Real
 			void setVersion( const unsigned int, const unsigned int, const unsigned int );
 
 			void exportsType( const std::string name, const std::vector< FieldDeclaration > fields );
-			void exportsBlock( const std::string name, const bool isSingleton, const std::vector< InletDeclaration > inlets, const std::vector< OutletDeclaration > outlets, const std::vector< ParameterDeclaration > parameters );
+			// removed 'singleton' attrib, may be re-added if necessary
+			void exportsBlock( const std::string name, const std::vector< InletDeclaration > inlets, const std::vector< OutletDeclaration > outlets, const std::vector< ParameterDeclaration > parameters );
 
 		private:
 
-			std::weak_ptr< SharedLibraryMetainfo >		mImpl;
+			std::shared_ptr< BundleMetainfoImpl >		mImpl;
 
 		};
 	}

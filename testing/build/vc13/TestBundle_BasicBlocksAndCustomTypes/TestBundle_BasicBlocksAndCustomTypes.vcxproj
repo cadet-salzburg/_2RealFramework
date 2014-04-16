@@ -18,7 +18,7 @@
     <ClInclude Include="..\..\..\src\TestBundle_BasicBlocksAndCustomTypes\ComplexCounterBlock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F397D961-7DF8-45C5-B4FD-61539B40573A}</ProjectGuid>
+    <ProjectGuid>{0C95B6C0-3C3A-4D5A-BC92-CF8FFD09AD54}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFrameworkTests</RootNamespace>
     <ProjectName>TestBundle_BasicBlocksAndCustomTypes</ProjectName>

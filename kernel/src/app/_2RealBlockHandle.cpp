@@ -18,34 +18,102 @@
 
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealBundleHandle.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealBlock.h"
+#include "app/_2RealTimerHandle.h"
+#include "app/_2RealBlockIo.h"
+#include "app/_2RealInletHandle_I.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealMultiInletHandle.h"
+#include "app/_2RealOutletHandle.h"
+#include "app/_2RealParameterHandle.h"
+#include "app/_2RealUpdatePolicyHandle.h"
+
+#include "engine/_2RealBundleImpl.h"
+#include "engine/_2RealBlockImpl.h"
+#include "engine/_2RealTimerImpl.h"
+#include "engine/_2RealInletImpl_I.h"
+#include "engine/_2RealInletImpl.h"
+#include "engine/_2RealMultiInletImpl.h"
+#include "engine/_2RealOutletImpl.h"
+#include "engine/_2RealParameterImpl.h"
+
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		BlockHandle::BlockHandle( std::shared_ptr< Block > bundle ) :
+		BlockHandle::BlockHandle( std::shared_ptr< BlockImpl > bundle ) :
 			mImpl( bundle )
 		{
 		}
 
 		bool BlockHandle::isValid() const
 		{
-			std::shared_ptr< Block > block = mImpl.lock();
+			std::shared_ptr< BlockImpl > block = mImpl.lock();
 			return ( nullptr != block.get() );
-		}
-
-		bool BlockHandle::isSingleton() const
-		{
-			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			return block->isSingleton();
 		}
 
 		BundleHandle BlockHandle::getBundle()
 		{
-			std::shared_ptr< Block > block = checkValidity< Block >( mImpl, "block" );
-			return BundleHandle( block->getParent() );
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			auto bundle = block->getParent();
+			return BundleHandle( bundle );
+		}
+
+		std::future< BlockState > BlockHandle::setup()
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return block->setup();
+		}
+
+		std::future< BlockState > BlockHandle::singlestep()
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return block->singlestep();
+		}
+
+		std::future< BlockState > BlockHandle::shutdown()
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return block->shutdown();
+		}
+
+		std::future< BlockState > BlockHandle::startUpdating( TimerHandle handle )
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger_I > >( handle ) );
+		}
+
+		std::future< BlockState > BlockHandle::startUpdating()
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return block->startUpdating();
+		}
+
+		std::future< BlockState > BlockHandle::stopUpdating()
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return block->stopUpdating();
+		}
+
+		BlockIo BlockHandle::getBlockIo()
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			std::shared_ptr< _2Real::BlockIo > io = block->getBlockIo();
+			BlockIo result;
+			for ( auto it : io->mInlets )
+				result.mInlets.push_back( it->isMultiInlet() ? std::shared_ptr< InletHandle_I >( new MultiInletHandle( std::static_pointer_cast< MultiInletImpl >( it ) ) ) : std::shared_ptr< InletHandle_I >( new InletHandle( std::static_pointer_cast< InletImpl >( it ) ) ) );
+			for ( auto it : io->mParameters )
+				result.mParameters.push_back( std::shared_ptr< ParameterHandle >( new ParameterHandle( it ) ) );
+			for ( auto it : io->mOutlets )
+				result.mOutlets.push_back( std::shared_ptr< OutletHandle >( new OutletHandle( it ) ) );
+			return result;
+		}
+
+		UpdatePolicyHandle BlockHandle::getUpdatePolicy()
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return UpdatePolicyHandle( block->getUpdatePolicy() );
 		}
 	}
 }

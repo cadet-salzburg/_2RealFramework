@@ -33,6 +33,33 @@
 
 #include "_2RealApplication.h"
 
+void printBasicTypeMetainfo( _2Real::app::TypeMetainfo const& );
+void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& );
+
+void printBasicTypeMetainfo( _2Real::app::TypeMetainfo const& meta )
+{
+	assert( meta.isValid() );
+	std::cout << "basic type " << meta.getName() << std::endl;
+}
+
+void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& meta )
+{
+	assert( meta.isValid() );
+
+	std::cout << "custom type " << meta.getName() << std::endl;
+	std::cout << meta.getDescription() << std::endl;
+
+	auto fields = meta.getDataFields();
+	for ( auto it : fields )
+	{
+		std::cout << "has field " << it.first << std::endl;
+		if ( it.second->isBasicType() )
+			printBasicTypeMetainfo( *( static_cast< const _2Real::app::TypeMetainfo * >( it.second.get() ) ) );
+		else
+			printCustomTypeMetainfo( *( static_cast< const _2Real::app::CustomTypeMetainfo * >( it.second.get() ) ) );
+	}
+}
+
 void handleFuture( std::future< _2Real::BlockState > &obj, std::string const& info = "" )
 {
 	obj.wait();
@@ -64,7 +91,7 @@ int main( int argc, char *argv[] )
 
 	// -------print the block metainfo---------
 
-		_2Real::app::BundleMetainfo bundleinfo = loadedBundle.second;
+		auto bundleinfo = loadedBundle.second;
 
 		std::cout << "basic bundle info" << std::endl;
 		std::cout << "description " << bundleinfo.getDescription() << std::endl;
@@ -73,14 +100,27 @@ int main( int argc, char *argv[] )
 		std::cout << "contact " << bundleinfo.getContact() << std::endl;
 		std::cout << "version " << bundleinfo.getVersion() << std::endl;
 
-		std::vector< _2Real::app::BlockMetainfo > blockinfos = bundleinfo.getExportedBlocks();
+		std::cout << std::endl;
+
+		// i know that these are custom types, so no need for casting around
+		auto typeinfos = bundleinfo.getExportedTypes();
+		std::cout << "number of exported types : " << typeinfos.size() << std::endl;
+		if ( !typeinfos.empty() ) std::cout << "--------------------------------" << std::endl;
+		for ( auto it : typeinfos )
+		{
+			printCustomTypeMetainfo( it );
+			std::cout << "--------------------------------" << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		auto blockinfos = bundleinfo.getExportedBlocks();
 		std::cout << "exported blocks " << blockinfos.size() << std::endl;
 		for ( auto it : blockinfos )
 		{
 			std::cout << "\t" << it.getName() << std::endl;
 			std::cout << "\t" << it.getDescription() << std::endl;
-			std::cout << "\tis singleton " << std::boolalpha << it.isSingleton() << std::endl;
-			std::vector< std::string > dependencies = it.getDependenciesByName();
+			auto dependencies = it.getDependenciesByName();
 			std::cout << "\tdependencies\t";
 			for ( auto it : dependencies ) std::cout << it << " ";
 			std::cout << std::endl;
@@ -92,74 +132,40 @@ int main( int argc, char *argv[] )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 				std::cout << "\t\tis multi " << std::boolalpha << it.isMulti() << std::endl;
 			}
 
 			std::vector< _2Real::app::OutletMetainfo > outletinfos = it.getOutlets();
-
 			std::cout << "\toutlets "  << outletinfos.size() << std::endl;
 			for ( auto it : outletinfos )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 
 			std::vector< _2Real::app::ParameterMetainfo > paraminfos = it.getParameters();
-
 			std::cout << "\tparameters " << paraminfos.size() << std::endl;
 			for ( auto it : paraminfos )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 		}
 
-		// -------create block instances---------
+		// -------create block instance---------
 
 		_2Real::app::TimerHandle timer = testEngine.createTimer( 5.0 );
-		_2Real::app::FunctionBlockHandle counter = loadedBundle.first.createBlock( "counter" );
+		_2Real::app::ThreadpoolHandle threadpool = testEngine.createThreadpool( _2Real::ThreadpoolPolicy::FIFO );
+		_2Real::app::BlockHandle counter = loadedBundle.first.createBlock( "counter", threadpool, std::vector< _2Real::app::BlockHandle >() );
 
 		_2Real::app::BlockIo counterio = counter.getBlockIo();
 		auto incInlet = std::dynamic_pointer_cast< _2Real::app::InletHandle >( counterio.mInlets[ 0 ] );
-
-		// should io slots really hand out type metainfo?
-		//_2Real::app::TypeMetainfo info = incInlet->getTypeMetainfo();
-		//std::cout << std::boolalpha << info.isBasicType() << std::noboolalpha << std::endl;
-
-		//_2Real::app::CustomTypeMetainfo &custominfo = dynamic_cast< _2Real::app::CustomTypeMetainfo & >( info );
-
-		//std::cout << custominfo.getName() << std::endl;
-		//std::cout << custominfo.getDescription() << std::endl;
-
-		//for ( auto it : counterio.mInlets )
-		//{
-		//	if ( it->isMultiInlet() )
-		//	{
-		//		auto inlet = dynamic_cast< _2Real::app::MultiInletHandle * >( it );
-		//		std::cout << " inlet " << inlet->getName() << " is a multiinlet, size " << inlet->getSize() << std::endl;
-		//	}
-		//	else
-		//	{
-		//		auto inlet = dynamic_cast< _2Real::app::InletHandle * >( it );
-		//		std::cout << " inlet " << inlet->getName() << " is an regular inlet " << std::endl;
-		//	}
-		//}
-
-		//for ( auto it : counterio.mParameters )
-		//{
-		//	std::cout << "parameter " << it->getName() << std::endl;
-		//}
-
-		//for ( auto it : counterio.mOutlets )
-		//{
-		//	std::cout << "outlet " << it->getName() << std::endl;
-		//}
 
 		std::future< _2Real::BlockState > setup = counter.setup();
 		handleFuture( setup );

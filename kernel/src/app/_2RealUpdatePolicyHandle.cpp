@@ -17,27 +17,28 @@
 */
 
 #include "app/_2RealUpdatePolicyHandle.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealUpdatePolicy.h"
+#include "engine/_2RealUpdatePolicyImpl.h"
+
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		UpdatePolicyHandle::UpdatePolicyHandle( std::shared_ptr< UpdatePolicy > policy ) :
+		UpdatePolicyHandle::UpdatePolicyHandle( std::shared_ptr< UpdatePolicyImpl > policy ) :
 			mImpl( policy )
 		{
 		}
 
 		bool UpdatePolicyHandle::isValid() const
 		{
-			std::shared_ptr< UpdatePolicy > policy = mImpl.lock();
+			std::shared_ptr< UpdatePolicyImpl > policy = mImpl.lock();
 			return ( nullptr != policy.get() );
 		}
 
-		void UpdatePolicyHandle::set( const DefaultPolicy code )
+		void UpdatePolicyHandle::set( const DefaultUpdatePolicy code )
 		{
-			std::shared_ptr< UpdatePolicy > policy = checkValidity< UpdatePolicy >( mImpl, "update policy" );
+			std::shared_ptr< UpdatePolicyImpl > policy = checkValidity< UpdatePolicyImpl >( mImpl, "update policy" );
 			policy->set( code );
 		}
 	}

@@ -17,39 +17,40 @@
 */
 
 #include "app/_2RealTypeMetainfo.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealBasicTypeMetainfoImpl.h"
+
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		TypeMetainfo::TypeMetainfo( std::shared_ptr< const TMetainfo > meta ) :
+		TypeMetainfo::TypeMetainfo( std::shared_ptr< const BasicTypeMetainfoImpl > meta ) :
 			mImpl( meta )
 		{
 		}
 
 		bool TypeMetainfo::isValid() const
 		{
-			std::shared_ptr< const TMetainfo > meta = mImpl.lock();
+			std::shared_ptr< const BasicTypeMetainfoImpl > meta = mImpl.lock();
 			return ( meta.get() != nullptr );
 		}
 
 		bool TypeMetainfo::isBasicType() const
 		{
-			std::shared_ptr< const TMetainfo > meta = checkValidity< const TMetainfo >( mImpl, "type metainfo" );
-			return meta->isBasicType();
+			std::shared_ptr< const BasicTypeMetainfoImpl > meta = checkValidity< const BasicTypeMetainfoImpl >( mImpl, "type metainfo" );
+			return true;
 		}
 
 		DataItem TypeMetainfo::makeData() const
 		{
-			std::shared_ptr< const TMetainfo > meta = checkValidity< const TMetainfo >( mImpl, "type metainfo" );
+			std::shared_ptr< const BasicTypeMetainfoImpl > meta = checkValidity< const BasicTypeMetainfoImpl >( mImpl, "type metainfo" );
 			return meta->makeData();
 		}
 
 		std::string TypeMetainfo::getName() const
 		{
-			std::shared_ptr< const TMetainfo > meta = checkValidity< const TMetainfo >( mImpl, "type metainfo" );
+			std::shared_ptr< const BasicTypeMetainfoImpl > meta = checkValidity< const BasicTypeMetainfoImpl >( mImpl, "type metainfo" );
 			return meta->getName();
 		}
 	}

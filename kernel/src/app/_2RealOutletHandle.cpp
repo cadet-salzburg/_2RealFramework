@@ -17,29 +17,29 @@
 */
 
 #include "app/_2RealOutletHandle.h"
-#include "app/_2RealOutletMetainfo.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealOutlet.h"
+#include "engine/_2RealOutletImpl.h"
+
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		OutletHandle::OutletHandle( std::shared_ptr< Outlet > outlet ) :
+		OutletHandle::OutletHandle( std::shared_ptr< OutletImpl > outlet ) :
 			mImpl( outlet )
 		{
 		}
 
 		bool OutletHandle::isValid() const
 		{
-			std::shared_ptr< Outlet > outlet = mImpl.lock();
+			std::shared_ptr< OutletImpl > outlet = mImpl.lock();
 			return ( nullptr != outlet.get() );
 		}
 
-		OutletHandle::operator std::shared_ptr< DataSource > ()
+		OutletHandle::operator std::shared_ptr< DataSource_I > ()
 		{
-			std::shared_ptr< Outlet > outlet = checkValidity< Outlet >( mImpl, "outlet" );
-			return std::static_pointer_cast< DataSource >( outlet );
+			std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
+			return std::static_pointer_cast< DataSource_I >( outlet );
 		}
 	}
 }

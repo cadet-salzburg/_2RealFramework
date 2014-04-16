@@ -18,19 +18,48 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
+#include "common/_2RealStdIncludes.h"
+#include "bundle/_2RealIoSlotMetainfo.h"
+#include "engine/_2RealBlockFactory_T.h"
 
 namespace _2Real
 {
+	class BlockMetainfoImpl;
+
 	namespace bundle
 	{
+		class UpdatePolicyMetainfo;
+
 		class BlockMetainfo
 		{
 
 		public:
 
-			BlockMetainfo() = default;
-			virtual std::string getName() const = 0;
+			explicit BlockMetainfo( std::shared_ptr< BlockMetainfoImpl > );
+
+			std::string getName() const;
+
+			template< typename TBlock >
+			void setBlockClass()
+			{
+				std::shared_ptr< BlockFactory_I > f( new BlockFactory_T< TBlock > );
+				setBlockClassInternal( f );
+			}
+
+			void setDescription( std::string const& );
+			void setDependencies( std::vector< std::string > const& );
+
+			OutletMetainfo			getOutletMetainfo( std::string const& name );
+			InletMetainfo			getInletMetainfo( std::string const& name );
+			ParameterMetainfo		getParameterMetainfo( std::string const& name );
+
+			UpdatePolicyMetainfo	getUpdatePolicyMetainfo();
+
+		private:
+
+			void setBlockClassInternal( std::shared_ptr< BlockFactory_I > );
+
+			std::shared_ptr< BlockMetainfoImpl >		mImpl;
 
 		};
 	}

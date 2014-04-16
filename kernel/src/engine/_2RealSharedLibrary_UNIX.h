@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealPath.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealPath.h"
 
 namespace _2Real
 {

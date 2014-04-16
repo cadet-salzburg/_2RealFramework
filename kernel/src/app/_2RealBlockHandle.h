@@ -18,31 +18,46 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealBlockState.h"
 
 namespace _2Real
 {
-	class Block;
+	class BlockImpl;
 
 	namespace app
 	{
 		class BundleHandle;
+		class TimerHandle;
+		class UpdatePolicyHandle;
+		class BlockIo;
 
 		class BlockHandle
 		{
 
 		public:
 
-			explicit BlockHandle( std::shared_ptr< Block > );
-			virtual ~BlockHandle() = default;
+			explicit BlockHandle( std::shared_ptr< BlockImpl > );
 
-			bool					isValid() const;
-			bool					isSingleton() const;
-			BundleHandle			getBundle();
+			bool							isValid() const;
+			BundleHandle					getBundle();
 
-		protected:
+			std::future< BlockState >		setup();
+			std::future< BlockState >		singlestep();
+			std::future< BlockState >		shutdown();
+			std::future< BlockState >		startUpdating( TimerHandle );
+			std::future< BlockState >		startUpdating();
+			std::future< BlockState >		stopUpdating();
 
-			std::weak_ptr< Block >		mImpl;
+			UpdatePolicyHandle				getUpdatePolicy();
+
+			BlockIo							getBlockIo();
+
+		private:
+
+			friend class BundleHandle;
+
+			std::weak_ptr< BlockImpl >		mImpl;
 
 		};
 	}

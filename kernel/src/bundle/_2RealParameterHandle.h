@@ -18,14 +18,12 @@
 
 #pragma once
 
-#include "engine/_2RealData.h"
-
-#include <memory>
-#include <string>
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
 
 namespace _2Real
 {
-	class Parameter;
+	class ParameterImpl;
 
 	namespace bundle
 	{
@@ -34,13 +32,13 @@ namespace _2Real
 
 		public:
 
-			explicit ParameterHandle( std::shared_ptr< const Parameter > );
+			explicit ParameterHandle( std::shared_ptr< const ParameterImpl > );
 
 			DataItem const& getValue() const;
 
 		private:
 
-			std::shared_ptr< const Parameter >		mImpl;
+			std::shared_ptr< const ParameterImpl >		mImpl;
 
 		};
 	}

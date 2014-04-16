@@ -18,22 +18,24 @@
 
 #pragma once
 
-#include "bundle/_2RealAbstractBlock.h"
-#include "engine/_2RealData.h"
-#include "engine/_2RealCustomData.h"
-#include "engine/_2RealDeclarations.h"
+#include "common/_2RealData.h"
+#include "common/_2RealDeclarations.h"
+#include "common/_2RealException.h"
+
+#include "bundle/_2RealBlock.h"
+
+#include "bundle/_2RealBundleMetainfo.h"
+#include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealCustomTypeMetainfo.h"
+#include "bundle/_2RealIoSlotMetainfo.h"
+#include "bundle/_2RealUpdatePolicyMetainfo.h"
 
 #include "bundle/_2RealBlockIo.h"
-#include "bundle/_2RealBundleMetainfo.h"
-#include "bundle/_2RealContextBlockMetainfo.h"
-#include "bundle/_2RealFunctionBlockMetainfo.h"
-#include "bundle/_2RealTypeMetainfo.h"
-#include "bundle/_2RealInletMetainfo.h"
-#include "bundle/_2RealOutletMetainfo.h"
-#include "bundle/_2RealParameterMetainfo.h"
-#include "bundle/_2RealDefaultUpdatePolicy.h"
-
-#include "helpers/_2RealException.h"
+#include "bundle/_2RealInletHandle_I.h"
+#include "bundle/_2RealInletHandle.h"
+#include "bundle/_2RealMultiInletHandle.h"
+#include "bundle/_2RealOutletHandle.h"
+#include "bundle/_2RealParameterHandle.h"
 
 #if defined( _WIN32 )
 	#define _2REAL_LIBRARY_API __declspec( dllexport )
@@ -44,6 +46,6 @@
 extern "C"	/* used to prevent name mangling under windows */
 {
 	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::bundle::BundleMetainfo & info );
-	void _2REAL_LIBRARY_API getTypeMetainfo( _2Real::bundle::TypeMetainfo & info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& );
-	void _2REAL_LIBRARY_API getBlockMetainfo(  _2Real::bundle::BlockMetainfo & info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& );
+	void _2REAL_LIBRARY_API getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& );
+	void _2REAL_LIBRARY_API getBlockMetainfo(  _2Real::bundle::BlockMetainfo & info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& );
 }

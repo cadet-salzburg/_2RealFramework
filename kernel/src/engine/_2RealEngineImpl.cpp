@@ -21,9 +21,9 @@
 #include "engine/_2RealTimerCollection.h"
 #include "engine/_2RealThreadpoolCollection.h"
 #include "engine/_2RealTypeCollection.h"
-#include "helpers/_2RealConstants.h"
-#include "helpers/_2RealException.h"
-#include "engine/_2RealSharedTypeMetainfo.h"
+#include "common/_2RealConstants.h"
+#include "common/_2RealException.h"
+#include "engine/_2RealBasicTypeMetainfoImpl.h"
 
 namespace _2Real
 {
@@ -31,21 +31,19 @@ namespace _2Real
 		std::enable_shared_from_this< EngineImpl >(),
 		mTimerCollection( new TimerCollection ),
 		mThreadpoolCollection( new ThreadpoolCollection ),
-		mStdThreads( mThreadpoolCollection->createThreadpool( ThreadpoolPolicy::FIFO ) ),
-		mCtxtThreads( mThreadpoolCollection->createThreadpool( ThreadpoolPolicy::DEDICATED ) ),
 		mTypeCollection( new TypeCollection ),
-		mBundleCollection( new BundleCollection( mTypeCollection, mStdThreads.lock(), mCtxtThreads.lock() ) )
+		mBundleCollection( new BundleCollection( mTypeCollection ) )
 	{
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( uint8_t )0 ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( int8_t )0 ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( uint32_t )0 ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( int32_t )0 ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( uint64_t )0 ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, ( int64_t )0 ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, 0.0 ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, 0.f ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, false ) );
-			mTypeCollection->addType( BasicTypeMetainfo::make( mTypeCollection, std::string() ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( uint8_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( int8_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( uint32_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( int32_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( uint64_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( int64_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, 0.0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, 0.f ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, false ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::string() ) );
 	}
 
 	EngineImpl::~EngineImpl()
@@ -54,9 +52,6 @@ namespace _2Real
 
 	void EngineImpl::clear()
 	{
-		mStdThreads.reset();
-		mCtxtThreads.reset();
-
 		//mBundleCollection.clear();
 		//mTypeCollection.clear();
 		//mTimerCollection.clear();
@@ -68,7 +63,7 @@ namespace _2Real
 		mThreadpoolCollection.reset();
 	}
 
-	std::pair< std::shared_ptr< Bundle >, std::shared_ptr< const SharedLibraryMetainfo > > EngineImpl::loadLibrary( std::string const& filename )
+	std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > EngineImpl::loadLibrary( std::string const& filename )
 	{
 		std::string file = filename;
 		if ( file.find( Constants::SharedLibrarySuffix ) == std::string::npos )
@@ -77,17 +72,17 @@ namespace _2Real
 		return mBundleCollection->loadBundle( file, mTypeCollection );
 	}
 
-	Path const& EngineImpl::getBundleDirectory() const
+	Path EngineImpl::getBundleDirectory() const
 	{
 		return mBundleCollection->getBundleDirectory();
 	}
 
-	std::shared_ptr< Timer > EngineImpl::createTimer( const double fps )
+	std::shared_ptr< TimerImpl > EngineImpl::createTimer( const double fps )
 	{
 		return mTimerCollection->createTimer( fps );
 	}
 
-	std::shared_ptr< Threadpool > EngineImpl::createThreadpool( const ThreadpoolPolicy policy )
+	std::shared_ptr< ThreadpoolImpl_I > EngineImpl::createThreadpool( const ThreadpoolPolicy policy )
 	{
 		return mThreadpoolCollection->createThreadpool( policy );
 	}

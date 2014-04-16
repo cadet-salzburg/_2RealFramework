@@ -18,29 +18,29 @@
 
 #pragma once
 
-#include "bundle/_2RealAbstractInletHandle.h"
-#include "engine/_2RealData.h"
-
-#include <memory>
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
+#include "bundle/_2RealInletHandle_I.h"
 
 namespace _2Real
 {
-	class Inlet;
+	class InletImpl;
 
 	namespace bundle
 	{
-		class InletHandle : public AbstractInletHandle
+		class InletHandle : public InletHandle_I
 		{
 
 		public:
 
-			explicit InletHandle( std::shared_ptr< Inlet > );
+			explicit InletHandle( std::shared_ptr< InletImpl > );
 
 			DataItem const& getValue() const;
+			bool isMultiInlet() const;
 
 		private:
 
-			std::shared_ptr< Inlet >	mImpl;
+			std::shared_ptr< InletImpl >	mImpl;
 
 		};
 	}

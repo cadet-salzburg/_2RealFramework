@@ -19,10 +19,10 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealPath.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealPath.h"
 
-#include "enums/_2RealThreadpoolPolicy.h"
+#include "common/_2RealThreadpoolPolicy.h"
 
 namespace _2Real
 {
@@ -31,10 +31,10 @@ namespace _2Real
 	class ThreadpoolCollection;
 	class TimerCollection;
 
-	class Threadpool;
-	class Timer;
-	class Bundle;
-	class SharedLibraryMetainfo;
+	class ThreadpoolImpl_I;
+	class TimerImpl;
+	class BundleImpl;
+	class BundleMetainfoImpl;
 
 	class EngineImpl : public std::enable_shared_from_this< EngineImpl >
 	{
@@ -46,12 +46,12 @@ namespace _2Real
 
 		void clear();
 
-		std::pair< std::shared_ptr< Bundle >, std::shared_ptr< const SharedLibraryMetainfo > > loadLibrary( std::string const& filename );
-		Path const&							getBundleDirectory() const;
+		std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > loadLibrary( std::string const& filename );
+		Path									getBundleDirectory() const;
 
-		std::shared_ptr< Timer >			createTimer( const double fps );
+		std::shared_ptr< TimerImpl >			createTimer( const double fps );
 
-		std::shared_ptr< Threadpool >		createThreadpool( const ThreadpoolPolicy );
+		std::shared_ptr< ThreadpoolImpl_I >		createThreadpool( const ThreadpoolPolicy );
 
 	private:
 
@@ -62,10 +62,6 @@ namespace _2Real
 
 		std::shared_ptr< TimerCollection >			mTimerCollection;
 		std::shared_ptr< ThreadpoolCollection >		mThreadpoolCollection;
-		// keep around here, for the time being
-		// maybe some time in the future, threadpools will be created at user request
-		std::weak_ptr< Threadpool >					mStdThreads;		// owned by threadpool collection
-		std::weak_ptr< Threadpool >					mCtxtThreads;		// owned by threadpool collection
 		std::shared_ptr< TypeCollection >			mTypeCollection;
 		std::shared_ptr< BundleCollection >			mBundleCollection;
 		

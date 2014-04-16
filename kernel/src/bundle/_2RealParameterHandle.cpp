@@ -17,13 +17,13 @@
 */
 
 #include "bundle/_2RealParameterHandle.h"
-#include "engine/_2RealParameter.h"
+#include "engine/_2RealParameterImpl.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		ParameterHandle::ParameterHandle( std::shared_ptr< const Parameter > parameter ) :
+		ParameterHandle::ParameterHandle( std::shared_ptr< const ParameterImpl > parameter ) :
 			mImpl( parameter )
 		{
 		}

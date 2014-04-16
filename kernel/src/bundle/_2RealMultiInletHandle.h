@@ -18,24 +18,25 @@
 
 #pragma once
 
-#include "bundle/_2RealAbstractInletHandle.h"
-
-#include <memory>
+#include "common/_2RealStdIncludes.h"
+#include "bundle/_2RealInletHandle_I.h"
 
 namespace _2Real
 {
-	class MultiInlet;
+	class MultiInletImpl;
 
 	namespace bundle
 	{
 		class InletHandle;
 
-		class MultiInletHandle : public AbstractInletHandle
+		class MultiInletHandle : public InletHandle_I
 		{
 
 		public:
 
-			explicit MultiInletHandle( std::shared_ptr< MultiInlet > );
+			explicit MultiInletHandle( std::shared_ptr< MultiInletImpl > );
+
+			bool isMultiInlet() const;
 
 			uint32_t getSize() const;
 			bool isEmpty() const;
@@ -43,7 +44,7 @@ namespace _2Real
 		
 		private:
 
-			std::shared_ptr< MultiInlet >	mImpl;
+			std::shared_ptr< MultiInletImpl >	mImpl;
 
 		};
 	}

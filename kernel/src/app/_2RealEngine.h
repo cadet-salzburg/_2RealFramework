@@ -19,11 +19,9 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealException.h"
-#include "helpers/_2RealPath.h"
-
-#include "enums/_2RealThreadpoolPolicy.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealPath.h"
+#include "common/_2RealThreadpoolPolicy.h"
 
 namespace _2Real
 {
@@ -34,7 +32,7 @@ namespace _2Real
 		class BundleHandle;
 		class BundleMetainfo;
 		class TimerHandle;
-		class SystemHandle;
+		class ThreadpoolHandle;
 
 		class Engine
 		{
@@ -46,29 +44,17 @@ namespace _2Real
 
 			void clear();
 
-	//--------------------- bundle
 			// returns the absolute path to the bundle directory
 			Path		 getBundleDirectory() const;
 			// loads a bundle, path must be relative to bundle dir, with or without the suffix
 			std::pair< BundleHandle, BundleMetainfo > loadBundle( std::string const& libname );
-	//--------------------- bundle
 
-	//--------------------- threadpool
-			SystemHandle createSystem( const ThreadpoolPolicy );
-			// TODO: remove ( behaviour? )
-			// all systems destroyed on engine destruction
-	//--------------------- threadpool
+			ThreadpoolHandle createThreadpool( const ThreadpoolPolicy );
 
-	//--------------------- timer
+			// creates a timer with the desired framerate
 			TimerHandle createTimer( const double fps );
-			// TODO: remove ( behaviour? )
-			// all timers destroyed on engine destruction
-	//--------------------- timer
 
 		private:
-
-			Engine( Engine const& src ) = delete;
-			Engine& operator=( Engine const& other ) = delete;
 
 			std::unique_ptr< EngineImpl > mImpl;
 

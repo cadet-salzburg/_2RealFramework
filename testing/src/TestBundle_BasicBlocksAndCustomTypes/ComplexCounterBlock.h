@@ -19,14 +19,14 @@
 
 #include "_2RealBundle.h"
 
-class ComplexCounter : public _2Real::bundle::AbstractBlock
+class ComplexCounter : public _2Real::bundle::Block
 {
 
 public:
 
-	static void getBlockMetainfo( _2Real::bundle::BlockMetainfo &, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& );
+	static void getBlockMetainfo( _2Real::bundle::BlockMetainfo &, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& );
 
-	ComplexCounter( _2Real::bundle::BlockIo const&, std::vector< std::shared_ptr< _2Real::bundle::AbstractBlock > > const& );
+	ComplexCounter( _2Real::bundle::BlockIo const&, std::vector< std::shared_ptr< _2Real::bundle::Block > > const& );
 	~ComplexCounter();
 
 	void setup();

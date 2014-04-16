@@ -19,48 +19,44 @@
 
 #pragma once
 
-#include "engine/_2RealBundleImporter.h"
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealPath.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealPath.h"
 
 namespace _2Real
 {
-	class Bundle;
+	class BundleImpl;
 	class TypeCollection;
-	class Threadpool;
 
 	class BundleCollection : public std::enable_shared_from_this< BundleCollection >
 	{
 
 	public:
 
-		BundleCollection( std::shared_ptr< TypeCollection > registry, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
+		BundleCollection( std::shared_ptr< TypeCollection > registry );
 		~BundleCollection();
 
-		std::pair< std::shared_ptr< Bundle >, std::shared_ptr< const SharedLibraryMetainfo > >	loadBundle( Path const& pathToBundle, std::shared_ptr< TypeCollection > );
-		Path const&									getBundleDirectory() const;
+		BundleCollection( BundleCollection const& other ) = delete;
+		BundleCollection( BundleCollection && other ) = delete;
+		BundleCollection& operator=( BundleCollection const& other ) = delete;
+		BundleCollection& operator=( BundleCollection && other ) = delete;
 
-		void										clear( const unsigned long timeout );
-		void										bundleUnloaded( std::shared_ptr< const Bundle > );
+		typedef std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > LoadResult;
+
+		LoadResult			loadBundle( Path const& pathToBundle, std::shared_ptr< TypeCollection > );
+	
+		void				clear( const unsigned long timeout );
+		void				bundleUnloaded( std::shared_ptr< const BundleImpl > );
+
+		Path				getBundleDirectory() const;
 
 	private:
 
-		BundleCollection( BundleCollection const& other ) = delete;
-		BundleCollection& operator=( BundleCollection const& other ) = delete;
-
 		void updateBundleDirectory();
 
-		typedef std::map< Path, std::shared_ptr< Bundle > >		Bundles;
+		typedef std::vector< std::shared_ptr< BundleImpl > >	Bundles;
 
-		// responsible for loading bundles
-		BundleImporter								mBundleImporter;
-		// initialized on contruction by querying an env variable; can't change during runtime
-		Path										mBundleDirectory;
-		// the bundles
-		Bundles										mBundles;
-		// currently, these 2 threadpools are managed by the engine...
-		std::weak_ptr< Threadpool >					mStdThreads;
-		std::weak_ptr< Threadpool >					mCtxtThreads;
+		Path				mBundleDirectory;
+		Bundles				mBundles;
 
 	};
 }

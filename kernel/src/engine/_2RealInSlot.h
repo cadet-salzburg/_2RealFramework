@@ -19,42 +19,37 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealData.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
 
 namespace _2Real
 {
-	/*
-	*	base for parameters & ( normal ) inlets
-	*/
+
 	class InSlot
 	{
 
 	public:
 
-		InSlot();
-		virtual ~InSlot();
+		InSlot() = default;
+		virtual ~InSlot() = default;
+
+		InSlot( InSlot const& other ) = delete;
+		InSlot( InSlot && other ) = delete;
+		InSlot& operator=( InSlot const& other ) = delete;
+		InSlot& operator=( InSlot && other ) = delete;
 
 		void setTmpValueExt( DataItem );
-
-		// used internally to avoid copies
 		void setTmpValue( std::shared_ptr< const DataItem > );
-
-		//std::shared_ptr< DataItem > getTmpValue() const;
-
-		// used from bundle
 		DataItem const& getValue() const;
 
 		void update();
 
 	private:
 
-		InSlot( InSlot const& other ) = delete;
-		InSlot& operator=( InSlot const& other ) = delete;
-
 		mutable std::mutex					mMutex;
 		std::shared_ptr< const DataItem >	mTmpValue;
 		std::shared_ptr< const DataItem >	mValue;
 
 	};
+
 }

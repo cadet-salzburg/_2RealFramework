@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
+#include "common/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class Timer;
-	class UpdateTrigger;
+	class TimerImpl;
+	class UpdateTrigger_I;
 
 	namespace app
 	{
@@ -32,18 +32,18 @@ namespace _2Real
 
 		public:
 
-			explicit TimerHandle( std::shared_ptr< Timer > );
+			explicit TimerHandle( std::shared_ptr< TimerImpl > );
 
 			bool isValid() const;
 
 			void start();
 			void stop();
 
-			operator std::shared_ptr< UpdateTrigger > ();
+			operator std::shared_ptr< UpdateTrigger_I > ();
 
 		private:
 
-			std::weak_ptr< Timer >		mImpl;
+			std::weak_ptr< TimerImpl >		mImpl;
 
 		};
 	}

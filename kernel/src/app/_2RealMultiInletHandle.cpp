@@ -18,47 +18,66 @@
 
 #include "app/_2RealMultiInletHandle.h"
 #include "app/_2RealInletHandle.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealMultiInlet.h"
+#include "app/_2RealBlockHandle.h"
+#include "engine/_2RealMultiInletImpl.h"
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		MultiInletHandle::MultiInletHandle( std::shared_ptr< MultiInlet > inlet ) :
-			AbstractInletHandle( inlet ),
+		MultiInletHandle::MultiInletHandle( std::shared_ptr< MultiInletImpl > inlet ) :
+			InletHandle_I(),
 			mImpl( inlet )
 		{
 		}
 
+		bool MultiInletHandle::isValid() const
+		{
+			std::shared_ptr< MultiInletImpl > inlet = mImpl.lock();
+			return ( nullptr != inlet.get() );
+		}
+
+		bool MultiInletHandle::isMultiInlet() const
+		{
+			std::shared_ptr< MultiInletImpl > inlet = checkValidity< MultiInletImpl >( mImpl, "multiinlet" );
+			return true;
+		}
+		
+		BlockHandle MultiInletHandle::getBlock()
+		{
+			std::shared_ptr< MultiInletImpl > inlet = checkValidity< MultiInletImpl >( mImpl, "inlet" );
+			return BlockHandle( inlet->getParent() );
+		}
+
 		InletHandle MultiInletHandle::operator[]( const uint32_t index )
 		{
-			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			std::shared_ptr< MultiInletImpl > inlet = checkValidity< MultiInletImpl >( mImpl, "multiinlet" );
 			return InletHandle( inlet->operator[]( index ) );
 		}
 
 		uint32_t MultiInletHandle::getSize() const
 		{
-			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			std::shared_ptr< MultiInletImpl > inlet = checkValidity< MultiInletImpl >( mImpl, "multiinlet" );
 			return inlet->getSize();
 		}
 
 		bool MultiInletHandle::isEmpty() const
 		{
-			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			std::shared_ptr< MultiInletImpl > inlet = checkValidity< MultiInletImpl >( mImpl, "multiinlet" );
 			return inlet->isEmpty();
 		}
 
 		InletHandle MultiInletHandle::add()
 		{
-			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
+			std::shared_ptr< MultiInletImpl > inlet = checkValidity< MultiInletImpl >( mImpl, "multiinlet" );
 			return InletHandle( inlet->add_back() );
 		}
 
 		void MultiInletHandle::remove( InletHandle subinlet )
 		{
-			std::shared_ptr< MultiInlet > inlet = checkValidity< MultiInlet >( mImpl, "multiinlet" );
-			std::shared_ptr< Inlet > sub = subinlet.mImpl.lock();
+			std::shared_ptr< MultiInletImpl > inlet = checkValidity< MultiInletImpl >( mImpl, "multiinlet" );
+			std::shared_ptr< InletImpl > sub = subinlet.mImpl.lock();
 			inlet->remove( sub );
 		}
 	}

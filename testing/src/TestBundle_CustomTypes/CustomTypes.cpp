@@ -31,11 +31,18 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 
 	// -- types ( by name )
 
-	info.exportType( "simpleType" );
-	info.exportType( "complexType" );
+	info.exportsType( "simpleType", {} );
+	info.exportsType( "complexType", {} );
 }
 
-void getTypeMetainfo( _2Real::bundle::TypeMetainfo & info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& previousTypes )
+struct FindType : public std::unary_function< bool, const _2Real::bundle::CustomTypeMetainfo >
+{
+	explicit FindType( const std::string baseline ) : mBaseline( baseline ) {}
+	bool operator()( const _2Real::bundle::CustomTypeMetainfo obj ) const { return mBaseline == obj.getName(); }
+	std::string mBaseline;
+};
+
+void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& previousTypes )
 {
 	if ( info.getName() == "simpleType" )
 	{
@@ -45,7 +52,8 @@ void getTypeMetainfo( _2Real::bundle::TypeMetainfo & info, std::map< std::string
 	}
 	else if ( info.getName() == "complexType" )
 	{
-		const _2Real::bundle::TypeMetainfo simpleInfo = previousTypes.at( "simpleType" );
+		// ordering is preserved
+		const _2Real::bundle::CustomTypeMetainfo simpleInfo = previousTypes[ 0 ];
 		_2Real::CustomDataItem aSimple = simpleInfo.makeData();
 		aSimple.set( "int_field", ( int32_t )64 );
 		aSimple.set( "string_field", std::string( "narf" ) );

@@ -17,47 +17,73 @@
 */
 
 #include "app/_2RealCustomTypeMetainfo.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealSharedTypeMetainfo.h"
+#include "app/_2RealTypeMetainfo.h"
+#include "engine/_2RealTypeMetainfoImpl_I.h"
+#include "engine/_2RealBasicTypeMetainfoImpl.h"
+#include "engine/_2RealCustomTypeMetainfoImpl.h"
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		CustomTypeMetainfo::CustomTypeMetainfo( std::shared_ptr< const SharedTypeMetainfo > meta ) :
-			TypeMetainfo( meta ),
+		CustomTypeMetainfo::CustomTypeMetainfo( std::shared_ptr< const CustomTypeMetainfoImpl > meta ) :
+			TypeMetainfo_I(),
 			mImpl( meta )
 		{
 		}
 
+		bool CustomTypeMetainfo::isValid() const
+		{
+			std::shared_ptr< const CustomTypeMetainfoImpl > meta = mImpl.lock();
+			return ( meta.get() != nullptr );
+		}
+
+		bool CustomTypeMetainfo::isBasicType() const
+		{
+			std::shared_ptr< const CustomTypeMetainfoImpl > meta = checkValidity< const CustomTypeMetainfoImpl >( mImpl, "custom type metainfo" );
+			return false;
+		}
+
+		DataItem CustomTypeMetainfo::makeData() const
+		{
+			std::shared_ptr< const CustomTypeMetainfoImpl > meta = checkValidity< const CustomTypeMetainfoImpl >( mImpl, "custom type metainfo" );
+			return meta->makeData();
+		}
+
+		std::string CustomTypeMetainfo::getName() const
+		{
+			std::shared_ptr< const CustomTypeMetainfoImpl > meta = checkValidity< const CustomTypeMetainfoImpl >( mImpl, "custom type metainfo" );
+			return meta->getName();
+		}
+
 		std::string CustomTypeMetainfo::getDescription() const
 		{
-			std::shared_ptr< const SharedTypeMetainfo > meta = checkValidity< const SharedTypeMetainfo >( mImpl, "custom type metainfo" );
+			std::shared_ptr< const CustomTypeMetainfoImpl > meta = checkValidity< const CustomTypeMetainfoImpl >( mImpl, "custom type metainfo" );
 			return meta->getDescription();
 		}
 
 		CustomDataItem CustomTypeMetainfo::makeCustomData() const
 		{
-			std::shared_ptr< const SharedTypeMetainfo > meta = checkValidity< const SharedTypeMetainfo >( mImpl, "custom type metainfo" );
+			std::shared_ptr< const CustomTypeMetainfoImpl > meta = checkValidity< const CustomTypeMetainfoImpl >( mImpl, "custom type metainfo" );
 			return meta->makeCustomData();
 		}
 
-		std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo > > > CustomTypeMetainfo::getDataFields() const
+		std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo_I > > > CustomTypeMetainfo::getDataFields() const
 		{
-			std::shared_ptr< const SharedTypeMetainfo > meta = checkValidity< const SharedTypeMetainfo >( mImpl, "custom type metainfo" );
-			std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo > > > result;
-			std::vector< std::pair< std::string, std::shared_ptr< const TMetainfo > > > tmp = meta->getDataFields();
+			std::shared_ptr< const CustomTypeMetainfoImpl > meta = checkValidity< const CustomTypeMetainfoImpl >( mImpl, "custom type metainfo" );
+			std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo_I > > > result;
+			std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfoImpl_I > > > tmp = meta->getDataFields();
 			for ( auto const& it : tmp )
 			{
 				if ( it.second->isBasicType() )
 				{
-					std::shared_ptr< TypeMetainfo > info( new TypeMetainfo( it.second ) );
+					std::shared_ptr< const TypeMetainfo > info( new TypeMetainfo( std::static_pointer_cast< const BasicTypeMetainfoImpl >( it.second ) ) );
 					result.push_back( std::make_pair( it.first, info ) );
 				}
 				else
 				{
-					std::shared_ptr< const SharedTypeMetainfo > shared = std::dynamic_pointer_cast< const SharedTypeMetainfo >( it.second );
-					std::shared_ptr< const CustomTypeMetainfo > info( new CustomTypeMetainfo( shared ) );
+					std::shared_ptr< const CustomTypeMetainfo > info( new CustomTypeMetainfo( std::static_pointer_cast< const CustomTypeMetainfoImpl >( it.second ) ) );
 					result.push_back( std::make_pair( it.first, info ) );
 				}
 			}

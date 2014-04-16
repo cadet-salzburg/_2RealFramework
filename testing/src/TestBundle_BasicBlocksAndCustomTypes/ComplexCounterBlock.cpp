@@ -18,22 +18,22 @@
 */
 
 #include "ComplexCounterBlock.h"
-#include "engine/_2RealData.h"
+#include "common/_2RealData.h"
 
 #include <Windows.h>
 
-void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& types )
+void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& types )
 {
-	_2Real::bundle::FunctionBlockMetainfo &counterinfo = dynamic_cast< _2Real::bundle::FunctionBlockMetainfo & >( info );
+	_2Real::bundle::BlockMetainfo &counterinfo = dynamic_cast< _2Real::bundle::BlockMetainfo & >( info );
 
-	const _2Real::bundle::TypeMetainfo simpleInfo = types.at( "simpleType" );
-	const _2Real::bundle::TypeMetainfo complexInfo = types.at( "complexType" );
+	const _2Real::bundle::CustomTypeMetainfo simpleInfo = types[ 0 ];
+	const _2Real::bundle::CustomTypeMetainfo complexInfo = types[ 1 ];
 
 	counterinfo.setBlockClass< ComplexCounter >();
 	counterinfo.setDescription( "counter" );
 
-	_2Real::bundle::DefaultUpdatePolicy policy = counterinfo.getDefaultUpdatePolicy();
-	policy.set( _2Real::DefaultPolicy::DISABLED );
+	_2Real::bundle::UpdatePolicyMetainfo policy = counterinfo.getUpdatePolicyMetainfo();
+	policy.set( _2Real::DefaultUpdatePolicy::DISABLED );
 
 	_2Real::bundle::InletMetainfo in = counterinfo.getInletMetainfo( "increment" );
 	in.setDescription( "counter increment" );
@@ -56,8 +56,8 @@ void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std:
 	out.setDatatypeAndInitialValue( complexInfo.makeData() );
 }
 
-ComplexCounter::ComplexCounter( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr< _2Real::bundle::AbstractBlock > > const& dependencies ) :
-	_2Real::bundle::AbstractBlock( io, dependencies )
+ComplexCounter::ComplexCounter( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr< _2Real::bundle::Block > > const& dependencies ) :
+	_2Real::bundle::Block( io, dependencies )
 {
 }
 

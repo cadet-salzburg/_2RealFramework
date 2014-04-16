@@ -19,15 +19,15 @@
 
 #include "_2RealBundle.h"
 
-class PrintInfo : public _2Real::bundle::AbstractBlock
+class PrintInfo : public _2Real::bundle::Block
 {
 
 public:
 
-	PrintInfo( _2Real::bundle::BlockIo const&, std::vector< std::shared_ptr< _2Real::bundle::AbstractBlock > > const& );
+	PrintInfo( _2Real::bundle::BlockIo const&, std::vector< std::shared_ptr< _2Real::bundle::Block > > const& );
 	~PrintInfo();
 
-	static void getBlockMetainfo( _2Real::bundle::BlockMetainfo &, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& );
+	static void getBlockMetainfo( _2Real::bundle::BlockMetainfo &, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& );
 
 	void setup();
 	void update();

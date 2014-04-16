@@ -18,7 +18,7 @@
 */
 
 #include "engine/_2RealTimerCollection.h"
-#include "engine/_2RealTimer.h"
+#include "engine/_2RealTimerImpl.h"
 
 namespace _2Real
 {
@@ -48,10 +48,10 @@ namespace _2Real
 		mIoService.run();
 	}
 
-	std::shared_ptr< Timer > TimerCollection::createTimer( const double fps )
+	std::shared_ptr< TimerImpl > TimerCollection::createTimer( const double fps )
 	{
 		uint64_t period = static_cast< uint64_t >( 1000 / fps );
-		std::shared_ptr< Timer > timer( new Timer( mIoService, period ) );
+		std::shared_ptr< TimerImpl > timer( new TimerImpl( mIoService, period ) );
 		mTimers.insert( timer );
 		return timer;
 	}

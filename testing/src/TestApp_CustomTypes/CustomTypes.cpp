@@ -33,25 +33,16 @@
 
 #include "_2RealApplication.h"
 
-void printTypeMetainfo( _2Real::app::TypeMetainfo const& );
-void printTypeMetainfo( _2Real::app::CustomTypeMetainfo const& );
+void printBasicTypeMetainfo( _2Real::app::TypeMetainfo const& );
+void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& );
 
-void printTypeMetainfo( _2Real::app::TypeMetainfo const& meta )
+void printBasicTypeMetainfo( _2Real::app::TypeMetainfo const& meta )
 {
 	assert( meta.isValid() );
-
-	if ( meta.isBasicType() )
-	{
-		std::cout << "basic type " << meta.getName() << std::endl;
-	}
-	else
-	{
-		_2Real::app::CustomTypeMetainfo const& custom = dynamic_cast< _2Real::app::CustomTypeMetainfo const& >( meta );
-		printTypeMetainfo( custom );
-	}
+	std::cout << "basic type " << meta.getName() << std::endl;
 }
 
-void printTypeMetainfo( _2Real::app::CustomTypeMetainfo const& meta )
+void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& meta )
 {
 	assert( meta.isValid() );
 
@@ -62,7 +53,10 @@ void printTypeMetainfo( _2Real::app::CustomTypeMetainfo const& meta )
 	for ( auto it : fields )
 	{
 		std::cout << "has field " << it.first << std::endl;
-		printTypeMetainfo( *it.second.get() );
+		if ( it.second->isBasicType() )
+			printBasicTypeMetainfo( *( static_cast< const _2Real::app::TypeMetainfo * >( it.second.get() ) ) );
+		else
+			printCustomTypeMetainfo( *( static_cast< const _2Real::app::CustomTypeMetainfo * >( it.second.get() ) ) );
 	}
 }
 
@@ -84,10 +78,15 @@ int main( int argc, char *argv[] )
 		std::cout << "contact " << bundleinfo.getContact() << std::endl;
 		std::cout << "version " << bundleinfo.getVersion() << std::endl;
 
+		// i know that these are custom types, so no need for casting around
 		auto typeinfos = bundleinfo.getExportedTypes();
 		std::cout << "number of exported types : " << typeinfos.size() << std::endl;
+		if ( !typeinfos.empty() ) std::cout << "--------------------------------" << std::endl;
 		for ( auto it : typeinfos )
-			printTypeMetainfo( it );
+		{
+			printCustomTypeMetainfo( it );
+			std::cout << "--------------------------------" << std::endl;
+		}
 
 	// -------print the metainfos---------
 

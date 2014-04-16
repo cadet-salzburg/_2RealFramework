@@ -17,16 +17,21 @@
 */
 
 #include "bundle/_2RealInletHandle.h"
-#include "engine/_2RealInlet.h"
+#include "engine/_2RealInletImpl.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		InletHandle::InletHandle( std::shared_ptr< Inlet > inlet ) :
-			AbstractInletHandle( inlet ),
+		InletHandle::InletHandle( std::shared_ptr< InletImpl > inlet ) :
+			InletHandle_I(),
 			mImpl( inlet )
 		{
+		}
+
+		bool InletHandle::isMultiInlet() const
+		{
+			return false;
 		}
 
 		DataItem const& InletHandle::getValue() const

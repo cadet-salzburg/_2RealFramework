@@ -24,7 +24,7 @@
 	#include "_2RealSharedLibrary_UNIX.h"
 #endif
 
-#include "helpers/_2RealPath.h"
+#include "common/_2RealPath.h"
 
 namespace _2Real
 {

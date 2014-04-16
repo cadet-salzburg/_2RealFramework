@@ -18,7 +18,7 @@
 
 
 #include "_2RealSharedLibrary_UNIX.h"
-#include "helpers/_2RealException.h"
+#include "common/_2RealException.h"
 
 #include <dlfcn.h>
 

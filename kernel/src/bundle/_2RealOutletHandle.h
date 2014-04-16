@@ -18,14 +18,12 @@
 
 #pragma once
 
-#include "engine/_2RealData.h"
-
-#include <memory>
-#include <string>
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
 
 namespace _2Real
 {
-	class Outlet;
+	class OutletImpl;
 
 	namespace bundle
 	{
@@ -34,13 +32,13 @@ namespace _2Real
 
 		public:
 
-			explicit OutletHandle( std::shared_ptr< Outlet > );
+			explicit OutletHandle( std::shared_ptr< OutletImpl > );
 
 			DataItem & getValue();
 
 		private:
 
-			std::shared_ptr< Outlet >		mImpl;
+			std::shared_ptr< OutletImpl >		mImpl;
 
 		};
 	}

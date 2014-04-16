@@ -19,16 +19,15 @@
 
 #pragma once
 
-#include "engine/_2RealBundleImporter.h"
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealPath.h"
+#include "common/_2RealBoost.h"
+#include "common/_2RealStdIncludes.h"
 
 #include <boost/asio.hpp>
 #include <thread>
 
 namespace _2Real
 {
-	class Timer;
+	class TimerImpl;
 
 	class TimerCollection : public std::enable_shared_from_this< TimerCollection >
 	{
@@ -38,19 +37,20 @@ namespace _2Real
 		TimerCollection();
 		~TimerCollection();
 
-		std::shared_ptr< Timer >	createTimer( const double fps );
+		TimerCollection( TimerCollection const& other ) = delete;
+		TimerCollection( TimerCollection && other ) = delete;
+		TimerCollection& operator=( TimerCollection const& other ) = delete;
+		TimerCollection& operator=( TimerCollection && other ) = delete;
+
+		std::shared_ptr< TimerImpl >	createTimer( const double fps );
 
 		void run();
 
 	private:
 
-		TimerCollection( TimerCollection const& other ) = delete;
-		TimerCollection& operator=( TimerCollection const& other ) = delete;
+		typedef std::set< std::shared_ptr< TimerImpl > > Timers;
 
-		typedef std::set< std::shared_ptr< Timer > >		Timers;
-
-		Timers		mTimers;
-
+		Timers												mTimers;
 		boost::asio::io_service								mIoService;
 		std::shared_ptr< boost::asio::io_service::work >	mWork;
 		std::thread											mThread;

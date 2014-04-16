@@ -17,17 +17,9 @@
 */
 
 #include "engine/_2RealInSlot.h"
-#include "engine/_2RealCustomdata.h"
 
 namespace _2Real
 {
-	InSlot::InSlot()
-	{
-	}
-
-	InSlot::~InSlot()
-	{
-	}
 
 	void InSlot::setTmpValue( std::shared_ptr< const DataItem > value )
 	{
@@ -49,21 +41,13 @@ namespace _2Real
 
 	DataItem const& InSlot::getValue() const
 	{
-#ifdef _DEBUG
-		assert( mValue );
-#endif
-		return *mValue.get();
+		return * mValue.get();
 	}
-
-	//std::shared_ptr< DataItem > InSlot::getTmpValue() const
-	//{
-	//	std::lock_guard< std::mutex > lock( mMutex );
-	//	return mTmpValue;
-	//}
 
 	void InSlot::update()
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 		mValue = mTmpValue;
 	}
+
 }

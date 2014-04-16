@@ -18,10 +18,8 @@
 
 #pragma once
 
-#include <vector>
-#include "app/_2RealAbstractInletHandle.h"
-#include "app/_2RealInletHandle.h"
-#include "app/_2RealMultiInletHandle.h"
+#include "common/_2RealStdIncludes.h"
+#include "app/_2RealInletHandle_I.h"
 #include "app/_2RealOutletHandle.h"
 #include "app/_2RealParameterHandle.h"
 
@@ -35,7 +33,7 @@ namespace _2Real
 		public:
 
 			std::vector< std::shared_ptr< ParameterHandle > >		mParameters;
-			std::vector< std::shared_ptr< AbstractInletHandle > >	mInlets;
+			std::vector< std::shared_ptr< InletHandle_I > >			mInlets;
 			std::vector< std::shared_ptr< OutletHandle > >			mOutlets;
 
 		};

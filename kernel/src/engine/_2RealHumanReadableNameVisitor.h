@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealData.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
 
 namespace _2Real
 {
@@ -40,7 +40,7 @@ namespace _2Real
 		std::string operator()( const float val ) const;
 		std::string operator()( const bool val ) const;
 		std::string operator()( std::string const& val ) const;
-		std::string operator()( _2Real::CustomDataItem const& val ) const;
+		std::string operator()( CustomDataItem const& val ) const;
 
 	};
 

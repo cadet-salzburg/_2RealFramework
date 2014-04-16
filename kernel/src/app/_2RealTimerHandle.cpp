@@ -17,40 +17,41 @@
 */
 
 #include "app/_2RealTimerHandle.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealTimer.h"
+#include "engine/_2RealTimerImpl.h"
+
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		TimerHandle::TimerHandle( std::shared_ptr< Timer > timer ) :
+		TimerHandle::TimerHandle( std::shared_ptr< TimerImpl > timer ) :
 			mImpl( timer )
 		{
 		}
 
 		bool TimerHandle::isValid() const
 		{
-			std::shared_ptr< Timer > timer = mImpl.lock();
+			std::shared_ptr< TimerImpl > timer = mImpl.lock();
 			return ( nullptr != timer.get() );
 		}
 
 		void TimerHandle::start()
 		{
-			std::shared_ptr< Timer > timer = checkValidity< Timer >( mImpl, "timer" );
+			std::shared_ptr< TimerImpl > timer = checkValidity< TimerImpl >( mImpl, "timer" );
 			timer->start();
 		}
 
 		void TimerHandle::stop()
 		{
-			std::shared_ptr< Timer > timer = checkValidity< Timer >( mImpl, "timer" );
+			std::shared_ptr< TimerImpl > timer = checkValidity< TimerImpl >( mImpl, "timer" );
 			timer->stop();
 		}
 
-		TimerHandle::operator std::shared_ptr< UpdateTrigger > ()
+		TimerHandle::operator std::shared_ptr< UpdateTrigger_I > ()
 		{
-			std::shared_ptr< Timer > timer = checkValidity< Timer >( mImpl, "timer" );
-			return std::static_pointer_cast< UpdateTrigger >( timer );
+			std::shared_ptr< TimerImpl > timer = checkValidity< TimerImpl >( mImpl, "timer" );
+			return std::static_pointer_cast< UpdateTrigger_I >( timer );
 		}
 	}
 }

@@ -18,32 +18,32 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
+#include "common/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class Outlet;
-	class DataSource;
+	class OutletImpl;
+	class DataSource_I;
 
 	namespace app
 	{
-		class FunctionBlockHandle;
+		class BlockHandle;
 
 		class OutletHandle
 		{
 
 		public:
 
-			explicit OutletHandle( std::shared_ptr< Outlet > );
+			explicit OutletHandle( std::shared_ptr< OutletImpl > );
 
 			bool					isValid() const;
-			FunctionBlockHandle		getBlock();
+			BlockHandle		getBlock();
 
-			operator std::shared_ptr< DataSource > ();
+			operator std::shared_ptr< DataSource_I > ();
 
 		private:
 
-			std::weak_ptr< Outlet >		mImpl;
+			std::weak_ptr< OutletImpl >		mImpl;
 
 		};
 	}

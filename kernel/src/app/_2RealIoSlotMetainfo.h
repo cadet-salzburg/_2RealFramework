@@ -18,36 +18,39 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealData.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
 
 namespace _2Real
 {
-	class IoSlotMetainfo;
+	class IoSlotMetainfoImpl;
 
 	namespace app
 	{
-		class TypeMetainfo;
+		class TypeMetainfo_I;
 
 		class IoSlotMetainfo
 		{
 
 		public:
 
-			explicit IoSlotMetainfo( std::shared_ptr< const _2Real::IoSlotMetainfo > );
-			virtual ~IoSlotMetainfo() = default;
+			explicit IoSlotMetainfo( std::shared_ptr< const IoSlotMetainfoImpl > );
 
 			bool			isValid() const;
 			std::string		getName() const;
 			std::string		getDescription() const;
-			TypeMetainfo	getTypeMetainfo() const;
+			std::shared_ptr< TypeMetainfo_I >	getTypeMetainfo() const;
 			DataItem		getInitialValue() const;
 			bool			isMulti() const;
 	
 		private:
 
-			std::weak_ptr< const _2Real::IoSlotMetainfo >		mImpl;
+			std::weak_ptr< const IoSlotMetainfoImpl >		mImpl;
 
 		};
+
+		typedef IoSlotMetainfo InletMetainfo;
+		typedef IoSlotMetainfo OutletMetainfo;
+		typedef IoSlotMetainfo ParameterMetainfo;
 	}
 }

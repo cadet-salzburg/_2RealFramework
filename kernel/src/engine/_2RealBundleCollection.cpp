@@ -17,20 +17,61 @@
 	limitations under the License.
 */
 
-#include "helpers/_2RealBoost.h"
-#include "helpers/_2RealException.h"
-#include "helpers/_2RealConstants.h"
+#include "common/_2RealBoost.h"
+#include "common/_2RealException.h"
+#include "common/_2RealConstants.h"
 
-#include "engine/_2RealBundle.h"
+#include "engine/_2RealSharedLibrary.h"
+#include "engine/_2RealBundleMetainfoImpl.h"
+#include "engine/_2RealBundleImpl.h"
 #include "engine/_2RealBundleCollection.h"
 
 namespace _2Real
 {
-	BundleCollection::BundleCollection( std::shared_ptr< TypeCollection > registry, std::shared_ptr< Threadpool > stdthreads, std::shared_ptr< Threadpool > ctxtthreads ) :
-		std::enable_shared_from_this< BundleCollection >(),
-		mBundleImporter( registry ),
-		mStdThreads( stdthreads ),
-		mCtxtThreads( ctxtthreads )
+	class BundlePtrCmp : public std::unary_function< bool, std::shared_ptr< const BundleImpl > >
+	{
+
+	public:
+
+		explicit BundlePtrCmp( std::shared_ptr< const BundleImpl > obj ) : mObj( obj )
+		{
+		}
+
+		bool operator()( std::shared_ptr< const BundleImpl > other ) const
+		{
+			return mObj.get() == other.get();
+		}
+
+	private:
+
+		std::shared_ptr< const BundleImpl > mObj;
+
+	};
+
+	class BundlePathCmp : public std::unary_function< bool, std::string >
+	{
+
+	public:
+
+		explicit BundlePathCmp( const Path path ) : mPath( path )
+		{
+		}
+
+		bool operator()( std::shared_ptr< const BundleImpl > bundle ) const
+		{
+			return mPath == bundle->getFilePath();
+		}
+
+	private:
+
+		Path mPath;
+
+	};
+
+	/////////////////////////////////////////////////////////////////////////////////////
+
+	BundleCollection::BundleCollection( std::shared_ptr< TypeCollection > registry ) :
+		std::enable_shared_from_this< BundleCollection >()
 	{
 		updateBundleDirectory();
 	}
@@ -42,66 +83,68 @@ namespace _2Real
 
 	void BundleCollection::clear( const unsigned long timeout )
 	{
-		for ( auto it = mBundles.begin(); it != mBundles.end(); )
+		for ( auto it : mBundles )
 		{
-			it->second->unregisterFromUnload( this, &BundleCollection::bundleUnloaded );
-
-			/*
-			*	kills blocks
-			*/
-			it->second->unload( timeout );
-
-			/*
-			*	calls dtor, removes exported service & types, deletes bundle metainfo
-			*/
-			_2Real::Path id = it->first;
-			it = mBundles.erase( it );
-
-			/*
-			*	unloads dll
-			*/
-			mBundleImporter.unimportLibrary( id );
+			it->unregisterFromUnload( this, &BundleCollection::bundleUnloaded );
+			it->unload( timeout );
 		}
+
+		mBundles.clear();
 	}
 
-	Path const& BundleCollection::getBundleDirectory() const
+	Path BundleCollection::getBundleDirectory() const
 	{
 		return mBundleDirectory;
 	}
 
 	void BundleCollection::updateBundleDirectory()
 	{
-		char * dir = std::getenv( _2Real::Constants::BundleEnvName.c_str() );
+		char * dir = std::getenv( Constants::BundleEnvName.c_str() );
 		if ( nullptr != dir )
 			mBundleDirectory = Path( dir );
+
+		// TODO: exception? or some reasonable default value
 	}
 
-	std::pair< std::shared_ptr< Bundle >, std::shared_ptr< const SharedLibraryMetainfo > > BundleCollection::loadBundle( Path const& path, std::shared_ptr< TypeCollection > types )
+	std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > BundleCollection::loadBundle( Path const& path, std::shared_ptr< TypeCollection > types )
 	{
 		Path absPath = mBundleDirectory / path;
 
-		if ( mBundleImporter.isLibraryLoaded( absPath ) )
+		auto it = std::find_if( mBundles.begin(), mBundles.end(), BundlePathCmp( absPath ) );
+		if ( it != mBundles.end() )
 		{
 			std::ostringstream msg;
 			msg << "shared library " << absPath.string() << " is already loaded";
 			throw AlreadyExists( msg.str() );
 		}
 
-		std::shared_ptr< const SharedLibraryMetainfo > bundleMetainfo = mBundleImporter.importLibrary( absPath, types );
-		std::shared_ptr< Bundle > bundleInstance = Bundle::createFromMetainfo( bundleMetainfo, mStdThreads.lock(), mCtxtThreads.lock(), absPath );
-		bundleInstance->registerToUnload( this, &BundleCollection::bundleUnloaded );
-		auto result = std::make_pair( bundleInstance, bundleMetainfo );
+		// may throw
+		std::shared_ptr< SharedLibrary > lib( new SharedLibrary( path ) );
 
-		mBundles[ absPath ] = result.first;
+		std::shared_ptr< BundleMetainfoImpl > bundleMetainfo = BundleMetainfoImpl::make( lib, path, types );
+
+		if ( !bundleMetainfo.get() )
+		{
+			std::ostringstream msg;
+			msg << "shared library was found, but is not providing all necessary functions" << std::endl;
+			throw BundleImportFailure( msg.str() );
+		}
+
+		std::shared_ptr< BundleImpl > bundle = BundleImpl::createFromMetainfo( bundleMetainfo, lib, absPath );
+
+		bundle->registerToUnload( this, &BundleCollection::bundleUnloaded );
+
+		auto result = std::make_pair( bundle, bundleMetainfo );
+
+		mBundles.push_back( bundle );
 		return result;
 	}
 
-	void BundleCollection::bundleUnloaded( std::shared_ptr< const Bundle > bundle )
+	void BundleCollection::bundleUnloaded( std::shared_ptr< const BundleImpl > bundle )
 	{
-		auto it = mBundles.find( bundle->getFilePath() );
+		auto it = std::find_if( mBundles.begin(), mBundles.end(), BundlePtrCmp( bundle ) );
 		if ( it != mBundles.end() )
 			mBundles.erase( it );
-		mBundleImporter.unimportLibrary( bundle->getFilePath() );
 	}
 
 }

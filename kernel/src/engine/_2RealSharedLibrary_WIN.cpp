@@ -18,8 +18,8 @@
 
 
 #include "_2RealSharedLibrary_WIN.h"
-#include "helpers/_2RealPath.h"
-#include "helpers/_2RealException.h"
+#include "common/_2RealPath.h"
+#include "common/_2RealException.h"
 
 #include <Windows.h>
 

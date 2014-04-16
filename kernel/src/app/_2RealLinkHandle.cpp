@@ -17,8 +17,9 @@
 */
 
 #include "app/_2RealLinkHandle.h"
-#include "app/_2RealHandleValidity.h"
 #include "engine/_2RealLink.h"
+
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {

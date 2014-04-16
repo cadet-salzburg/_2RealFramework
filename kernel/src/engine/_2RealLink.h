@@ -19,27 +19,23 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealData.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealData.h"
 
 namespace _2Real
 {
-	class DataSource;
-	class DataSink;
+	class DataSource_I;
+	class DataSink_I;
 
 	class Link : public std::enable_shared_from_this< Link >
 	{
 
 	public:
 
-		Link( std::shared_ptr< DataSource >, std::shared_ptr< DataSink > );
+		Link( std::shared_ptr< DataSource_I >, std::shared_ptr< DataSink_I > );
 		~Link();
 
-		// link is only valid if both sink & source exist
 		bool isValid() const;
-
-		//void setActive();
-		//bool isActive();
 
 		void receiveData( std::shared_ptr< const DataItem > );
 
@@ -48,8 +44,8 @@ namespace _2Real
 		Link( Link const& other ) = delete;
 		Link& operator=( Link const& other ) = delete;
 
-		std::weak_ptr< DataSource > mSource;
-		std::weak_ptr< DataSink >	mSink;
+		std::weak_ptr< DataSource_I > mSource;
+		std::weak_ptr< DataSink_I >	mSink;
 
 	};
 }

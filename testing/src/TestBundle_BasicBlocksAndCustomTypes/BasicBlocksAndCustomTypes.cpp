@@ -30,10 +30,10 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 
 	info.exportsType( "simpleType", {} );
 	info.exportsType( "complexType", {} );
-	info.exportsBlock( "counter", false, { _2Real::declareInlet( "increment" ), _2Real::declareInlet( "stringy" ), _2Real::declareMultiInlet( "multi" ), }, { _2Real::declareOutlet( "value" ) }, { _2Real::declareParameter( "init" ) } );
+	info.exportsBlock( "counter", { _2Real::declareInlet( "increment" ), _2Real::declareInlet( "stringy" ), _2Real::declareMultiInlet( "multi" ), }, { _2Real::declareOutlet( "value" ) }, { _2Real::declareParameter( "init" ) } );
 }
 
-void getTypeMetainfo( _2Real::bundle::TypeMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& previousTypes )
+void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& previousTypes )
 {
 	if ( info.getName() == "simpleType" )
 	{
@@ -46,7 +46,7 @@ void getTypeMetainfo( _2Real::bundle::TypeMetainfo &info, std::map< std::string,
 	}
 	else if ( info.getName() == "complexType" )
 	{
-		const _2Real::bundle::TypeMetainfo simpleInfo = previousTypes.at( "simpleType" );
+		const _2Real::bundle::CustomTypeMetainfo simpleInfo = previousTypes.at( 0 );
 
 		info.setDescription( "testing complex types, that is, types where at least one field is a custom type" );
 		info.addField( "string_field", std::string( "denn nudeln sind wir, und piraten wollen wir werden" ) );
@@ -54,7 +54,7 @@ void getTypeMetainfo( _2Real::bundle::TypeMetainfo &info, std::map< std::string,
 	}
 }
 
-void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& types )
+void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& types )
 {
 	if ( info.getName() == "counter" )
 		ComplexCounter::getBlockMetainfo( info, types );

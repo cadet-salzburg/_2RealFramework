@@ -19,31 +19,33 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "enums/_2RealThreadpoolPolicy.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealThreadpoolPolicy.h"
 
 namespace _2Real
 {
-	class Threadpool;
+	class ThreadpoolImpl_I;
 
 	class ThreadpoolCollection : public std::enable_shared_from_this< ThreadpoolCollection >
 	{
 	
 	public:
 
-		ThreadpoolCollection();
+		ThreadpoolCollection() = default;
+		ThreadpoolCollection( ThreadpoolCollection const& other ) = delete;
+		ThreadpoolCollection( ThreadpoolCollection && other ) = delete;
+		ThreadpoolCollection& operator=( ThreadpoolCollection const& other ) = delete;
+		ThreadpoolCollection& operator=( ThreadpoolCollection && other ) = delete;
+
 		~ThreadpoolCollection();
 
-		std::shared_ptr< Threadpool >	createThreadpool( const ThreadpoolPolicy );
+		std::shared_ptr< ThreadpoolImpl_I >	createThreadpool( const ThreadpoolPolicy );
 
 	private:
 
-		ThreadpoolCollection( ThreadpoolCollection const& other ) = delete;
-		ThreadpoolCollection& operator=( ThreadpoolCollection const& other ) = delete;
+		typedef std::set< std::shared_ptr< ThreadpoolImpl_I > >	Threadpools;
 
-		typedef std::set< std::shared_ptr< Threadpool > >		Threadpools;
-
-		Threadpools				mThreadpools;
+		Threadpools		mThreadpools;
 
 	};
 }

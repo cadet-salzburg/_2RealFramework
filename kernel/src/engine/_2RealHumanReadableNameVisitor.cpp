@@ -17,7 +17,6 @@
 */
 
 #include "engine/_2RealHumanReadableNameVisitor.h"
-#include "engine/_2RealCustomData.h"
 #include "engine/_2RealId.h"
 
 namespace _2Real
@@ -82,7 +81,7 @@ namespace _2Real
 		return "bool";
 	}
 
-	std::string HumanReadableNameVisitor::operator()( _2Real::CustomDataItem const& val ) const
+	std::string HumanReadableNameVisitor::operator()( CustomDataItem const& val ) const
 	{
 		return val.mTypeMetainfo->getName();
 	}

@@ -19,29 +19,24 @@
 
 #include "CounterBlock.h"
 
-void Counter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& previousTypes )
+void Counter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &counterinfo, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& previousTypes )
 {
-	_2Real::bundle::FunctionBlockMetainfo &counterinfo = dynamic_cast< _2Real::bundle::FunctionBlockMetainfo & >( info );
-
 	counterinfo.setBlockClass< Counter >();
 	counterinfo.setDescription( "test block - some simple counters" );
 
-	_2Real::bundle::DefaultUpdatePolicy policy = counterinfo.getDefaultUpdatePolicy();
-	policy.set( _2Real::DefaultPolicy::DISABLED );
+	_2Real::bundle::UpdatePolicyMetainfo policy = counterinfo.getUpdatePolicyMetainfo();
+	policy.set( _2Real::DefaultUpdatePolicy::DISABLED );
 
 	_2Real::bundle::InletMetainfo inA = counterinfo.getInletMetainfo( "inA" );
 	inA.setDescription( "int increment" );
-	inA.setMultiInlet( false );
 	inA.setDatatypeAndInitialValue( ( int32_t )10 );
 
 	_2Real::bundle::InletMetainfo inB = counterinfo.getInletMetainfo( "inB" );
 	inB.setDescription( "float increment" );
-	inB.setMultiInlet( false );
 	inB.setDatatypeAndInitialValue( 1.f );
 
 	_2Real::bundle::InletMetainfo inC = counterinfo.getInletMetainfo( "inC" );
 	inC.setDescription( "ulong increment" );
-	inC.setMultiInlet( false );
 	inC.setDatatypeAndInitialValue( ( uint64_t )1000 );
 
 	_2Real::bundle::ParameterMetainfo paramA = counterinfo.getParameterMetainfo( "paramA" );
@@ -69,8 +64,8 @@ void Counter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< s
 	outC.setDatatypeAndInitialValue( ( uint64_t )0 );
 }
 
-Counter::Counter( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr< _2Real::bundle::AbstractBlock > > const& dependencies ) :
-	_2Real::bundle::AbstractBlock( io, dependencies )
+Counter::Counter( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr< _2Real::bundle::Block > > const& dependencies ) :
+	_2Real::bundle::Block( io, dependencies )
 {
 }
 

@@ -19,12 +19,12 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "engine/_2RealAbstractBlockState.h"
+#include "common/_2RealStdIncludes.h"
+#include "engine/_2RealBlockState_I.h"
 
 namespace _2Real
 {
-	class PostShutdownState : public AbstractBlockState
+	class PostShutdownState : public BlockState_I
 	{
 
 	public:
@@ -38,6 +38,12 @@ namespace _2Real
 		std::shared_ptr< SignalResponse > onSingleUpdateSignalReceived() override;
 		std::shared_ptr< SignalResponse > onShutdownSignalReceived() override;
 		std::shared_ptr< SignalResponse > onEngineShutdownReceived() override;
+
+		BlockState getId() const { return mId; }
+
+	private:
+
+		const BlockState	mId;
 
 	};
 }

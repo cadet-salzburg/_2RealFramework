@@ -29,14 +29,14 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.setContact( "fhs33223@fh-salzburg.ac.at" );
 	info.setVersion( 0, 0, 0 );
 
-	info.exportBlock( "printInfoBlock", false, { "inA", "inB", "inC" }, { "outA", "outB" }, { "paramA", "paramB" } );
-	info.exportBlock( "counterBlock", false, { "inA", "inB", "inC" }, { "outA", "outB", "outC" }, { "paramA", "paramB", "paramC" } );
+	info.exportsBlock( "printInfoBlock",  { _2Real::declareInlet( "inA" ), _2Real::declareInlet( "inB" ), _2Real::declareInlet( "inC" ) }, { _2Real::declareOutlet( "outA" ), _2Real::declareOutlet( "outB" ) }, { _2Real::declareParameter( "paramA" ), _2Real::declareParameter( "paramB" ) } );
+	info.exportsBlock( "counterBlock", { _2Real::declareInlet( "inA" ), _2Real::declareInlet( "inB" ), _2Real::declareInlet( "inC" ) }, { _2Real::declareOutlet( "outA" ), _2Real::declareOutlet( "outB" ), _2Real::declareOutlet( "outC" ) }, { _2Real::declareParameter( "paramA" ), _2Real::declareParameter( "paramB" ), _2Real::declareParameter( "paramC" ) } );
 }
 
-void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::map< std::string, const _2Real::bundle::TypeMetainfo > const& previousTypes )
+void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& allTypes )
 {
 	if ( info.getName() == "printInfoBlock" )
-		PrintInfo::getBlockMetainfo( info, previousTypes );
+		PrintInfo::getBlockMetainfo( info, allTypes );
 	else if ( info.getName() == "counterBlock" )
-		Counter::getBlockMetainfo( info, previousTypes );
+		Counter::getBlockMetainfo( info, allTypes );
 }

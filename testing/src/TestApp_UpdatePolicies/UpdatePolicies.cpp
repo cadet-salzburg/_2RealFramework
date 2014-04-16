@@ -33,7 +33,32 @@
 
 #include "_2RealApplication.h"
 
-#include <iomanip>
+void printBasicTypeMetainfo( _2Real::app::TypeMetainfo const& );
+void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& );
+
+void printBasicTypeMetainfo( _2Real::app::TypeMetainfo const& meta )
+{
+	assert( meta.isValid() );
+	std::cout << "basic type " << meta.getName() << std::endl;
+}
+
+void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& meta )
+{
+	assert( meta.isValid() );
+
+	std::cout << "custom type " << meta.getName() << std::endl;
+	std::cout << meta.getDescription() << std::endl;
+
+	auto fields = meta.getDataFields();
+	for ( auto it : fields )
+	{
+		std::cout << "has field " << it.first << std::endl;
+		if ( it.second->isBasicType() )
+			printBasicTypeMetainfo( *( static_cast< const _2Real::app::TypeMetainfo * >( it.second.get() ) ) );
+		else
+			printCustomTypeMetainfo( *( static_cast< const _2Real::app::CustomTypeMetainfo * >( it.second.get() ) ) );
+	}
+}
 
 void handleFuture( std::future< _2Real::BlockState > &obj, std::string const& info = "" )
 {
@@ -66,7 +91,7 @@ int main( int argc, char *argv[] )
 
 	// -------print the block metainfo---------
 
-		_2Real::app::BundleMetainfo bundleinfo = loadedBundle.second;
+		auto bundleinfo = loadedBundle.second;
 
 		std::cout << "basic bundle info" << std::endl;
 		std::cout << "description " << bundleinfo.getDescription() << std::endl;
@@ -77,77 +102,92 @@ int main( int argc, char *argv[] )
 
 		std::cout << std::endl;
 
-		std::vector< _2Real::app::BlockMetainfo > blockinfos = bundleinfo.getExportedBlocks();
-		std::cout << "exported blocks" << std::endl;
+		// i know that these are custom types, so no need for casting around
+		auto typeinfos = bundleinfo.getExportedTypes();
+		std::cout << "number of exported types : " << typeinfos.size() << std::endl;
+		if ( !typeinfos.empty() ) std::cout << "--------------------------------" << std::endl;
+		for ( auto it : typeinfos )
+		{
+			printCustomTypeMetainfo( it );
+			std::cout << "--------------------------------" << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		auto blockinfos = bundleinfo.getExportedBlocks();
+		std::cout << "exported blocks " << blockinfos.size() << std::endl;
 		for ( auto it : blockinfos )
 		{
-			std::cout << "name " << it.getName() << std::endl;
-			std::cout << "description " << it.getDescription() << std::endl;
-			std::cout << "is singleton " << std::boolalpha << it.isSingleton() << std::endl;
-			std::cout << "dependencies : "; for ( auto it : it.getDependenciesByName() ) std::cout << it << " "; std::cout << std::endl;
+			std::cout << "\t" << it.getName() << std::endl;
+			std::cout << "\t" << it.getDescription() << std::endl;
+			auto dependencies = it.getDependenciesByName();
+			std::cout << "\tdependencies\t";
+			for ( auto it : dependencies ) std::cout << it << " ";
+			std::cout << std::endl;
 
 			std::vector< _2Real::app::InletMetainfo > inletinfos = it.getInlets();
-			std::cout << "inlets" << std::endl;
+
+			std::cout << "\tinlets " << inletinfos.size() << std::endl;
 			for ( auto it : inletinfos )
 			{
-				std::cout << "name " << it.getName() << std::endl;
-				std::cout << "description " << it.getDescription() << std::endl;
-				std::cout << "datatype " << it.getTypeMetainfo().getName() << std::endl;
-				std::cout << "initial " << it.getInitialValue() << std::endl;
-				std::cout << "is multi " << std::boolalpha << it.isMulti() << std::endl;
+				std::cout << "\t\tname " << it.getName() << std::endl;
+				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
+				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tis multi " << std::boolalpha << it.isMulti() << std::endl;
 			}
 
 			std::vector< _2Real::app::OutletMetainfo > outletinfos = it.getOutlets();
-			std::cout << "outlets" << std::endl;
+			std::cout << "\toutlets "  << outletinfos.size() << std::endl;
 			for ( auto it : outletinfos )
 			{
-				std::cout << "name " << it.getName() << std::endl;
-				std::cout << "description " << it.getDescription() << std::endl;
-				std::cout << "datatype " << it.getTypeMetainfo().getName() << std::endl;
-				std::cout << "initial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tname " << it.getName() << std::endl;
+				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
+				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 
 			std::vector< _2Real::app::ParameterMetainfo > paraminfos = it.getParameters();
-			std::cout << "parameters" << std::endl;
+			std::cout << "\tparameters " << paraminfos.size() << std::endl;
 			for ( auto it : paraminfos )
 			{
-				std::cout << "name " << it.getName() << std::endl;
-				std::cout << "description " << it.getDescription() << std::endl;
-				std::cout << "datatype " << it.getTypeMetainfo().getName() << std::endl;
-				std::cout << "initial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tname " << it.getName() << std::endl;
+				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
+				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 		}
 
 		// -------create block instances---------
 
-		_2Real::app::BundleHandle bundle = loadedBundle.first;
+		auto bundle = loadedBundle.first;
 
-		auto counter = bundle.createBlock( "counter" );
+		auto threadpool = testEngine.createThreadpool( _2Real::ThreadpoolPolicy::FIFO );
+		auto counter = loadedBundle.first.createBlock( "counter", threadpool, std::vector< _2Real::app::BlockHandle >() );
 		auto io = counter.getBlockIo();
 		auto counterinfo = bundleinfo.getExportedBlock( "counter" );
-		auto inc = std::dynamic_pointer_cast< _2Real::app::InletHandle >( counter.getBlockIo().mInlets[ 0 ] );
+		auto inc = std::static_pointer_cast< _2Real::app::InletHandle >( counter.getBlockIo().mInlets[ 0 ] );
 		auto incinfo = counterinfo.getInlet( "increment" );
-		auto stringy = std::dynamic_pointer_cast< _2Real::app::InletHandle >( counter.getBlockIo().mInlets[ 1 ] );
+		auto stringy = std::static_pointer_cast< _2Real::app::InletHandle >( counter.getBlockIo().mInlets[ 1 ] );
 		auto stringyinfo = counterinfo.getInlet( "stringy" );
 
-		auto multiinlet = std::dynamic_pointer_cast< _2Real::app::MultiInletHandle >( counter.getBlockIo().mInlets[ 2 ] );
+		auto multiinlet = std::static_pointer_cast< _2Real::app::MultiInletHandle >( counter.getBlockIo().mInlets[ 2 ] );
 		auto multiinletinfo = counterinfo.getInlet( "multi" );
 		std::deque< _2Real::app::InletHandle > subinlets;
 
-		// urgh. this has been sliced now... how the hell to deal with this?
-		auto simpleinfo = incinfo.getTypeMetainfo();
-		auto custominfo = bundleinfo.getExportedType( simpleinfo.getName() );
+		auto info = incinfo.getTypeMetainfo();
+		auto custominfo = std::static_pointer_cast< _2Real::app::CustomTypeMetainfo >( info );
 
 		auto basicinfo = stringyinfo.getTypeMetainfo();
 
 		uint32_t aNumber = 0;
-		auto aSimple = custominfo.makeCustomData();
+		auto aSimple = custominfo->makeCustomData();
 		aSimple.set( "uint_field", aNumber );
 
 		std::string aString = "";
 
 		auto policy = counter.getUpdatePolicy();
-		policy.set( _2Real::DefaultPolicy::ANY );
+		policy.set( _2Real::DefaultUpdatePolicy::ANY );
 
 		auto timer = testEngine.createTimer( 4.0 );
 		timer.start();
@@ -170,7 +210,7 @@ int main( int argc, char *argv[] )
 				//aSimple.set( "uint_field", aNumber );
 				//inc->setValue( aSimple );
 
-				//aString.append( " next" );
+				//aString.appeqnd( " next" );
 				//stringy->setValue( aString );
 
 				for ( auto it : subinlets )
@@ -183,7 +223,7 @@ int main( int argc, char *argv[] )
 				//inc->setValue( aSimple );
 
 				//aString.append( " next" );
-				//stringy->setValue( aString );
+				//stringy->setValue( aString );q
 
 				Sleep( 200 );
 
@@ -192,7 +232,7 @@ int main( int argc, char *argv[] )
 				//inc->setValue( aSimple );
 
 				//aString.append( " next" );
-				//stringy->setValue( aString );
+				//stringy->setqValue( aString );
 			}
 			else if ( line == "policy" )
 			{

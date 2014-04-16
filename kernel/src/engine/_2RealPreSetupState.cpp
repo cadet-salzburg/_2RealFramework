@@ -17,11 +17,12 @@
 */
 
 #include "engine/_2RealPreSetupState.h"
+#include "engine/_2RealSignalResponse.h"
 
 namespace _2Real
 {
 	PreSetupState::PreSetupState( const BlockState state ) :
-		AbstractBlockState( state )
+		mId( state )
 	{
 	}
 
@@ -29,18 +30,18 @@ namespace _2Real
 
 	std::shared_ptr< SignalResponse > PreSetupState::onStartRunning()
 	{
-		return makeResponse( Action::DO_NOTHING, BlockState::PRE_SETUP, false );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
 	}
 
 	std::shared_ptr< SignalResponse > PreSetupState::onStopRunning()
 	{	
-		return makeResponse( Action::DO_NOTHING, BlockState::PRE_SETUP, false );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
 	}
 
 	std::shared_ptr< SignalResponse > PreSetupState::onUpdateSignalReceived()
 	{
 		assert( NULL );
-		return makeResponse( Action::DO_NOTHING, BlockState::PRE_SETUP, false );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
 	}
 
 // ----- user input
@@ -48,18 +49,18 @@ namespace _2Real
 	std::shared_ptr< SignalResponse > PreSetupState::onSetupSignalReceived()
 	{	
 		// valid -> post setup state
-		return makeResponse( Action::DO_SETUP, BlockState::POST_SETUP, false );
+		return SignalResponse::makeResponse( BlockAction::DO_SETUP, BlockState::POST_SETUP, false );
 	}
 
 	std::shared_ptr< SignalResponse > PreSetupState::onSingleUpdateSignalReceived()
 	{
-		return makeResponse( Action::DO_NOTHING, BlockState::PRE_SETUP, false );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
 	}
 
 	std::shared_ptr< SignalResponse > PreSetupState::onShutdownSignalReceived()
 	{
 		// no setup -> no shutdown needed
-		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
 	}
 
 // ----- shutdown
@@ -67,6 +68,6 @@ namespace _2Real
 	std::shared_ptr< SignalResponse > PreSetupState::onEngineShutdownReceived()
 	{
 		// no setup -> no shutdown needed
-		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
 	}
 }

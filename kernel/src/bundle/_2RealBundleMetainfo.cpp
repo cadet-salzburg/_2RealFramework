@@ -17,17 +17,16 @@
 */
 
 #include "bundle/_2RealBundleMetainfo.h"
-#include "bundle/_2RealFunctionBlockMetainfo.h"
-#include "bundle/_2RealContextBlockMetainfo.h"
-#include "bundle/_2RealTypeMetainfo.h"
-#include "engine/_2RealSharedLibraryMetainfo.h"
+#include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealCustomTypeMetainfo.h"
+#include "engine/_2RealBundleMetainfoImpl.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
 
-		BundleMetainfo::BundleMetainfo( std::shared_ptr< SharedLibraryMetainfo > metainfo ) :
+		BundleMetainfo::BundleMetainfo( std::shared_ptr< BundleMetainfoImpl > metainfo ) :
 			mImpl( metainfo )
 		{
 		}
@@ -35,37 +34,37 @@ namespace _2Real
 
 		void BundleMetainfo::setAuthor( const std::string author )
 		{
-			mImpl.lock()->setAuthor( author );
+			mImpl->setAuthor( author );
 		}
 
 		void BundleMetainfo::setDescription( const std::string description )
 		{
-			mImpl.lock()->setDescription( description );
+			mImpl->setDescription( description );
 		}
 
 		void BundleMetainfo::setContact( const std::string contact )
 		{
-			mImpl.lock()->setContact( contact );
+			mImpl->setContact( contact );
 		}
 
 		void BundleMetainfo::setCategory( const std::string category )
 		{
-			mImpl.lock()->setCategory( category );
+			mImpl->setCategory( category );
 		}
 
 		void BundleMetainfo::setVersion( const unsigned int major, const unsigned int minor, const unsigned int revision )
 		{
-			mImpl.lock()->setVersion( Version( major, minor, revision ) );
+			mImpl->setVersion( Version( major, minor, revision ) );
 		}
 	
 		void BundleMetainfo::exportsType( const std::string name, const std::vector< FieldDeclaration > fields )
 		{
-			mImpl.lock()->exportType( name, fields );
+			mImpl->exportType( name, fields );
 		}
 
-		void BundleMetainfo::exportsBlock( const std::string name, const bool isSingleton, const std::vector< InletDeclaration > inlets,  const std::vector< OutletDeclaration > outlets, const std::vector< ParameterDeclaration > parameters )
+		void BundleMetainfo::exportsBlock( const std::string name, const std::vector< InletDeclaration > inlets,  const std::vector< OutletDeclaration > outlets, const std::vector< ParameterDeclaration > parameters )
 		{
-			mImpl.lock()->exportBlock( name, isSingleton, inlets, outlets, parameters );
+			mImpl->exportBlock( name, inlets, outlets, parameters );
 		}
 
 	}

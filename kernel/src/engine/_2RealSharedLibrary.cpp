@@ -17,7 +17,7 @@
 */
 
 #include "_2RealSharedLibrary.h"
-#include "helpers/_2RealException.h"
+#include "common/_2RealException.h"
 
 namespace _2Real 
 {

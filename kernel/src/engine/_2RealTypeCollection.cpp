@@ -17,46 +17,56 @@
 */
 
 #include "engine/_2RealTypeCollection.h"
-#include "engine/_2RealSharedTypeMetainfo.h"
+#include "engine/_2RealTypeMetainfoImpl_I.h"
 #include "engine/_2RealId.h"
-#include "helpers/_2RealConstants.h"
 
 namespace _2Real
 {
-
-	TypeCollection::~TypeCollection()
+	class TypeNameCmp : public std::unary_function< bool, std::shared_ptr< const TypeMetainfoImpl_I > >
 	{
-		clear();
-	}
 
-	void TypeCollection::clear()
-	{
-		mTypes.clear();
-	}
+	public:
 
-	void TypeCollection::addType( std::shared_ptr< const TMetainfo > type )
+		explicit TypeNameCmp( const std::string name ) : mName( name )
+		{
+		}
+
+		bool operator()( std::shared_ptr< const TypeMetainfoImpl_I > type ) const
+		{
+			return mName == type->getId()->toString();
+		}
+
+	private:
+
+		std::string mName;
+
+	};
+
+	void TypeCollection::addType( std::shared_ptr< const TypeMetainfoImpl_I > type )
 	{
-		if ( mTypes.find( type->getId()->toString() ) != mTypes.end() )
+		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeNameCmp( type->getId()->toString() ) );
+		if ( it != mTypes.end() )
 		{
 			std::ostringstream msg;
 			msg << "type " << type->getId()->toString() << " already exists" << std::endl;
 			throw AlreadyExists( msg.str() );
 		}
 
-		mTypes[ type->getId()->toString() ] = type;
+		mTypes.push_back( type );
 	}
 
-	void TypeCollection::typeRemoved( const std::string name )
+	void TypeCollection::typeRemoved( std::shared_ptr< const TypeMetainfoImpl_I > type )
 	{
-		auto it = mTypes.find( name );
-		mTypes.erase( it );
-	}
-
-	std::shared_ptr< const TMetainfo > TypeCollection::getMetainfo( const std::string name ) const
-	{
-		auto it = mTypes.find( name );
+		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeNameCmp( type->getId()->toString() ) );
 		if ( it != mTypes.end() )
-			return it->second;
+			mTypes.erase( it );
+	}
+
+	std::shared_ptr< const TypeMetainfoImpl_I > TypeCollection::getTypeMetainfo( const std::string name ) const
+	{
+		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeNameCmp( name ) );
+		if ( it != mTypes.end() )
+			return *it;
 		else
 			return nullptr;
 	}

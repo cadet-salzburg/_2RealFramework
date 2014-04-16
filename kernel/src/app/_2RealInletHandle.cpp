@@ -18,48 +18,55 @@
 
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealLinkHandle.h"
+#include "app/_2RealBlockHandle.h"
 #include "app/_2RealTypeMetainfo.h"
-#include "app/_2RealHandleValidity.h"
-#include "engine/_2RealInlet.h"
-#include "engine/_2RealCustomData.h"
+#include "engine/_2RealInletImpl.h"
+
+#include "common/_2RealWeakPtrCheck.h"
 
 namespace _2Real
 {
 	namespace app
 	{
-		InletHandle::InletHandle( std::shared_ptr< Inlet > inlet ) :
-			AbstractInletHandle( inlet ),
+		InletHandle::InletHandle( std::shared_ptr< InletImpl > inlet ) :
+			InletHandle_I(),
 			mImpl( inlet )
 		{
 		}
 
+		bool InletHandle::isValid() const
+		{
+			std::shared_ptr< InletImpl > inlet = mImpl.lock();
+			return ( nullptr != inlet.get() );
+		}
+
+		bool InletHandle::isMultiInlet() const
+		{
+			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
+			return false;
+		}
+
+		BlockHandle InletHandle::getBlock()
+		{
+			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
+			return BlockHandle( inlet->getParent() );
+		}
+
 		void InletHandle::setValue( DataItem value )
 		{
-			std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
+			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
 			inlet->setData( std::move( value ) );
 		}
 
-		//DataItem InletHandle::getValue() const
-		//{
-		//	std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
-		//	return *( inlet->getTmpValue().get() );
-		//}
-
-		//DataItem InletHandle::getCurrentValue() const
-		//{
-		//	std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
-		//	return inlet->getValue();
-		//}
-
-		InletHandle::operator std::shared_ptr< DataSink > ()
+		InletHandle::operator std::shared_ptr< DataSink_I > ()
 		{
-			std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
-			return std::static_pointer_cast< DataSink >( inlet );
+			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
+			return std::static_pointer_cast< DataSink_I >( inlet );
 		}
 
-		LinkHandle InletHandle::linkTo( std::shared_ptr< DataSource > source )
+		LinkHandle InletHandle::linkTo( std::shared_ptr< DataSource_I > source )
 		{
-			std::shared_ptr< Inlet > inlet = checkValidity< Inlet >( mImpl, "inlet" );
+			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
 			return LinkHandle( inlet->linkTo( source ) );
 		}
 	}

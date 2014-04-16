@@ -18,18 +18,23 @@
 
 #include "bundle/_2RealMultiInletHandle.h"
 #include "bundle/_2RealInletHandle.h"
-#include "engine/_2RealMultiInlet.h"
+#include "engine/_2RealMultiInletImpl.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		MultiInletHandle::MultiInletHandle( std::shared_ptr< MultiInlet > inlet ) :
-			AbstractInletHandle( inlet ),
+		MultiInletHandle::MultiInletHandle( std::shared_ptr< MultiInletImpl > inlet ) :
+			InletHandle_I(),
 			mImpl( inlet )
 		{
 		}
 	
+		bool MultiInletHandle::isMultiInlet() const
+		{
+			return true;
+		}
+
 		uint32_t MultiInletHandle::getSize() const
 		{
 			return mImpl->getSize();

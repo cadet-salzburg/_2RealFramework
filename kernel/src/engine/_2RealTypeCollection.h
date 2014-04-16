@@ -19,14 +19,11 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include <unordered_map>
+#include "common/_2RealStdIncludes.h"
 
 namespace _2Real
 {
-	class TMetainfo;
-	class SharedTypeMetainfo;
-	class MetainfoId;
+	class TypeMetainfoImpl_I;
 
 	class TypeCollection : public std::enable_shared_from_this< TypeCollection >
 	{
@@ -34,24 +31,22 @@ namespace _2Real
 	public:
 
 		TypeCollection() = default;
-		~TypeCollection();
+		~TypeCollection() = default;
 
 		TypeCollection( TypeCollection const& other ) = delete;
+		TypeCollection( TypeCollection && other ) = delete;
 		TypeCollection& operator=( TypeCollection const& other ) = delete;
+		TypeCollection& operator=( TypeCollection && other ) = delete;
 
-		void clear();
-
-		void addType( std::shared_ptr< const TMetainfo > );
-
-		std::shared_ptr< const TMetainfo > getMetainfo( const std::string ) const;
-
-		void typeRemoved( const std::string );
+		void addType( std::shared_ptr< const TypeMetainfoImpl_I > );
+		std::shared_ptr< const TypeMetainfoImpl_I > getTypeMetainfo( const std::string ) const;
+		void typeRemoved( std::shared_ptr< const TypeMetainfoImpl_I > );
 
 	private:
 
-		typedef std::map< std::string, std::shared_ptr< const TMetainfo > > Types;
+		typedef std::vector< std::shared_ptr< const TypeMetainfoImpl_I > > Types;
 
-		Types								mTypes;
+		Types	mTypes;
 
 	};
 

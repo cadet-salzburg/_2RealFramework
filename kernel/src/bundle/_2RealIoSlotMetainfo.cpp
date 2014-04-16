@@ -17,29 +17,25 @@
 */
 
 #include "bundle/_2RealIoSlotMetainfo.h"
-#include "engine/_2RealIoSlotMetainfo.h"
+#include "engine/_2RealIoSlotMetainfoImpl.h"
 
 namespace _2Real
 {
 	namespace bundle
 	{
-		IoSlotMetainfo::IoSlotMetainfo( std::shared_ptr< _2Real::IoSlotMetainfo > info ) :
+		IoSlotMetainfo::IoSlotMetainfo( std::shared_ptr< IoSlotMetainfoImpl > info ) :
 			mImpl( info )
-		{
-		}
-
-		IoSlotMetainfo::~IoSlotMetainfo()
 		{
 		}
 
 		void IoSlotMetainfo::setDescription( std::string const& desc )
 		{
-			mImpl.lock()->setDescription( desc );
+			mImpl->setDescription( desc );
 		}
 
 		void IoSlotMetainfo::setDatatypeAndInitialValue( DataItem const& initialValue )
 		{
-			mImpl.lock()->setDatatypeAndInitialValue( initialValue );
+			mImpl->setDatatypeAndInitialValue( initialValue );
 		}
 	}
 }

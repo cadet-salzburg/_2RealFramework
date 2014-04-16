@@ -54,37 +54,6 @@ void handleFuture( std::future< _2Real::BlockState > &obj, std::string const& in
 	}
 }
 
-//class UserInput
-//{
-//
-//public:
-//
-//	UserInput( std::function< void( std::string const& ) > func ) : mFunc( func ), mShouldRun( false ), mThread( &UserInput::loop, this ) {}
-//
-//	void loop()
-//	{
-//		while( mShouldRun )
-//		{
-//			Sleep( 100 );
-//
-//			std::string line;
-//			char lineEnd = '\n';
-//			std::getline( std::cin, line, lineEnd );
-//			if ( line == "q" )
-//				mShouldRun = false;
-//			else
-//				mFunc( line );
-//		}
-//	}
-//
-//private:
-//
-//	std::function< void( std::string const& ) >		mFunc;
-//	std::atomic< bool >								mShouldRun;
-//	std::thread										mThread;
-//
-//};
-
 int main( int argc, char *argv[] )
 {
 	try
@@ -113,7 +82,6 @@ int main( int argc, char *argv[] )
 		{
 			std::cout << "\t" << it.getName() << std::endl;
 			std::cout << "\t" << it.getDescription() << std::endl;
-			std::cout << "\tis singleton " << std::boolalpha << it.isSingleton() << std::endl;
 			std::vector< std::string > dependencies = it.getDependenciesByName();
 			std::cout << "\tdependencies\t";
 			for ( auto it : dependencies ) std::cout << it << " ";
@@ -126,7 +94,7 @@ int main( int argc, char *argv[] )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 				std::cout << "\t\tis multi " << std::boolalpha << it.isMulti() << std::endl;
 			}
@@ -138,7 +106,7 @@ int main( int argc, char *argv[] )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 
@@ -149,7 +117,7 @@ int main( int argc, char *argv[] )
 			{
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
-				std::cout << "\t\tdatatype " << it.getTypeMetainfo().getName() << std::endl;
+				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
 				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
 			}
 		}
@@ -157,15 +125,16 @@ int main( int argc, char *argv[] )
 		//// -------create block instances---------
 
 		_2Real::app::TimerHandle timer = testEngine.createTimer( 5.0 );
+		_2Real::app::ThreadpoolHandle threadpool = testEngine.createThreadpool( _2Real::ThreadpoolPolicy::FIFO );
 
 		_2Real::app::BundleHandle bundle = loadedBundle.first;
 
-		auto aCounter = bundle.createBlock( "counterBlock" );
+		auto aCounter = bundle.createBlock( "counterBlock", threadpool, std::vector< _2Real::app::BlockHandle >() );
 		auto aCounterIo = aCounter.getBlockIo();
 		auto anIncInlet = std::dynamic_pointer_cast< _2Real::app::InletHandle >( aCounterIo.mInlets[ 0 ] );
 		auto anInitParam = aCounterIo.mParameters[ 0 ];
 
-		auto otherCounter = bundle.createBlock( "counterBlock" );
+		auto otherCounter = bundle.createBlock( "counterBlock", threadpool, std::vector< _2Real::app::BlockHandle >() );
 		auto otherCounterIo = otherCounter.getBlockIo();
 		auto otherIncInlet = std::dynamic_pointer_cast< _2Real::app::InletHandle >( otherCounterIo.mInlets[ 0 ] );
 		auto otherInitParam = otherCounterIo.mParameters[ 0 ];

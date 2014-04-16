@@ -18,32 +18,32 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
-#include "enums/_2RealDefaultPolicy.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealDefaultUpdatePolicy.h"
 
 namespace _2Real
 {
-	class UpdatePolicy;
+	class UpdatePolicyImpl;
 
 	namespace app
 	{
-		class FunctionBlockHandle;
+		class BlockHandle;
 
 		class UpdatePolicyHandle
 		{
 
 		public:
 
-			explicit UpdatePolicyHandle( std::shared_ptr< UpdatePolicy > );
+			explicit UpdatePolicyHandle( std::shared_ptr< UpdatePolicyImpl > );
 
 			bool					isValid() const;
 
-			FunctionBlockHandle		getBlock();
-			void					set( const DefaultPolicy );
+			BlockHandle		getBlock();
+			void					set( const DefaultUpdatePolicy );
 
 		private:
 
-			std::weak_ptr< UpdatePolicy >		mImpl;
+			std::weak_ptr< UpdatePolicyImpl >		mImpl;
 
 		};
 	}

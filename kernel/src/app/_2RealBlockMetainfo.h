@@ -18,26 +18,23 @@
 
 #pragma once
 
-#include "helpers/_2RealStdIncludes.h"
+#include "common/_2RealStdIncludes.h"
+#include "app/_2RealIoSlotMetainfo.h"
 
 namespace _2Real
 {
-	class SharedServiceMetainfo;
+	class BlockMetainfoImpl;
 
 	namespace app
 	{
-		class InletMetainfo;
-		class OutletMetainfo;
-		class ParameterMetainfo;
 
 		class BlockMetainfo
 		{
 
 		public:
 
-			explicit BlockMetainfo( std::shared_ptr< const SharedServiceMetainfo > );
+			explicit BlockMetainfo( std::shared_ptr< const BlockMetainfoImpl > );
 
-			// bundle unload -> invalid
 			bool			isValid() const;
 
 			bool			isSingleton() const;
@@ -56,7 +53,7 @@ namespace _2Real
 			
 		private:
 
-			std::weak_ptr< const SharedServiceMetainfo >		mImpl;
+			std::weak_ptr< const BlockMetainfoImpl >		mImpl;
 
 		};
 	}

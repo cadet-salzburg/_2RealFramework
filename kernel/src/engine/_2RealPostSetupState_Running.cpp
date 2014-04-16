@@ -17,11 +17,12 @@
 */
 
 #include "engine/_2RealPostSetupState_Running.h"
+#include "engine/_2RealSignalResponse.h"
 
 namespace _2Real
 {
 	PostSetupState_Running::PostSetupState_Running( const BlockState state ) :
-		AbstractBlockState( state )
+		mId( state )
 	{
 	}
 
@@ -29,40 +30,40 @@ namespace _2Real
 
 	std::shared_ptr< SignalResponse > PostSetupState_Running::onStartRunning()
 	{
-		return makeResponse( Action::DO_NOTHING, BlockState::POST_SETUP_RUNNING, false );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SETUP_RUNNING, false );
 	}
 
 	std::shared_ptr< SignalResponse > PostSetupState_Running::onStopRunning()
 	{	
-		return makeResponse( Action::DO_NOTHING, BlockState::POST_SETUP, true );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SETUP, true );
 	}
 
 	std::shared_ptr< SignalResponse > PostSetupState_Running::onUpdateSignalReceived()
 	{
-		return makeResponse( Action::DO_UPDATE, BlockState::POST_SETUP_RUNNING, false );
+		return SignalResponse::makeResponse( BlockAction::DO_UPDATE, BlockState::POST_SETUP_RUNNING, false );
 	}
 
 // ----- user input
 
 	std::shared_ptr< SignalResponse > PostSetupState_Running::onSetupSignalReceived()
 	{
-		return makeResponse( Action::DO_NOTHING, BlockState::POST_SETUP_RUNNING, false );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SETUP_RUNNING, false );
 	}
 
 	std::shared_ptr< SignalResponse > PostSetupState_Running::onSingleUpdateSignalReceived()
 	{
-		return makeResponse( Action::DO_NOTHING, BlockState::POST_SETUP_RUNNING, false );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SETUP_RUNNING, false );
 	}
 
 	std::shared_ptr< SignalResponse > PostSetupState_Running::onShutdownSignalReceived()
 	{
-		return makeResponse( Action::DO_SHUTDOWN, BlockState::POST_SHUTDOWN, true );
+		return SignalResponse::makeResponse( BlockAction::DO_SHUTDOWN, BlockState::POST_SHUTDOWN, true );
 	}
 
 // ----- shutdown
 
 	std::shared_ptr< SignalResponse > PostSetupState_Running::onEngineShutdownReceived()
 	{
-		return makeResponse( Action::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
+		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
 	}
 }

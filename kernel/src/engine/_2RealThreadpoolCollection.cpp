@@ -18,15 +18,10 @@
 */
 
 #include "engine/_2RealThreadpoolCollection.h"
-#include "engine/_2RealThreadpool.h"
+#include "engine/_2RealThreadpoolImpl_I.h"
 
 namespace _2Real
 {
-	ThreadpoolCollection::ThreadpoolCollection() :
-		std::enable_shared_from_this< ThreadpoolCollection >()
-	{
-	}
-
 	ThreadpoolCollection::~ThreadpoolCollection()
 	{
 		for ( auto it : mThreadpools )	
@@ -35,9 +30,9 @@ namespace _2Real
 		}
 	}
 
-	std::shared_ptr< Threadpool > ThreadpoolCollection::createThreadpool( const ThreadpoolPolicy p )
+	std::shared_ptr< ThreadpoolImpl_I > ThreadpoolCollection::createThreadpool( const ThreadpoolPolicy p )
 	{
-		auto threadpool = Threadpool::create( p );
+		auto threadpool = ThreadpoolImpl_I::create( p );
 		mThreadpools.insert( threadpool );
 		return threadpool;
 	}
