@@ -26,18 +26,18 @@ namespace _2Real
 {
 	class ThreadpoolImpl_I;
 
-	class ThreadpoolCollection : public std::enable_shared_from_this< ThreadpoolCollection >
+	class ThreadpoolCollection
 	{
 	
 	public:
 
 		ThreadpoolCollection() = default;
+		~ThreadpoolCollection();
+
 		ThreadpoolCollection( ThreadpoolCollection const& other ) = delete;
 		ThreadpoolCollection( ThreadpoolCollection && other ) = delete;
 		ThreadpoolCollection& operator=( ThreadpoolCollection const& other ) = delete;
 		ThreadpoolCollection& operator=( ThreadpoolCollection && other ) = delete;
-
-		~ThreadpoolCollection();
 
 		std::shared_ptr< ThreadpoolImpl_I >	createThreadpool( const ThreadpoolPolicy );
 

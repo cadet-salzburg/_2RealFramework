@@ -22,9 +22,6 @@
 #include "common/_2RealBoost.h"
 #include "common/_2RealException.h"
 
-#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#define BOOST_MPL_LIMIT_LIST_SIZE 40
-
 #include <boost/variant.hpp>
 
 namespace _2Real

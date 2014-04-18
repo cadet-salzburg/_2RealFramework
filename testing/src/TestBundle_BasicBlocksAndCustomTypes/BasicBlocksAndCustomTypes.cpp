@@ -30,7 +30,7 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 
 	info.exportsType( "simpleType", {} );
 	info.exportsType( "complexType", {} );
-	info.exportsBlock( "counter", { _2Real::declareInlet( "increment" ), _2Real::declareInlet( "stringy" ), _2Real::declareMultiInlet( "multi" ), }, { _2Real::declareOutlet( "value" ) }, { _2Real::declareParameter( "init" ) } );
+	info.exportsBlock( "counter", { _2Real::declareInlet( "increment" ), _2Real::declareInlet( "stringy" ), _2Real::declareMultiInlet( "multi" ), }, { _2Real::declareOutlet( "value" ), _2Real::declareOutlet( "msg" ), _2Real::declareOutlet( "test" ) }, { _2Real::declareParameter( "init" ) } );
 }
 
 void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& previousTypes )

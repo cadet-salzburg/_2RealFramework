@@ -20,16 +20,23 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
+#include "common/_2RealSignals.h"
 #include "engine/_2RealBlockState_I.h"
 
 namespace _2Real
 {
+
+	class UpdateTrigger_I;
+
 	class PostSetupState_Running : public BlockState_I
 	{
 
 	public:
 
-		PostSetupState_Running( const BlockState );
+		PostSetupState_Running( const BlockState, boost::signals2::connection );
+		~PostSetupState_Running();
+
+		bool operator==( const BlockState ) const;
 
 		std::shared_ptr< SignalResponse > onStartRunning() override;
 		std::shared_ptr< SignalResponse > onStopRunning() override;
@@ -39,11 +46,14 @@ namespace _2Real
 		std::shared_ptr< SignalResponse > onShutdownSignalReceived() override;
 		std::shared_ptr< SignalResponse > onEngineShutdownReceived() override;
 
+		std::shared_ptr< SignalResponse > nextAction( std::deque< std::shared_ptr< SignalResponse > > & );
+
 		BlockState getId() const { return mId; }
 
 	private:
 
-		const BlockState	mId;
+		const BlockState			mId;
+		boost::signals2::connection	mConnection;
 
 	};
 }

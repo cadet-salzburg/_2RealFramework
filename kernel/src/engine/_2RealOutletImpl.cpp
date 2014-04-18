@@ -16,6 +16,9 @@
 	limitations under the License.
 */
 
+#pragma warning( disable : 4996 )
+#pragma warning( disable : 4702 )
+
 #include "engine/_2RealOutletImpl.h"
 #include "engine/_2RealBlockImpl.h"
 #include "engine/_2RealIoSlotMetainfoImpl.h"
@@ -63,6 +66,21 @@ namespace _2Real
 		std::lock_guard< std::mutex > lock( mMutex );
 		mTmpValue = mValue;
 		mValue.reset( new DataItem( mMetainfo.lock()->getInitialValue() ) );
-		DataSource_I::notify( mTmpValue );
+		mUpdated( mTmpValue );
+	}
+
+	void OutletImpl::unlink()
+	{
+		mRemoved( std::static_pointer_cast< DataSource_I >( shared_from_this() ) );
+	}
+
+	boost::signals2::connection OutletImpl::registerToUpdate( boost::signals2::signal< void( std::shared_ptr< const DataItem > )>::slot_type listener ) const
+	{
+		return mUpdated.connect( listener );
+	}
+
+	boost::signals2::connection OutletImpl::registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSource_I > )>::slot_type listener ) const
+	{
+		return mRemoved.connect( listener );
 	}
 }

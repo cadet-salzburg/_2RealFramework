@@ -16,6 +16,9 @@
 	limitations under the License.
 */
 
+#pragma warning( disable : 4996 )
+#pragma warning( disable : 4702 )
+
 #include "engine/_2RealMultiInletImpl.h"
 #include "engine/_2RealInletImpl.h"
 #include "engine/_2RealBlockImpl.h"
@@ -98,12 +101,18 @@ namespace _2Real
 		return mInlets[ idx ];
 	}
 
+	std::shared_ptr< const InletImpl > MultiInletImpl::operator[]( const uint32_t idx ) const
+	{
+		std::lock_guard< std::mutex > lock( mMutex );
+		return mInlets[ idx ];
+	}
+
 	std::shared_ptr< InletImpl > MultiInletImpl::add_front()
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 		std::shared_ptr< InletImpl > inlet = InletImpl::createFromMetainfo( shared_from_this(), mMetainfo.lock() );
 		mInlets.push_front( inlet );
-		mInletAdded.notify( inlet );
+		mSubinletAdded( inlet );
 		return mInlets.front();
 	}
 
@@ -112,7 +121,7 @@ namespace _2Real
 		std::lock_guard< std::mutex > lock( mMutex );
 		std::shared_ptr< InletImpl > inlet = InletImpl::createFromMetainfo( shared_from_this(), mMetainfo.lock() );
 		mInlets.push_back( inlet );
-		mInletAdded.notify( inlet );
+		mSubinletAdded( inlet );
 		return mInlets.back();
 	}
 
@@ -125,7 +134,17 @@ namespace _2Real
 			throw NotFound( inlet->getId()->getName() );
 
 		mInlets.erase( it );
-		mInletRemoved.notify( inlet );
+		mSubinletRemoved( inlet );
+	}
+
+	boost::signals2::connection MultiInletImpl::registerToSubinletAdded( boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >::slot_type listener ) const
+	{
+		return mSubinletAdded.connect( listener );
+	}
+
+	boost::signals2::connection MultiInletImpl::registerToSubinletRemoved( boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >::slot_type listener ) const
+	{
+		return mSubinletRemoved.connect( listener );
 	}
 
 }

@@ -25,10 +25,7 @@ namespace _2Real
 	struct Constants
 	{
 		static const std::string BundleEnvName;
-
-		static const std::string BasicTypename;
-		static const std::string FrameworkTypename;
-		static const std::string ContextBlockName;
 		static const std::string SharedLibrarySuffix;
+		static const uint32_t EngineDefaultTimeout;
 	};
 }

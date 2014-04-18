@@ -24,6 +24,8 @@
 
 namespace _2Real
 {
+	class DataSource_I;
+
 	class DataSink_I
 	{
 
@@ -37,7 +39,9 @@ namespace _2Real
 		DataSink_I& operator=( DataSink_I const& other ) = delete;
 		DataSink_I& operator=( DataSink_I && other ) = delete;
 
+		virtual void linkTo( std::shared_ptr< DataSource_I > ) = 0;
 		virtual void receiveData( std::shared_ptr< const DataItem > ) = 0;
+		virtual boost::signals2::connection registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSink_I > ) >::slot_type ) const = 0;
 
 	};
 }

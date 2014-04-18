@@ -19,61 +19,37 @@
 
 #pragma once
 
-#include "engine/_2RealBundleImporter.h"
-#include "helpers/_2RealStdIncludes.h"
-#include "helpers/_2RealPath.h"
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
-	class Bundle;
-	class TypeRegistry;
-	class Threadpool;
+	class Link;
+	class InletImpl;
+	class OutletImpl;
 
-	class BundleCollection : public std::enable_shared_from_this< BundleCollection >
+	class LinkCollection
 	{
 	
 	public:
 
-		BundleCollection( std::shared_ptr< TypeRegistry > registry, std::shared_ptr< Threadpool >, std::shared_ptr< Threadpool > );
-		~BundleCollection();
+		LinkCollection() = default;
+		~LinkCollection();
 
-		std::shared_ptr< Bundle > 					loadBundle( Path const& pathToBundle );
-		Path const&									getBundleDirectory() const;
+		LinkCollection( LinkCollection const& other ) = delete;
+		LinkCollection( LinkCollection && other ) = delete;
+		LinkCollection& operator=( LinkCollection && other ) = delete;
+		LinkCollection& operator=( LinkCollection const& other ) = delete;
 
-		void										clear( const unsigned long timeout );
-		void										bundleUnloaded( std::shared_ptr< const Bundle > );
-
-		// TODO: let user create threadpools?
-		std::weak_ptr< Threadpool >					getThreadsForSingletonBlock()
-		{
-			return mThreadsDedicated;
-		}
-
-		std::weak_ptr< Threadpool >					getThreadsForRegularBlock()
-		{
-			return mThreads;
-		}
+		void					clear();
+		std::shared_ptr< Link > createLink( std::shared_ptr< InletImpl >, std::shared_ptr< OutletImpl > );
+		void					linkRemoved( std::shared_ptr< const Link > );
 
 	private:
 
-		BundleCollection( BundleCollection const& other );
-		BundleCollection& operator=( BundleCollection const& other );
+		typedef std::vector< std::pair< boost::signals2::connection, std::shared_ptr< Link > > > Links;
 
-		void updateBundleDirectory();
-
-		typedef std::map< Path, std::shared_ptr< Bundle > >		Bundles;
-
-		// responsible for loading bundles
-		BundleImporter								mBundleImporter;
-		// initialized on contruction by querying an env variable; can't change during runtime
-		Path										mBundleDirectory;
-		// the bundles
-		Bundles										mBundles;
-
-		// ? not sure where these should be handled ?
-		// currently, these 2 threadpools are managed by the engine...
-		std::weak_ptr< Threadpool >					mThreadsDedicated;
-		std::weak_ptr< Threadpool >					mThreads;
+		Links mLinks;
 
 	};
 }

@@ -20,4 +20,7 @@
 
 #define BOOST_ALL_DYN_LINK
 
+#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+#define BOOST_MPL_LIMIT_LIST_SIZE 40
+
 #include <sdkddkver.h>

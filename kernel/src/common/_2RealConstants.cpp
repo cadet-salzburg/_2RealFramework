@@ -22,9 +22,7 @@ namespace _2Real
 {
 	const std::string Constants::BundleEnvName = "_2REAL_BUNDLE_DIR";
 
-	const std::string Constants::BasicTypename = "BasicType";
-	const std::string Constants::FrameworkTypename = "FrameworkType";
-	const std::string Constants::ContextBlockName = "Context";
+	const uint32_t Constants::EngineDefaultTimeout = 5000;
 
 #ifdef _WIN64
 	#ifndef _DEBUG

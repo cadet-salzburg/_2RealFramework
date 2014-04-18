@@ -35,30 +35,24 @@ namespace _2Real
 		mDataFields(),
 		mTypeMetainfo()
 	{
-		//std::cout << "custom data item  def ctor" << std::endl;
 	}
 
 	CustomDataItem::CustomDataItem( std::shared_ptr< const MetainfoId > type ) :
 		mDataFields(),
 		mTypeMetainfo( type )
 	{
-		//std::cout << "custom data item init ctor" << std::endl;
 	}
 
 	CustomDataItem::CustomDataItem( CustomDataItem const& other ) :
 		mDataFields( other.mDataFields ),
 		mTypeMetainfo( other.mTypeMetainfo )
 	{
-		//std::cout << "custom data item copy ctor" << std::endl;
-		//std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 	}
 
 	CustomDataItem::CustomDataItem( CustomDataItem && other ) :
 		mDataFields( std::move( other.mDataFields ) ),
 		mTypeMetainfo( std::move( other.mTypeMetainfo ) )
 	{
-		//std::cout << "custom data item move ctor" << std::endl;
-		//std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 	}
 
 	CustomDataItem& CustomDataItem::operator=( CustomDataItem const& other )
@@ -68,8 +62,6 @@ namespace _2Real
 
 		mDataFields = other.mDataFields;
 		mTypeMetainfo = other.mTypeMetainfo;
-		//std::cout << "custom data item copy assignment" << std::endl;
-		//std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 
 		return *this;
 	}
@@ -81,8 +73,6 @@ namespace _2Real
 
 		mDataFields = std::move( other.mDataFields );
 		mTypeMetainfo = std::move( other.mTypeMetainfo );
-		//std::cout << "custom data item move assignment" << std::endl;
-		//std::cout << mDataFields.size() << " : " << other.mDataFields.size() << std::endl;
 
 		return *this;
 	}

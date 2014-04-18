@@ -21,6 +21,9 @@
 #include "app/_2RealBundleMetainfo.h"
 #include "app/_2RealTimerHandle.h"
 #include "app/_2RealThreadpoolHandle.h"
+#include "app/_2RealLinkHandle.h"
+#include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
 
 #include "engine/_2RealEngineImpl.h"
 #include "common/_2RealBoost.h"
@@ -44,8 +47,6 @@ namespace _2Real
 			mImpl->clear();
 		}
 
-	// ---------------------------------- bundle
-
 		Path Engine::getBundleDirectory() const
 		{
 			return mImpl->getBundleDirectory();
@@ -57,19 +58,11 @@ namespace _2Real
 			return std::make_pair( BundleHandle( result.first ), BundleMetainfo( result.second ) );
 		}
 
-	// ---------------------------------- bundle
-
-	// ---------------------------------- timer
-
 		TimerHandle Engine::createTimer( const double fps )
 		{
 			auto timer = mImpl->createTimer( fps );
 			return TimerHandle( timer );
 		}
-
-	// ---------------------------------- timer
-
-	// ---------------------------------- threadpool
 
 		ThreadpoolHandle Engine::createThreadpool( const ThreadpoolPolicy policy )
 		{
@@ -77,7 +70,13 @@ namespace _2Real
 			return ThreadpoolHandle( system );
 		}
 
-	// ---------------------------------- threadpool
+		LinkHandle Engine::link( InletHandle inlet, OutletHandle outlet )
+		{
+			if ( inlet.mImpl.lock().get() == nullptr || outlet.mImpl.lock().get() == nullptr )
+				throw HandleAccessFailure( "could not create link" );
 
+			auto link = mImpl->createLink( inlet.mImpl.lock(), outlet.mImpl.lock() );
+			return LinkHandle( link );
+		}
 	}
 }

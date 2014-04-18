@@ -33,7 +33,7 @@ void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std:
 	counterinfo.setDescription( "counter" );
 
 	_2Real::bundle::UpdatePolicyMetainfo policy = counterinfo.getUpdatePolicyMetainfo();
-	policy.set( _2Real::DefaultUpdatePolicy::DISABLED );
+	policy.set( _2Real::DefaultUpdatePolicy::ANY );
 
 	_2Real::bundle::InletMetainfo in = counterinfo.getInletMetainfo( "increment" );
 	in.setDescription( "counter increment" );
@@ -54,12 +54,22 @@ void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std:
 	_2Real::bundle::OutletMetainfo out = counterinfo.getOutletMetainfo( "value" );
 	out.setDescription( "counter current value" );
 	out.setDatatypeAndInitialValue( complexInfo.makeData() );
+
+	_2Real::bundle::OutletMetainfo msg = counterinfo.getOutletMetainfo( "msg" );
+	msg.setDescription( "a test message" );
+	msg.setDatatypeAndInitialValue( std::string( "NARF" ) );
+
+	_2Real::bundle::OutletMetainfo test = counterinfo.getOutletMetainfo( "test" );
+	test.setDescription( "a test int" );
+	test.setDatatypeAndInitialValue( (uint32_t)0 );
 }
 
 ComplexCounter::ComplexCounter( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr< _2Real::bundle::Block > > const& dependencies ) :
-	_2Real::bundle::Block( io, dependencies )
+	_2Real::bundle::Block( io, dependencies ), mUpdates( 0 )
 {
 }
+
+
 
 ComplexCounter::~ComplexCounter()
 {
@@ -76,6 +86,9 @@ void ComplexCounter::update()
 {
 	auto inlet = std::dynamic_pointer_cast< _2Real::bundle::InletHandle >( mIo.mInlets[ 0 ] );
 	auto outlet = mIo.mOutlets[ 0 ];
+
+	auto message = mIo.mOutlets[ 1 ];
+	auto test = mIo.mOutlets[ 2 ];
 
 	// extract a reference to the simple field in the outlet data
 	_2Real::CustomDataItem & counter = boost::get< _2Real::CustomDataItem >( outlet->getValue() );
@@ -94,9 +107,15 @@ void ComplexCounter::update()
 	val_out.getValue< double >( "double_field" ) += val_in.getValue< double >( "double_field" );
 
 	std::cout << "UPDATE" << std::endl;
-	std::cout << counter << std::endl;
+	//std::cout << counter << std::endl;
 
-	Sleep( 1000 );
+	++mUpdates;
+
+	std::string &s = boost::get< std::string >( message->getValue() );
+	uint32_t &i = boost::get< uint32_t >( test->getValue() );
+
+	s = std::to_string( mUpdates );
+	i = mUpdates;
 }
 
 void ComplexCounter::shutdown()

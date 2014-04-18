@@ -60,23 +60,17 @@ void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& meta )
 	}
 }
 
-void handleFuture( std::future< _2Real::BlockState > &obj, std::string const& info = "" )
+void handleFuture( std::future< _2Real::BlockResult > &obj, std::string const& info = "" )
 {
 	obj.wait();
-	_2Real::BlockState val = obj.get();
+	_2Real::BlockResult val = obj.get();
 	switch ( val )
 	{
-	case _2Real::BlockState::PRE_SETUP:
-		std::cout << "---- " << info << " pre setup state" << std::endl;
+	case _2Real::BlockResult::CARRIED_OUT:
+		std::cout << "---- " << info << " was carried out" << std::endl;
 		break;
-	case _2Real::BlockState::POST_SETUP:
-		std::cout << "---- " << info << " post setup state" << std::endl;
-		break;
-	case _2Real::BlockState::POST_SETUP_RUNNING:
-		std::cout << "---- " << info << " running state" << std::endl;
-		break;
-	case _2Real::BlockState::POST_SHUTDOWN:
-		std::cout << "---- " << info << " post shutdown state" << std::endl;
+	case _2Real::BlockResult::IGNORED:
+		std::cout << "---- " << info << " was ignored" << std::endl;
 		break;
 	}
 }
@@ -192,7 +186,7 @@ int main( int argc, char *argv[] )
 		auto timer = testEngine.createTimer( 4.0 );
 		timer.start();
 
-		std::future< _2Real::BlockState > setup = counter.setup();
+		std::future< _2Real::BlockResult > setup = counter.setup();
 		handleFuture( setup );
 
 		while( 1 )
@@ -236,17 +230,17 @@ int main( int argc, char *argv[] )
 			}
 			else if ( line == "policy" )
 			{
-				std::future< _2Real::BlockState > start = counter.startUpdating();
+				std::future< _2Real::BlockResult > start = counter.startUpdating();
 				handleFuture( start );
 			}
 			else if ( line == "timer" )
 			{
-				std::future< _2Real::BlockState > start = counter.startUpdating( timer );
+				std::future< _2Real::BlockResult > start = counter.startUpdating( timer );
 				handleFuture( start );
 			}
 			else if ( line == "done" )
 			{
-				std::future< _2Real::BlockState > stop = counter.stopUpdating();
+				std::future< _2Real::BlockResult > stop = counter.stopUpdating();
 				handleFuture( stop );
 			}
 			else if ( line == "add" )
@@ -264,9 +258,9 @@ int main( int argc, char *argv[] )
 			}
 		}
 
-		std::future< _2Real::BlockState > stop = counter.stopUpdating();
+		std::future< _2Real::BlockResult > stop = counter.stopUpdating();
 		handleFuture( stop );
-		std::future< _2Real::BlockState > shutdown = counter.shutdown();
+		std::future< _2Real::BlockResult > shutdown = counter.shutdown();
 		handleFuture( shutdown );
 
 		while( 1 )

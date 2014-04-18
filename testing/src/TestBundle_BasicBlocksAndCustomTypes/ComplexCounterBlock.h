@@ -33,4 +33,8 @@ public:
 	void update();
 	void shutdown();
 
+private:
+
+	uint32_t mUpdates;
+
 };

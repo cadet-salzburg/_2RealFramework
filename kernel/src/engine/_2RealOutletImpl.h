@@ -50,6 +50,11 @@ namespace _2Real
 		std::shared_ptr< const InstanceId > getId() const;
 		std::shared_ptr< BlockImpl >			getParent();
 
+		void unlink();
+
+		boost::signals2::connection registerToUpdate( boost::signals2::signal< void( std::shared_ptr< const DataItem > )>::slot_type ) const;
+		boost::signals2::connection registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSource_I > )>::slot_type ) const;
+
 	private:
 
 		OutletImpl( std::shared_ptr< BlockImpl >, std::shared_ptr< const IoSlotMetainfoImpl >, std::shared_ptr< const InstanceId > );
@@ -61,6 +66,9 @@ namespace _2Real
 		mutable std::mutex							mMutex;
 		std::shared_ptr< DataItem >					mTmpValue;
 		std::shared_ptr< DataItem >					mValue;
+
+		mutable boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >		mUpdated;
+		mutable boost::signals2::signal< void( std::shared_ptr< const DataSource_I > ) >	mRemoved;
 
 	};
 }

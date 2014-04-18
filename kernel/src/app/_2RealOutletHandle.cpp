@@ -36,10 +36,10 @@ namespace _2Real
 			return ( nullptr != outlet.get() );
 		}
 
-		OutletHandle::operator std::shared_ptr< DataSource_I > ()
-		{
-			std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
-			return std::static_pointer_cast< DataSource_I >( outlet );
-		}
+		//OutletHandle::operator std::shared_ptr< DataSource_I > ()
+		//{
+		//	std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
+		//	return std::static_pointer_cast< DataSource_I >( outlet );
+		//}
 	}
 }

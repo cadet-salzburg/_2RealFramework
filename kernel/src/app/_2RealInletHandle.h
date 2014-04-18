@@ -25,13 +25,11 @@
 namespace _2Real
 {
 	class InletImpl;
-	class DataSink_I;
-	class DataSource_I;
 
 	namespace app
 	{
+		class OutletHandle;
 		class LinkHandle;
-		class TypeMetainfo;
 
 		class InletHandle : public InletHandle_I
 		{
@@ -44,16 +42,13 @@ namespace _2Real
 			bool isMultiInlet() const;
 			BlockHandle getBlock();
 
-			// TODO: these should definitely throw an exception in case of a datatype mismatch
+			// TODO should definitely throw an exception in case of a datatype mismatch
 			void setValue( DataItem value );
-
-			LinkHandle linkTo( std::shared_ptr< DataSource_I > );
-
-			operator std::shared_ptr< DataSink_I > ();
 
 		private:
 
 			friend class MultiInletHandle;
+			friend class Engine;
 
 			std::weak_ptr< InletImpl >		mImpl;
 

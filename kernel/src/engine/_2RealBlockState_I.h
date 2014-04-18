@@ -31,8 +31,6 @@ namespace _2Real
 
 	public:
 
-		static std::shared_ptr< BlockState_I > create( const BlockState );
-
 		BlockState_I() = default;
 		virtual ~BlockState_I() = default;
 
@@ -41,7 +39,8 @@ namespace _2Real
 		BlockState_I& operator=( BlockState_I const& other ) = delete;
 		BlockState_I& operator=( BlockState_I && other ) = delete;
 
-		virtual BlockState getId() const = 0;
+		virtual bool operator==( const BlockState ) const = 0;
+		virtual std::shared_ptr< SignalResponse > nextAction( std::deque< std::shared_ptr< SignalResponse > > & ) = 0;
 
 		virtual std::shared_ptr< SignalResponse > onStartRunning() = 0;
 		virtual std::shared_ptr< SignalResponse > onStopRunning() = 0;

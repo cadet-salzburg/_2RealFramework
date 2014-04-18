@@ -16,6 +16,9 @@
 	limitations under the License.
 */
 
+#pragma warning( disable : 4996 )
+#pragma warning( disable : 4702 )
+
 #include "engine/_2RealInletImpl.h"
 #include "engine/_2RealIoSlotMetainfoImpl.h"
 #include "engine/_2RealBlockImpl.h"
@@ -97,7 +100,7 @@ namespace _2Real
 		return mParent.lock();
 	}
 
-	std::shared_ptr< MultiInletImpl > InletImpl::getParentInlet()
+	std::shared_ptr< const MultiInletImpl > InletImpl::getParentInlet() const
 	{
 		return mParentInlet.lock();
 	}
@@ -107,23 +110,42 @@ namespace _2Real
 		InSlot::update();
 	}
 
+	bool InletImpl::isLinked() const
+	{
+		return mDataConnection.connected();
+	}
+
+	void InletImpl::unlink()
+	{
+		mDataConnection.disconnect();
+		mRemoved( std::static_pointer_cast< DataSink_I >( shared_from_this() ) );
+	}
+
 	void InletImpl::receiveData( std::shared_ptr< const DataItem > data )
 	{
 		InSlot::setTmpValue( data );
-		mUpdateEvent.notify( shared_from_this() );
+		mValueUpdated( shared_from_this() );
 	}
 
 	void InletImpl::setData( DataItem data )
 	{
 		InSlot::setTmpValueExt( data );
-		mUpdateEvent.notify( shared_from_this() );
+		mValueUpdated( shared_from_this() );
 	}
 
-	std::shared_ptr< Link > InletImpl::linkTo( std::shared_ptr< DataSource_I > source )
+	void InletImpl::linkTo( std::shared_ptr< DataSource_I > source )
 	{
-		// inlet keeps tracks of it's links
-		// ? might be problematic if the load - save thing comes back ?
-		mLink.reset( new Link( source, std::static_pointer_cast< DataSink_I >( shared_from_this() ) ) );
-		return mLink;
+		mDataConnection = source->registerToUpdate( std::bind( &InletImpl::receiveData, this, std::placeholders::_1 ) );
+		//source->registerToRemoved();
+	}
+
+	boost::signals2::connection InletImpl::registerToValueUpdated( boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >::slot_type listener ) const
+	{
+		return mValueUpdated.connect( listener );
+	}
+
+	boost::signals2::connection InletImpl::registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSink_I > ) >::slot_type listener ) const
+	{
+		return mRemoved.connect( listener );
 	}
 }

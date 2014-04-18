@@ -21,39 +21,105 @@
 #include "engine/_2RealDataSink_I.h"
 #include "common/_2RealException.h"
 
+#pragma warning( disable : 4100 )
+
 namespace _2Real
 {
-	Link::Link( std::shared_ptr< DataSource_I > source, std::shared_ptr< DataSink_I > sink ) :
-		std::enable_shared_from_this< Link >(),
-		mSource( source ),
-		mSink( sink )
+	std::shared_ptr< Link > Link::createLink( std::shared_ptr< DataSink_I > sink, std::shared_ptr< DataSource_I > source )
 	{
-			// TODO: check datatypes of source & sink
-			source->registerToNewData( this, &Link::receiveData );
+		std::shared_ptr< Link > result( new Link );
+
+		// link listens to source removal & source data
+		result->linkTo( source );
+
+		// link listens to sink removal
+		result->mSinkRemovedConnection = sink->registerToRemoved( std::bind( &Link::sinkRemoved, result.get() ) );
+
+		// sink listens to link-as-source removal & link data
+		sink->linkTo( result );
+
+		// no-one listens to link-as-sink removal
+
+		return result;
 	}
 
-	Link::~Link()
+	void Link::linkTo( std::shared_ptr< DataSource_I > source )
 	{
-		mSource.lock()->unregisterFromNewData( this, &Link::receiveData );
-	}
-
-	bool Link::isValid() const
-	{
-		return ( mSource.lock() && mSink.lock() );
+		mDataConnection = source->registerToUpdate( std::bind( &Link::receiveData, this, std::placeholders::_1 ) );
+		mSourceRemovedConnection = source->registerToRemoved( std::bind( &Link::sourceRemoved, this ) );
 	}
 
 	void Link::receiveData( std::shared_ptr< const DataItem > data )
 	{
-		// TODO: auto conversion?
+		mDataSignal( data );
+	}
 
-		std::shared_ptr< DataSink_I > sink = mSink.lock();
-		if ( !sink.get() )
-		{
-			std::ostringstream msg;
-			msg << "data sink no longer exists" << std::endl;
-			throw NotFound( msg.str() );
-		}
+	void Link::sinkRemoved()
+	{
+		// sink: has removed itself from link-as-source
+		// does not need link-as-source removal signal
+		mSinkRemovedConnection.disconnect();
 
-		sink->receiveData( data );
+		// source: listens to nothing, anyway
+		// link-as-sink removal does not matter
+		mDataConnection.disconnect();
+		mSourceRemovedConnection.disconnect();
+
+		// collection: listens to link removal
+		// this causes the collection to drop the shared ptr
+		mUnlinkedSignal( shared_from_this() );
+	}
+
+	void Link::sourceRemoved()
+	{
+		// source: listens to nothing, anyway
+		// link-as-sink removal does not matter
+		mDataConnection.disconnect();
+		mSourceRemovedConnection.disconnect();
+
+		// sink: still listens to link-as-source
+		mSourceRemovedSignal( std::static_pointer_cast< DataSource_I >( shared_from_this() ) );
+		mSinkRemovedConnection.disconnect();
+
+		// collection: listens to link removal
+		// this causes the collection to drop the shared ptr
+		mUnlinkedSignal( shared_from_this() );
+	}
+
+	void Link::unlink()
+	{
+		// source: listens to nothing, anyway
+		// link-as-sink removal does not matter
+		mDataConnection.disconnect();
+		mSourceRemovedConnection.disconnect();
+
+		// sink: still listens to link-as-source
+		// this will be stopped now
+		mSourceRemovedSignal( std::static_pointer_cast< DataSource_I >( shared_from_this() ) );
+		mSinkRemovedConnection.disconnect();
+
+		// collection: listens to link removal
+		// this causes the collection to drop the shared ptr
+		mUnlinkedSignal( shared_from_this() );
+	}
+
+	boost::signals2::connection Link::registerToUpdate( boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >::slot_type listener ) const
+	{
+		return mDataSignal.connect( listener );
+	}
+
+	boost::signals2::connection Link::registerToLinkRemoved( boost::signals2::signal< void( std::shared_ptr< const Link > ) >::slot_type listener ) const
+	{
+		return mUnlinkedSignal.connect( listener );
+	}
+
+	boost::signals2::connection Link::registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSource_I > ) >::slot_type listener ) const
+	{
+		return mSourceRemovedSignal.connect( listener );
+	}
+
+	boost::signals2::connection Link::registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSink_I > ) >::slot_type listener ) const
+	{
+		return mSinkRemovedSignal.connect( listener );
 	}
 }

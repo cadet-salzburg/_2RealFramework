@@ -35,6 +35,12 @@ namespace _2Real
 			std::shared_ptr< Link > link = mImpl.lock();
 			return ( nullptr != link.get() );
 		}
+
+		void LinkHandle::destroyUnderlyingLink()
+		{
+			std::shared_ptr< Link > link = checkValidity< Link >( link, "link" );
+			link->unlink();
+		}
 	}
 }
 	

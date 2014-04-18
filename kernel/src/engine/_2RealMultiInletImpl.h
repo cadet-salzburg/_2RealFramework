@@ -21,7 +21,7 @@
 
 #include "common/_2RealStdIncludes.h"
 #include "engine/_2RealInletImpl_I.h"
-#include "common/_2RealEvent_T.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
@@ -47,6 +47,7 @@ namespace _2Real
 		std::deque< std::shared_ptr< InletImpl > >::size_type getSize() const;
 		bool isEmpty() const;
 		std::shared_ptr< InletImpl > operator[]( const uint32_t );
+		std::shared_ptr< const InletImpl > operator[]( const uint32_t ) const;
 		std::shared_ptr< InletImpl > add_front();
 		std::shared_ptr< InletImpl > add_back();
 
@@ -57,33 +58,8 @@ namespace _2Real
 		std::shared_ptr< BlockImpl >			getParent();
 		void									update();
 
-		template< typename TCallable >
-		void registerToSubinletAdded( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< InletImpl > ) )
-		{
-			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< InletImpl > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< InletImpl > >( callable, callback ) );
-			mInletAdded.addListener( listener );
-		}
-
-		template< typename TCallable >
-		void unregisterFromSubinletAdded( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< InletImpl > ) )
-		{
-			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< InletImpl > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< InletImpl > >( callable, callback ) );
-			mInletAdded.removeListener( listener );
-		}
-
-		template< typename TCallable >
-		void registerToSubinletRemoved( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< InletImpl > ) )
-		{
-			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< InletImpl > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< InletImpl > >( callable, callback ) );
-			mInletRemoved.addListener( listener );
-		}
-
-		template< typename TCallable >
-		void unregisterFromSubinletRemoved( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< InletImpl > ) )
-		{
-			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< InletImpl > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< InletImpl > >( callable, callback ) );
-			mInletRemoved.removeListener( listener );
-		}
+		boost::signals2::connection registerToSubinletAdded( boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >::slot_type ) const;
+		boost::signals2::connection registerToSubinletRemoved( boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >::slot_type ) const;
 
 	private:
 
@@ -91,13 +67,13 @@ namespace _2Real
 
 		std::weak_ptr< BlockImpl >						mParent;
 		std::weak_ptr< const IoSlotMetainfoImpl >		mMetainfo;
-		std::shared_ptr< const InstanceId >			mId;
+		std::shared_ptr< const InstanceId >				mId;
 
-		mutable std::mutex									mMutex;
-		std::deque< std::shared_ptr< InletImpl > >				mInlets;
+		mutable std::mutex								mMutex;
+		std::deque< std::shared_ptr< InletImpl > >		mInlets;
 
-		Event_T< std::shared_ptr< InletImpl > >					mInletAdded;
-		Event_T< std::shared_ptr< InletImpl > >					mInletRemoved;
+		mutable boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >	mSubinletAdded;
+		mutable boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >	mSubinletRemoved;
 
 	};
 

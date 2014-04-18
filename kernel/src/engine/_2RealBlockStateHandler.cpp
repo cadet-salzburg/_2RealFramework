@@ -22,22 +22,17 @@
 #include "engine/_2RealUpdateTrigger_I.h"
 #include "engine/_2RealBlockImpl.h"
 
+#include <boost/bind.hpp>
+
 namespace _2Real
 {
 	BlockStateHandler::BlockStateHandler( std::shared_ptr< ThreadpoolImpl_I > threads, std::shared_ptr< BlockIo > service ) :
 		mThreads( threads ),
-		mState( BlockState_I::create( BlockState::PRE_SETUP ) ),
+		mState( createBlock( BlockState::PRE_SETUP, nullptr ) ),
 		mResponse( nullptr ),
-		mUpdateTrigger( nullptr ),
 		mIsActionInProcess( false ),
 		mServiceObj( service ),
-		mId( threads->createId() ),
-		mSkippedCounter( 0 ),
-		mUpdatedCounter( 0 )
-	{
-	}
-
-	BlockStateHandler::~BlockStateHandler()
+		mId( threads->createId() )
 	{
 	}
 
@@ -48,46 +43,47 @@ namespace _2Real
 		carryOut( response );
 	}
 
-	std::future< BlockState > BlockStateHandler::destroy()
+	std::future< BlockResult > BlockStateHandler::destroy()
 	{
 		mMutex.lock();
 		std::shared_ptr< SignalResponse > response = mState->onEngineShutdownReceived();
 		return carryOut( response );
 	}
 
-	std::future< BlockState > BlockStateHandler::setup()
+	std::future< BlockResult > BlockStateHandler::setup()
 	{
 		mMutex.lock();
 		std::shared_ptr< SignalResponse > response = mState->onSetupSignalReceived();
 		return carryOut( response );
 	}
 
-	std::future< BlockState > BlockStateHandler::singlestep()
+	std::future< BlockResult > BlockStateHandler::singlestep()
 	{	
 		mMutex.lock();
 		std::shared_ptr< SignalResponse > response = mState->onSingleUpdateSignalReceived();
 		return carryOut( response );
 	}
 
-	std::future< BlockState > BlockStateHandler::shutdown()
+	std::future< BlockResult > BlockStateHandler::shutdown()
 	{
 		mMutex.lock();
 		std::shared_ptr< SignalResponse > response = mState->onShutdownSignalReceived();
 		return carryOut( response );
 	}
 
-	std::future< BlockState > BlockStateHandler::startRunning( std::shared_ptr< UpdateTrigger_I > trigger )
+	std::future< BlockResult > BlockStateHandler::startRunning( std::shared_ptr< UpdateTrigger_I > trigger )
 	{
 #ifdef _DEBUG
 		assert( trigger );
 #endif
 		mMutex.lock();
 		std::shared_ptr< SignalResponse > response = mState->onStartRunning();
-		response->updateTrigger = trigger; // store trigger for later
+		// store trigger for later, otherwise it's null
+		response->updateTrigger = trigger;
 		return carryOut( response );
 	}
 
-	std::future< BlockState > BlockStateHandler::stopRunning()
+	std::future< BlockResult > BlockStateHandler::stopRunning()
 	{
 		mMutex.lock();
 		std::shared_ptr< SignalResponse > response = mState->onStopRunning();
@@ -97,47 +93,16 @@ namespace _2Real
 	void BlockStateHandler::onActionComplete()
 	{
 		mMutex.lock();
-		// now there's definitely no more action in process
 		mIsActionInProcess = false;
-		// this is where the state change takes place
 		finalizeStateTransition();
 
-		// immediately process the next action
-		// ( this might be critical if an engine shutdown gets delayed inifitely ? )
-		// however, as it currently stands, the only other queued action is
-		// a 'stopRunning', which is a no-operation
 		if ( !mQueuedResponses.empty() )
 		{
-			mResponse = mQueuedResponses.front();
-			mQueuedResponses.pop_front();
-			// as of now, an action is in process
+			mResponse = mState->nextAction( mQueuedResponses );
+			assert( mResponse.get() );
 			mIsActionInProcess = true;
 			mMutex.unlock();
-
-			// now, there's all the time in the world enqueue the job
-			std::function< void() > job;
-			switch ( mResponse->action )
-			{
-			case BlockAction::DO_SETUP:
-				job = std::bind( &BlockIo::doSetup, mServiceObj.get() );
-				break;
-			case BlockAction::DO_UPDATE:
-				job = std::bind( &BlockIo::doUpdate, mServiceObj.get() );
-				break;
-			case BlockAction::DO_SHUTDOWN:
-				job = std::bind( &BlockIo::doShutdown, mServiceObj.get() );
-				break;
-			default:
-				job = std::bind( &BlockIo::doNothing, mServiceObj.get() );
-				break;
-			}
-
-			std::function< void() > callback = std::bind( &BlockStateHandler::onActionComplete, this );
-			std::shared_ptr< ThreadpoolImpl_I > threads = mThreads.lock();
-#ifdef _DEBUG
-			assert( threads );
-#endif
-			threads->enqueueJob( mId, job, callback );
+			enqueueJob();
 		}
 		else
 		{
@@ -145,133 +110,83 @@ namespace _2Real
 		}
 	}
 
-	std::future< BlockState > BlockStateHandler::carryOut( std::shared_ptr< SignalResponse > response )
+	std::future< BlockResult > BlockStateHandler::carryOut( std::shared_ptr< SignalResponse > response )
 	{
-		// there are 2 'states' ( action vs. no action ) at work here
-		// which i could have integrated into the state machine...
-		// however, i prefer the way it's currently done, for ease of debugging
-
-		// ... which might bite me in the ass just about now
-
 		if ( mIsActionInProcess )
 		{
-			// store for later, if the shouldWait flag is set
-			// else: immediately set the promise to the current state
-			// then unlock mutex & stop
-			if ( response->shouldWait )
+			if ( response->shouldBeQueued )
 				mQueuedResponses.push_back( response );
 			else
-			{
-				// store the amount of skipped updates
-				if ( response->action == BlockAction::DO_UPDATE && mState->getId() == BlockState::POST_SETUP_RUNNING )
-				{
-					++mSkippedCounter;
-				}
-
-				response->isFinished.set_value( mState->getId() );
-			}
+				// return 'failure'
+				response->result.set_value( BlockResult::IGNORED );
 
 			mMutex.unlock();
 		}
 		else
 		{
-			// keep the response around, since it holds the std::promise
 			mResponse = response;
-			// allright, now there's definitely an action in process
 			mIsActionInProcess = true;
-
-			// store the amount of executed updates
-			if ( response->action == BlockAction::DO_UPDATE && mState->getId() == BlockState::POST_SETUP_RUNNING )
-			{
-				++mUpdatedCounter;
-			}
-
 			mMutex.unlock();
 
-			// now, there's all the time in the world enqueue the job
-			std::function< void() > job;
-			switch ( mResponse->action )
-			{
-			case BlockAction::DO_SETUP:
-				job = std::bind( &BlockIo::doSetup, mServiceObj.get() );
-				break;
-			case BlockAction::DO_UPDATE:
-				job = std::bind( &BlockIo::doUpdate, mServiceObj.get() );
-				break;
-			case BlockAction::DO_SHUTDOWN:
-				job = std::bind( &BlockIo::doShutdown, mServiceObj.get() );
-				break;
-			default:
-				job = std::bind( &BlockIo::doNothing, mServiceObj.get() );
-				break;
-			}
-
-			// callback to the state machine
-			std::function< void() > callback = std::bind( &BlockStateHandler::onActionComplete, this );
-
-			// acquire threadpool & enqueue
-			std::shared_ptr< ThreadpoolImpl_I > threads = mThreads.lock();
-#ifdef _DEBUG
-			assert( threads );
-#endif
-			threads->enqueueJob( mId, job, callback );
+			enqueueJob();
 		}
 
-		return response->isFinished.get_future();
+		return response->result.get_future();
 	}
 
 	void BlockStateHandler::finalizeStateTransition()
 	{
-		// this function is called only when the mutex is locked
-		// it basically performs some signals registration / unregistration
-		BlockState current = mState->getId();
+		// change state if follow up state differs
 		BlockState next = mResponse->followupState;
+		if ( !mState->operator==( next ) )
+			mState = createBlock( next, mResponse );
 
-		if ( current == next && current == BlockState::POST_SETUP_RUNNING )
+		// return success
+		mResponse->result.set_value( BlockResult::CARRIED_OUT );
+		mResponse.reset();
+	}
+
+	void BlockStateHandler::enqueueJob()
+	{
+		std::function< void() > job;
+		switch ( mResponse->action )
 		{
-			// check if they're the same?
-
-			// need to handle this pretty much as if it were a signal coming in
-			bool wasAlreadyFulfilled = mUpdateTrigger->reset();
-
-			if ( wasAlreadyFulfilled )
-			{
-				// so now i'd have to do a new update;
-				// however, only queue if absolutely no other signals are stored ( only other signals are stops sigs )
-				if ( mQueuedResponses.empty() )
-				{
-					std::shared_ptr< SignalResponse > response( new SignalResponse );
-					response->action = BlockAction::DO_UPDATE;
-					response->followupState = BlockState::POST_SETUP_RUNNING;
-					response->shouldWait = true;
-					mQueuedResponses.push_back( response );
-				}
-			}
-		}
-		else
-		{
-			// if an update trigger is stored, reset ( receive no more update signals )
-			if ( mUpdateTrigger )
-			{
-				mUpdateTrigger->disable();		// disconnects from all inlets
-				std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< BlockStateHandler, void >( this, &BlockStateHandler::update ) );
-				mUpdateTrigger->unregisterFromUpdate( cb );
-				mUpdateTrigger.reset();
-			}
-
-			// register to new update trigger ( receive update signals )
-			if ( mResponse->updateTrigger )
-			{
-				mUpdateTrigger = mResponse->updateTrigger;
-				mUpdateTrigger->enable();
-				std::shared_ptr< AbstractCallback_T< void > > cb( new MemberCallback_T< BlockStateHandler, void >( this, &BlockStateHandler::update ) );
-				mUpdateTrigger->registerToUpdate( cb );
-			}
-
-			mState = BlockState_I::create( next );
+		case BlockAction::DO_SETUP:
+			job = std::bind( &BlockIo::doSetup, mServiceObj.get() );
+			break;
+		case BlockAction::DO_UPDATE:
+			job = std::bind( &BlockIo::doUpdate, mServiceObj.get() );
+			break;
+		case BlockAction::DO_SHUTDOWN:
+			job = std::bind( &BlockIo::doShutdown, mServiceObj.get() );
+			break;
+		default:
+			job = std::bind( &BlockIo::doNothing, mServiceObj.get() );
+			break;
 		}
 
-		mResponse->isFinished.set_value( next );
-		mResponse.reset();		// obj no longer needed
+		std::function< void() > callback = std::bind( &BlockStateHandler::onActionComplete, this );
+		std::shared_ptr< ThreadpoolImpl_I > threads = mThreads.lock();
+#ifdef _DEBUG
+			assert( threads );
+#endif
+		threads->enqueueJob( mId, job, callback );
+	}
+
+	std::shared_ptr< BlockState_I > BlockStateHandler::createBlock( const BlockState id, std::shared_ptr< SignalResponse > response )
+	{
+		switch ( id )
+		{
+		case BlockState::PRE_SETUP:
+			return std::shared_ptr< BlockState_I >( new PreSetupState( id ) );
+		case BlockState::POST_SETUP:
+			return std::shared_ptr< BlockState_I >( new PostSetupState( id ) );
+		case BlockState::POST_SETUP_RUNNING:
+			return std::shared_ptr< BlockState_I >( new PostSetupState_Running( id, response->updateTrigger->registerToUpdate( std::bind( &BlockStateHandler::update, this ) ) ) );
+		case BlockState::POST_SHUTDOWN:
+			return std::shared_ptr< BlockState_I >( new PostShutdownState( id ) );
+		default:
+			return std::shared_ptr< BlockState_I >();
+		}
 	}
 }

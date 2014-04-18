@@ -20,9 +20,9 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include "common/_2RealBoost.h"
 #include "engine/_2RealUpdateTrigger_I.h"
 
+#include "common/_2RealBoost.h"
 #include <boost/asio.hpp>
 #include <atomic>
 
@@ -41,20 +41,15 @@ namespace _2Real
 
 		void update();
 
-		void enable() {}
-		void disable() {}
-		bool reset() { return false; }
-
-		void registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > );
-		void unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > );
+		boost::signals2::connection registerToUpdate( boost::signals2::signal< void() >::slot_type ) const;
 
 	private:
 
-		uint64_t						mPeriod;
-		boost::asio::deadline_timer		mTimer;
-		bool							mShouldUpdate;
-		mutable std::mutex				mMutex;
-		Event_T< void >			mEvent;
+		uint64_t									mPeriod;
+		boost::asio::deadline_timer					mTimer;
+		bool										mShouldUpdate;
+		mutable std::mutex							mMutex;
+		mutable boost::signals2::signal< void() >	mReady;
 
 	};
 }

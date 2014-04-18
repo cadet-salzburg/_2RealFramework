@@ -28,50 +28,49 @@
 
 namespace _2Real
 {
-	class BundlePtrCmp : public std::unary_function< bool, std::shared_ptr< const BundleImpl > >
+	class BundlePtrCmp : public std::unary_function< bool, std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > >
 	{
 
 	public:
 
-		explicit BundlePtrCmp( std::shared_ptr< const BundleImpl > obj ) : mObj( obj )
+		explicit BundlePtrCmp( std::shared_ptr< const BundleImpl > obj ) : mBaseline( obj )
 		{
 		}
 
-		bool operator()( std::shared_ptr< const BundleImpl > other ) const
+		bool operator()( std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > other ) const
 		{
-			return mObj.get() == other.get();
+			return mBaseline.get() == other.second.get();
 		}
 
 	private:
 
-		std::shared_ptr< const BundleImpl > mObj;
+		std::shared_ptr< const BundleImpl > mBaseline;
 
 	};
 
-	class BundlePathCmp : public std::unary_function< bool, std::string >
+	class BundlePathCmp : public std::unary_function< bool, std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > >
 	{
 
 	public:
 
-		explicit BundlePathCmp( const Path path ) : mPath( path )
+		explicit BundlePathCmp( const Path path ) : mBaseline( path )
 		{
 		}
 
-		bool operator()( std::shared_ptr< const BundleImpl > bundle ) const
+		bool operator()( std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > other ) const
 		{
-			return mPath == bundle->getFilePath();
+			return mBaseline == other.second->getFilePath();
 		}
 
 	private:
 
-		Path mPath;
+		Path mBaseline;
 
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////
 
-	BundleCollection::BundleCollection( std::shared_ptr< TypeCollection > registry ) :
-		std::enable_shared_from_this< BundleCollection >()
+	BundleCollection::BundleCollection( std::shared_ptr< TypeCollection > registry )
 	{
 		updateBundleDirectory();
 	}
@@ -85,8 +84,8 @@ namespace _2Real
 	{
 		for ( auto it : mBundles )
 		{
-			it->unregisterFromUnload( this, &BundleCollection::bundleUnloaded );
-			it->unload( timeout );
+			it.first.disconnect();
+			it.second->unload( timeout );
 		}
 
 		mBundles.clear();
@@ -132,11 +131,11 @@ namespace _2Real
 
 		std::shared_ptr< BundleImpl > bundle = BundleImpl::createFromMetainfo( bundleMetainfo, lib, absPath );
 
-		bundle->registerToUnload( this, &BundleCollection::bundleUnloaded );
+		boost::signals2::connection con = bundle->registerToUnload( std::bind( &BundleCollection::bundleUnloaded, this, std::placeholders::_1 ) );
 
 		auto result = std::make_pair( bundle, bundleMetainfo );
 
-		mBundles.push_back( bundle );
+		mBundles.push_back( std::make_pair( con, bundle ) );
 		return result;
 	}
 

@@ -22,7 +22,7 @@
 #include "common/_2RealStdIncludes.h"
 
 #include <future>
-#include "common/_2RealBlockState.h"
+#include "common/_2RealBlockResult.h"
 
 #include "bundle/_2RealBlock.h"
 #include "engine/_2RealBlockAccess.h"
@@ -82,13 +82,13 @@ namespace _2Real
 
 		bool										isSingleton() const;
 
-		std::future< BlockState > setup();
-		std::future< BlockState > singlestep();
-		std::future< BlockState > shutdown();
+		std::future< BlockResult > setup();
+		std::future< BlockResult > singlestep();
+		std::future< BlockResult > shutdown();
 
-		std::future< BlockState > startUpdating();
-		std::future< BlockState > startUpdating( std::shared_ptr< UpdateTrigger_I > );
-		std::future< BlockState > stopUpdating();
+		std::future< BlockResult > startUpdating();
+		std::future< BlockResult > startUpdating( std::shared_ptr< UpdateTrigger_I > );
+		std::future< BlockResult > stopUpdating();
 
 		std::shared_ptr< BlockIo >		getBlockIo();
 		std::shared_ptr< UpdatePolicyImpl >	getUpdatePolicy();

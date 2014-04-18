@@ -25,6 +25,7 @@
 #include "common/_2RealBlockState.h"
 #include "common/_2RealBlockAction.h"
 #include "common/_2RealBlockResult.h"
+#include "common/_2RealBlockRequest.h"
 
 namespace _2Real
 {
@@ -32,18 +33,24 @@ namespace _2Real
 
 	struct SignalResponse
 	{
+		SignalResponse() :
+			request( BlockRequest::UNKNOWN ), action( BlockAction::DO_NOTHING ), followupState( BlockState::UNKNOWN ), shouldBeQueued( false ), result(), updateTrigger( nullptr )
+		{}
+
+		BlockRequest						request;
 		BlockAction							action;
 		BlockState							followupState;
-		bool								shouldWait;		// alternative: ignore
-		std::promise< BlockState >			isFinished;
+		bool								shouldBeQueued;
+		std::promise< BlockResult >			result;
 		std::shared_ptr< UpdateTrigger_I >	updateTrigger;
 
-		static std::shared_ptr< SignalResponse > makeResponse( const BlockAction action, const BlockState state, const bool wait )
+		static std::shared_ptr< SignalResponse > makeResponse( const BlockRequest req, const BlockAction action, const BlockState state, const bool queue )
 		{
 			std::shared_ptr< SignalResponse > response( new SignalResponse );
+			response->request = req;
 			response->action = action;
 			response->followupState = state;
-			response->shouldWait = wait;
+			response->shouldBeQueued = queue;
 			response->updateTrigger = nullptr;
 			return response;
 		}

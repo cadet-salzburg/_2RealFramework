@@ -110,7 +110,6 @@
     <ClCompile Include="..\..\src\common\_2RealException.cpp" />
     <ClCompile Include="..\..\src\common\_2RealInletPolicy.cpp" />
     <ClCompile Include="..\..\src\common\_2RealVersion.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealBlockState_I.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealBasicTypeMetainfoImpl.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealBlockImpl.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealBundleImpl.cpp">
@@ -120,6 +119,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealFifoThreadpool.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealLinkCollection.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealUniqueThreadpool.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealUpdatePolicyImpl.cpp" />
     <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp">
@@ -202,11 +202,10 @@
     <ClInclude Include="..\..\src\bundle\_2RealOutletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealParameterHandle.h" />
     <ClInclude Include="..\..\src\common\_2RealBlockAction.h" />
+    <ClInclude Include="..\..\src\common\_2RealBlockRequest.h" />
     <ClInclude Include="..\..\src\common\_2RealBlockResult.h" />
     <ClInclude Include="..\..\src\common\_2RealBlockState.h" />
     <ClInclude Include="..\..\src\common\_2RealBoost.h" />
-    <ClInclude Include="..\..\src\common\_2RealCallback.h" />
-    <ClInclude Include="..\..\src\common\_2RealCallback_T.h" />
     <ClInclude Include="..\..\src\common\_2RealConstants.h" />
     <ClInclude Include="..\..\src\common\_2RealCustomDataItem.h" />
     <ClInclude Include="..\..\src\common\_2RealData.h" />
@@ -214,7 +213,7 @@
     <ClInclude Include="..\..\src\common\_2RealDataItem.h" />
     <ClInclude Include="..\..\src\common\_2RealDeclarations.h" />
     <ClInclude Include="..\..\src\common\_2RealDefaultUpdatePolicy.h" />
-    <ClInclude Include="..\..\src\common\_2RealEvent_T.h" />
+    <ClInclude Include="..\..\src\common\_2RealSignals.h" />
     <ClInclude Include="..\..\src\common\_2RealException.h" />
     <ClInclude Include="..\..\src\common\_2RealInletPolicy.h" />
     <ClInclude Include="..\..\src\common\_2RealPath.h" />
@@ -230,6 +229,7 @@
     <ClInclude Include="..\..\src\engine\_2RealBlockLifetimeMgr_I.h" />
     <ClInclude Include="..\..\src\engine\_2RealBlockState_I.h" />
     <ClInclude Include="..\..\src\engine\_2RealBlockFactory_T.h" />
+    <ClInclude Include="..\..\src\engine\_2RealLinkCollection.h" />
     <ClInclude Include="..\..\src\engine\_2RealTypeMetainfoImpl_I.h" />
     <ClInclude Include="..\..\src\engine\_2RealBasicTypeMetainfoImpl.h" />
     <ClInclude Include="..\..\src\engine\_2RealBlockImpl.h" />

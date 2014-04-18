@@ -37,9 +37,10 @@ namespace _2Real
 
 			explicit ParameterHandle( std::shared_ptr< ParameterImpl > );
 
-			bool					isValid() const;
-
+			bool			isValid() const;
 			BlockHandle		getBlock();
+
+			// TODO set stuff
 
 		private:
 

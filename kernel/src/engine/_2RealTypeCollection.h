@@ -25,13 +25,13 @@ namespace _2Real
 {
 	class TypeMetainfoImpl_I;
 
-	class TypeCollection : public std::enable_shared_from_this< TypeCollection >
+	class TypeCollection
 	{
 
 	public:
 
 		TypeCollection() = default;
-		~TypeCollection() = default;
+		~TypeCollection();
 
 		TypeCollection( TypeCollection const& other ) = delete;
 		TypeCollection( TypeCollection && other ) = delete;

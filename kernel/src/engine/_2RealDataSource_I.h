@@ -21,7 +21,7 @@
 
 #include "common/_2RealStdIncludes.h"
 #include "common/_2RealData.h"
-#include "common/_2RealEvent_T.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
@@ -38,27 +38,8 @@ namespace _2Real
 		DataSource_I& operator=( DataSource_I const& other ) = delete;
 		DataSource_I& operator=( DataSource_I && other ) = delete;
 
-		template< typename TCallable >
-		void registerToNewData( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const DataItem > ) )
-		{
-			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const DataItem > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const DataItem > >( callable, callback ) );
-			mNewDataEvent.addListener( listener );
-		}
-
-		template< typename TCallable >
-		void unregisterFromNewData( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const DataItem > ) )
-		{
-			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const DataItem > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const DataItem > >( callable, callback ) );
-			mNewDataEvent.removeListener( listener );
-		}
-
-	protected:
-
-		void notify( std::shared_ptr< const DataItem > data) { mNewDataEvent.notify( data ); }
-
-	private:
-
-		Event_T< std::shared_ptr< const DataItem > >		mNewDataEvent;
+		virtual boost::signals2::connection registerToUpdate( boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >::slot_type ) const = 0;
+		virtual boost::signals2::connection registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSource_I > ) >::slot_type ) const = 0;
 
 	};
 }

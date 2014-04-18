@@ -239,9 +239,6 @@
     <ClCompile Include="..\..\src\app\_2RealThreadpoolHandle.cpp">
       <Filter>Source Files\app\user created objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealBlockState_I.cpp">
-      <Filter>Source Files\engine\interfaces</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealThreadpoolImpl_I.cpp">
       <Filter>Source Files\engine\interfaces</Filter>
     </ClCompile>
@@ -308,6 +305,9 @@
     <ClCompile Include="..\..\src\common\_2RealDataField.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealLinkCollection.cpp">
+      <Filter>Source Files\engine\collections</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\app\_2RealEngine.h">
@@ -362,9 +362,6 @@
       <Filter>Header Files\app\bundle exported objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealBundleHandle.h">
-      <Filter>Header Files\app\bundle exported objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h">
       <Filter>Header Files\app\bundle exported objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealBlockIo.h">
@@ -502,16 +499,10 @@
     <ClInclude Include="..\..\src\common\_2RealBoost.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\_2RealCallback_T.h">
-      <Filter>Header Files\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\common\_2RealConstants.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\common\_2RealDefaultUpdatePolicy.h">
-      <Filter>Header Files\common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\common\_2RealEvent_T.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\common\_2RealException.h">
@@ -549,9 +540,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\app\_2RealBlockIo.h">
       <Filter>Header Files\app\bundle exported objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\common\_2RealCallback.h">
-      <Filter>Header Files\common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\common\_2RealWeakPtrCheck.h">
       <Filter>Header Files\common</Filter>
@@ -618,6 +606,18 @@
     </ClInclude>
     <ClInclude Include="..\..\src\common\_2RealDataField.h">
       <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealSignals.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealBlockRequest.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app\_2RealUpdatePolicyHandle.h">
+      <Filter>Header Files\app\bundle exported objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\engine\_2RealLinkCollection.h">
+      <Filter>Header Files\engine\collections</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

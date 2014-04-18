@@ -21,27 +21,73 @@
 
 namespace _2Real
 {
+	std::shared_ptr< SignalResponse > PreSetupState::nextAction( std::deque< std::shared_ptr< SignalResponse > > &responses )
+	{
+		if ( responses.empty() ) return nullptr;
+
+		struct PrioritySort
+		{
+			static uint8_t getPriority( const BlockRequest r )
+			{
+				switch ( r )
+				{
+				case BlockRequest::SHUTDOWN:
+					return 0;
+				default:
+					return 1;
+				}
+			}
+
+			bool operator()( std::shared_ptr< SignalResponse > a, std::shared_ptr< SignalResponse > b ) const
+			{
+				return getPriority( a->request ) < getPriority( b->request );
+			}
+		};
+
+		std::stable_sort( responses.begin(), responses.end(), PrioritySort() );
+
+		std::shared_ptr< SignalResponse > response;
+		if ( responses.front()->request == BlockRequest::SHUTDOWN )
+		{
+			response = responses.front();
+			responses.pop_front();
+			response->action = BlockAction::DO_NOTHING;
+			response->followupState = BlockState::POST_SHUTDOWN;
+			response->shouldBeQueued = false;
+		}
+
+		for ( auto it : responses )
+			it->result.set_value( BlockResult::IGNORED );
+		responses.clear();
+
+		return response;
+	}
+
 	PreSetupState::PreSetupState( const BlockState state ) :
 		mId( state )
 	{
+	}
+
+	bool PreSetupState::operator==( const BlockState state ) const
+	{
+		return mId == state;
 	}
 
 // ----- loop
 
 	std::shared_ptr< SignalResponse > PreSetupState::onStartRunning()
 	{
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
+		return SignalResponse::makeResponse( BlockRequest::START, BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
 	}
 
 	std::shared_ptr< SignalResponse > PreSetupState::onStopRunning()
 	{	
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
+		return SignalResponse::makeResponse( BlockRequest::STOP, BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
 	}
 
 	std::shared_ptr< SignalResponse > PreSetupState::onUpdateSignalReceived()
 	{
-		assert( NULL );
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
+		return SignalResponse::makeResponse( BlockRequest::UPDATE, BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
 	}
 
 // ----- user input
@@ -49,25 +95,26 @@ namespace _2Real
 	std::shared_ptr< SignalResponse > PreSetupState::onSetupSignalReceived()
 	{	
 		// valid -> post setup state
-		return SignalResponse::makeResponse( BlockAction::DO_SETUP, BlockState::POST_SETUP, false );
+		// don't queue, multiple setups should be ignored
+		return SignalResponse::makeResponse( BlockRequest::SETUP, BlockAction::DO_SETUP, BlockState::POST_SETUP, false );
 	}
 
 	std::shared_ptr< SignalResponse > PreSetupState::onSingleUpdateSignalReceived()
 	{
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
+		return SignalResponse::makeResponse( BlockRequest::SINGLESTEP, BlockAction::DO_NOTHING, BlockState::PRE_SETUP, false );
 	}
 
 	std::shared_ptr< SignalResponse > PreSetupState::onShutdownSignalReceived()
 	{
-		// no setup -> no shutdown needed
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
+		// no setup -> no shutdown needed: action = noop
+		return SignalResponse::makeResponse( BlockRequest::SHUTDOWN, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
 	}
 
 // ----- shutdown
 
 	std::shared_ptr< SignalResponse > PreSetupState::onEngineShutdownReceived()
 	{
-		// no setup -> no shutdown needed
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
+		// no setup -> no shutdown needed: action = noop
+		return SignalResponse::makeResponse( BlockRequest::SHUTDOWN, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, true );
 	}
 }

@@ -33,6 +33,33 @@
 
 #include "_2RealApplication.h"
 
+void printBasicTypeMetainfo( _2Real::app::TypeMetainfo const& );
+void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& );
+
+void printBasicTypeMetainfo( _2Real::app::TypeMetainfo const& meta )
+{
+	assert( meta.isValid() );
+	std::cout << "basic type " << meta.getName() << std::endl;
+}
+
+void printCustomTypeMetainfo( _2Real::app::CustomTypeMetainfo const& meta )
+{
+	assert( meta.isValid() );
+
+	std::cout << "custom type " << meta.getName() << std::endl;
+	std::cout << meta.getDescription() << std::endl;
+
+	auto fields = meta.getDataFields();
+	for ( auto it : fields )
+	{
+		std::cout << "has field " << it.first << std::endl;
+		if ( it.second->isBasicType() )
+			printBasicTypeMetainfo( *( static_cast< const _2Real::app::TypeMetainfo * >( it.second.get() ) ) );
+		else
+			printCustomTypeMetainfo( *( static_cast< const _2Real::app::CustomTypeMetainfo * >( it.second.get() ) ) );
+	}
+}
+
 void handleFuture( std::future< _2Real::BlockResult > &obj, std::string const& info = "" )
 {
 	obj.wait();
@@ -54,13 +81,11 @@ int main( int argc, char *argv[] )
 	{
 		_2Real::app::Engine testEngine;
 
-		std::cout << "loading bundle" << std::endl;
-		auto loadedBundle = testEngine.loadBundle( "TestBundle_BasicBlocks" );
-		std::cout << "bundle loaded" << std::endl;
+		auto loadedBundle = testEngine.loadBundle( "TestBundle_BasicBlocksAndCustomTypes" );
 
 	// -------print the block metainfo---------
 
-		_2Real::app::BundleMetainfo bundleinfo = loadedBundle.second;
+		auto bundleinfo = loadedBundle.second;
 
 		std::cout << "basic bundle info" << std::endl;
 		std::cout << "description " << bundleinfo.getDescription() << std::endl;
@@ -69,14 +94,27 @@ int main( int argc, char *argv[] )
 		std::cout << "contact " << bundleinfo.getContact() << std::endl;
 		std::cout << "version " << bundleinfo.getVersion() << std::endl;
 
-		std::vector< _2Real::app::BlockMetainfo > blockinfos = bundleinfo.getExportedBlocks();
-		_2Real::app::BlockMetainfo blockinfo = blockinfos.front();
+		std::cout << std::endl;
+
+		// i know that these are custom types, so no need for casting around
+		auto typeinfos = bundleinfo.getExportedTypes();
+		std::cout << "number of exported types : " << typeinfos.size() << std::endl;
+		if ( !typeinfos.empty() ) std::cout << "--------------------------------" << std::endl;
+		for ( auto it : typeinfos )
+		{
+			printCustomTypeMetainfo( it );
+			std::cout << "--------------------------------" << std::endl;
+		}
+
+		std::cout << std::endl;
+
+		auto blockinfos = bundleinfo.getExportedBlocks();
 		std::cout << "exported blocks " << blockinfos.size() << std::endl;
 		for ( auto it : blockinfos )
 		{
 			std::cout << "\t" << it.getName() << std::endl;
 			std::cout << "\t" << it.getDescription() << std::endl;
-			std::vector< std::string > dependencies = it.getDependenciesByName();
+			auto dependencies = it.getDependenciesByName();
 			std::cout << "\tdependencies\t";
 			for ( auto it : dependencies ) std::cout << it << " ";
 			std::cout << std::endl;
@@ -94,7 +132,6 @@ int main( int argc, char *argv[] )
 			}
 
 			std::vector< _2Real::app::OutletMetainfo > outletinfos = it.getOutlets();
-
 			std::cout << "\toutlets "  << outletinfos.size() << std::endl;
 			for ( auto it : outletinfos )
 			{
@@ -105,7 +142,6 @@ int main( int argc, char *argv[] )
 			}
 
 			std::vector< _2Real::app::ParameterMetainfo > paraminfos = it.getParameters();
-
 			std::cout << "\tparameters " << paraminfos.size() << std::endl;
 			for ( auto it : paraminfos )
 			{
@@ -116,36 +152,57 @@ int main( int argc, char *argv[] )
 			}
 		}
 
-		//// -------create block instances---------
+		// -------create block instances---------
 
-		_2Real::app::TimerHandle timer = testEngine.createTimer( 5.0 );
-		_2Real::app::ThreadpoolHandle threadpool = testEngine.createThreadpool( _2Real::ThreadpoolPolicy::FIFO );
+		auto threadpool = testEngine.createThreadpool( _2Real::ThreadpoolPolicy::FIFO );
+		auto timer = testEngine.createTimer( 0.1 );
 
-		_2Real::app::BundleHandle bundle = loadedBundle.first;
+		auto counterinfo = bundleinfo.getExportedBlock( "counter" );
+		auto incinletinfo = counterinfo.getInlet( "increment" );
+		auto msginletinfo = counterinfo.getInlet( "stringy" );
+		auto multiinletinfo = counterinfo.getInlet( "multi" );
 
-		auto aCounter = bundle.createBlock( "counterBlock", threadpool, std::vector< _2Real::app::BlockHandle >() );
-		auto aCounterIo = aCounter.getBlockIo();
-		auto anIncInlet = std::dynamic_pointer_cast< _2Real::app::InletHandle >( aCounterIo.mInlets[ 0 ] );
-		auto anInitParam = aCounterIo.mParameters[ 0 ];
+		struct CounterBlock
+		{
+			explicit CounterBlock( _2Real::app::BlockHandle b ) : block( b )
+			{
+				io = block.getBlockIo();
+				inc = std::static_pointer_cast< _2Real::app::InletHandle >( io.mInlets[ 0 ] );
+				text = std::static_pointer_cast< _2Real::app::InletHandle >( io.mInlets[ 1 ] );
+				multi = std::static_pointer_cast< _2Real::app::MultiInletHandle >( io.mInlets[ 2 ] );
+				value = io.mOutlets[ 0 ];
+				msg = io.mOutlets[ 1 ];
+				test = io.mOutlets[ 2 ];
+				init = io.mParameters[ 0 ];
+			}
 
-		auto otherCounter = bundle.createBlock( "counterBlock", threadpool, std::vector< _2Real::app::BlockHandle >() );
-		auto otherCounterIo = otherCounter.getBlockIo();
-		auto otherIncInlet = std::dynamic_pointer_cast< _2Real::app::InletHandle >( otherCounterIo.mInlets[ 0 ] );
-		auto otherInitParam = otherCounterIo.mParameters[ 0 ];
+			_2Real::app::BlockHandle		block;
+			_2Real::app::BlockIo			io;
 
-		{	
-			std::future< _2Real::BlockResult > setup = aCounter.setup();
+			std::shared_ptr< _2Real::app::InletHandle >			inc;
+			std::shared_ptr< _2Real::app::InletHandle >			text;
+			std::shared_ptr< _2Real::app::MultiInletHandle >	multi;
+			std::shared_ptr< _2Real::app::OutletHandle >		value;
+			std::shared_ptr< _2Real::app::OutletHandle >		msg;
+			std::shared_ptr< _2Real::app::OutletHandle >		test;
+			std::shared_ptr< _2Real::app::ParameterHandle >		init;
+		};
+
+		auto bundle = loadedBundle.first;
+		CounterBlock counterA( loadedBundle.first.createBlock( "counter", threadpool, std::vector< _2Real::app::BlockHandle >() ) );
+		CounterBlock counterB( loadedBundle.first.createBlock( "counter", threadpool, std::vector< _2Real::app::BlockHandle >() ) );
+
+		{
+			std::future< _2Real::BlockResult > setup = counterA.block.setup();
 			handleFuture( setup );
-			std::future< _2Real::BlockResult > start = aCounter.startUpdating( timer );
-			handleFuture( start );
 		}
 
-		{	
-			std::future< _2Real::BlockResult > setup = otherCounter.setup();
+		{
+			std::future< _2Real::BlockResult > setup = counterB.block.setup();
 			handleFuture( setup );
-			std::future< _2Real::BlockResult > start = otherCounter.startUpdating( timer );
-			handleFuture( start );
 		}
+
+		auto link = testEngine.link( *counterB.text.get(), *counterA.msg.get() );
 
 		while( 1 )
 		{
@@ -156,27 +213,47 @@ int main( int argc, char *argv[] )
 			std::getline( std::cin, line, lineEnd );
 			if ( line == "q" )
 				break;
-			else if ( line == "stop" )
+			else if ( line == "start A" )
 			{
-				timer.stop();
+				std::future< _2Real::BlockResult > start = counterA.block.startUpdating( timer );
+				handleFuture( start );
+			}
+			else if ( line == "start B" )
+			{
+				std::future< _2Real::BlockResult > start = counterB.block.startUpdating();
+				handleFuture( start );
 			}
 			else if ( line == "start" )
 			{
 				timer.start();
 			}
+			else if ( line == "stop A" )
+			{
+				std::future< _2Real::BlockResult > stop = counterA.block.stopUpdating();
+				handleFuture( stop );
+			}
+			else if ( line == "stop B" )
+			{
+				std::future< _2Real::BlockResult > stop = counterB.block.stopUpdating();
+				handleFuture( stop );
+			}
+			else if ( line == "stop" )
+			{
+				timer.stop();
+			}
 		}
 
 		{
-			std::future< _2Real::BlockResult > stop = aCounter.stopUpdating();
+			std::future< _2Real::BlockResult > stop = counterA.block.stopUpdating();
 			handleFuture( stop );
-			std::future< _2Real::BlockResult > shutdown = aCounter.shutdown();
+			std::future< _2Real::BlockResult > shutdown = counterA.block.shutdown();
 			handleFuture( shutdown );
 		}
 
 		{
-			std::future< _2Real::BlockResult > stop = otherCounter.stopUpdating();
+			std::future< _2Real::BlockResult > stop = counterB.block.stopUpdating();
 			handleFuture( stop );
-			std::future< _2Real::BlockResult > shutdown = otherCounter.shutdown();
+			std::future< _2Real::BlockResult > shutdown = counterB.block.shutdown();
 			handleFuture( shutdown );
 		}
 
@@ -226,8 +303,6 @@ int main( int argc, char *argv[] )
 		std::getline( std::cin, line, lineEnd );
 		if ( line == "q" )
 			break;
-		else
-			std::cout << "doh" << std::endl;
 	}
 
 	return 0;

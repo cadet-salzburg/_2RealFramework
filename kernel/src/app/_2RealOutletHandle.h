@@ -23,7 +23,6 @@
 namespace _2Real
 {
 	class OutletImpl;
-	class DataSource_I;
 
 	namespace app
 	{
@@ -36,12 +35,13 @@ namespace _2Real
 
 			explicit OutletHandle( std::shared_ptr< OutletImpl > );
 
-			bool					isValid() const;
-			BlockHandle		getBlock();
-
-			operator std::shared_ptr< DataSource_I > ();
+			bool				isValid() const;
+			BlockHandle			getBlock();
 
 		private:
+
+			friend class InletHandle;
+			friend class Engine;
 
 			std::weak_ptr< OutletImpl >		mImpl;
 

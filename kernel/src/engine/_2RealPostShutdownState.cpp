@@ -21,50 +21,66 @@
 
 namespace _2Real
 {
+	std::shared_ptr< SignalResponse > PostShutdownState::nextAction( std::deque< std::shared_ptr< SignalResponse > > &responses )
+	{
+		if ( responses.empty() ) return nullptr;
+
+		std::shared_ptr< SignalResponse > response;
+		for ( auto it : responses )
+			it->result.set_value( BlockResult::IGNORED );
+		responses.clear();
+		return response;
+	}
+
 	PostShutdownState::PostShutdownState( const BlockState state ) :
 		mId( state )
 	{
+	}
+
+	bool PostShutdownState::operator==( const BlockState state ) const
+	{
+		return mId == state;
 	}
 
 // ----- loop
 
 	std::shared_ptr< SignalResponse > PostShutdownState::onStartRunning()
 	{
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+		return SignalResponse::makeResponse( BlockRequest::START, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
 	}
 
 	std::shared_ptr< SignalResponse > PostShutdownState::onStopRunning()
 	{	
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+		return SignalResponse::makeResponse( BlockRequest::STOP, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
 	}
 
 	std::shared_ptr< SignalResponse > PostShutdownState::onUpdateSignalReceived()
 	{
 		assert( NULL );
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+		return SignalResponse::makeResponse( BlockRequest::UPDATE, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
 	}
 
 // ----- user input
 
 	std::shared_ptr< SignalResponse > PostShutdownState::onSetupSignalReceived()
 	{	
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+		return SignalResponse::makeResponse( BlockRequest::SETUP, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
 	}
 
 	std::shared_ptr< SignalResponse > PostShutdownState::onSingleUpdateSignalReceived()
 	{
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+		return SignalResponse::makeResponse( BlockRequest::SINGLESTEP, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
 	}
 
 	std::shared_ptr< SignalResponse > PostShutdownState::onShutdownSignalReceived()
 	{
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+		return SignalResponse::makeResponse( BlockRequest::SHUTDOWN, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
 	}
 
 // ----- shutdown
 
 	std::shared_ptr< SignalResponse > PostShutdownState::onEngineShutdownReceived()
 	{
-		return SignalResponse::makeResponse( BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
+		return SignalResponse::makeResponse( BlockRequest::SHUTDOWN, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
 	}
 }

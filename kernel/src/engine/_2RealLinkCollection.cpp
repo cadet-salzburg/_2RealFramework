@@ -17,98 +17,66 @@
 	limitations under the License.
 */
 
-#include "helpers/_2RealBoost.h"
-#include "helpers/_2RealException.h"
-#include "helpers/_2RealConstants.h"
-
-#include "engine/_2RealBundle.h"
-#include "engine/_2RealBundleCollection.h"
-
-#include <boost/log/sources/basic_logger.hpp>
+#include "engine/_2RealLink.h"
+#include "engine/_2RealInletImpl.h"
+#include "engine/_2RealOutletImpl.h"
+#include "engine/_2RealLinkCollection.h"
 
 namespace _2Real
 {
-	BundleCollection::BundleCollection( std::shared_ptr< TypeRegistry > registry, std::shared_ptr< Threadpool > ded, std::shared_ptr< Threadpool > threads ) :
-		std::enable_shared_from_this< BundleCollection >(),
-		mBundleImporter( registry ),
-		mThreadsDedicated( ded ),
-		mThreads( threads )
+	class LinkCmp : public std::unary_function< bool, std::pair< boost::signals2::connection, std::shared_ptr< Link > > >
 	{
-		updateBundleDirectory();
-	}
 
-	BundleCollection::~BundleCollection()
-	{
-		clear( 1000 );
-	}
+	public:
 
-	void BundleCollection::clear( const unsigned long timeout )
-	{
-		for ( auto it = mBundles.begin(); it != mBundles.end(); )
+		explicit LinkCmp( std::shared_ptr< const Link > link ) : mBaseline( link )
 		{
-			std::cout << "clearing bundle " << it->first.string() << std::endl;
-			
-			it->second->unregisterFromUnload( this, &BundleCollection::bundleUnloaded );
-
-			/*
-			*	kills blocks
-			*/
-			it->second->unload( timeout );
-
-			/*
-			*	calls dtor, removes exported service & types, deletes bundle metainfo
-			*/
-			_2Real::Path id = it->first;
-			it = mBundles.erase( it );
-
-			/*
-			*	unloads dll
-			*/
-			mBundleImporter.unimportLibrary( id );
-		}
-	}
-
-	Path const& BundleCollection::getBundleDirectory() const
-	{
-		return mBundleDirectory;
-	}
-
-	void BundleCollection::updateBundleDirectory()
-	{
-		char * dir = std::getenv( _2Real::Constants::BundleEnvName.c_str() );
-		if ( nullptr != dir )
-			mBundleDirectory = Path( dir );
-
-		std::ostringstream msg;
-		msg << "---- bundle directory: " << mBundleDirectory.string() << " ----";
-		std::cout << msg.str() << std::endl;
-	}
-
-	std::shared_ptr< Bundle > BundleCollection::loadBundle( Path const& path )
-	{
-		Path absPath = mBundleDirectory / path;
-
-		if ( mBundleImporter.isLibraryLoaded( absPath ) )
-		{
-			std::ostringstream msg;
-			msg << "shared library " << absPath.string() << " is already loaded";
-			throw AlreadyExistsException( msg.str() );
 		}
 
-		std::shared_ptr< const SharedLibraryMetainfo > info = mBundleImporter.importLibrary( absPath );
-		std::shared_ptr< Bundle > bundle( new Bundle( shared_from_this(), info ) );
-		bundle->registerToUnload( this, &BundleCollection::bundleUnloaded );
-		bundle->init();
-		mBundles[ absPath ] = bundle;
-		return bundle;
-	}
+		bool operator()( const std::pair< boost::signals2::connection, std::shared_ptr< Link > > other ) const
+		{
+			return mBaseline.get() == other.second.get();
+		}
 
-	void BundleCollection::bundleUnloaded( std::shared_ptr< const Bundle > bundle )
+	private:
+
+		std::shared_ptr< const Link > mBaseline;
+
+	};
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	LinkCollection::~LinkCollection()
 	{
-		auto it = mBundles.find( bundle->getFilePath() );
-		if ( it != mBundles.end() )
-			mBundles.erase( it );
-		mBundleImporter.unimportLibrary( bundle->getFilePath() );
+		clear();
 	}
 
+	void LinkCollection::clear()
+	{
+		for ( auto &it : mLinks )
+			it.first.disconnect();
+
+		mLinks.clear();
+	}
+
+	std::shared_ptr< Link > LinkCollection::createLink( std::shared_ptr< InletImpl > inlet, std::shared_ptr< OutletImpl > outlet )
+	{
+		auto sink = std::static_pointer_cast< DataSink_I >( inlet );
+		auto source = std::static_pointer_cast< DataSource_I >( outlet );
+		std::shared_ptr< Link > link = Link::createLink( sink, source );
+
+		auto connection = link->registerToLinkRemoved( std::bind( &LinkCollection::linkRemoved, this, std::placeholders::_1 ) );
+		mLinks.push_back( std::make_pair( connection, link ) );
+		return link;
+	}
+
+	void LinkCollection::linkRemoved( std::shared_ptr< const Link > link )
+	{
+		auto it = std::find_if( mLinks.begin(), mLinks.end(), LinkCmp( link ) );
+		if ( it != mLinks.end() )
+		{
+			it->first.disconnect();
+			mLinks.erase( it );
+		}
+	}
 }

@@ -34,8 +34,7 @@ namespace _2Real
 			explicit LinkHandle( std::shared_ptr< Link > );
 
 			bool isValid() const;
-			void setActive( const bool );
-			bool isActive() const;
+			void destroyUnderlyingLink();
 
 		private:
 

@@ -31,6 +31,8 @@ namespace _2Real
 
 		PostSetupState( const BlockState );
 
+		bool operator==( const BlockState ) const;
+
 		std::shared_ptr< SignalResponse > onStartRunning() override;
 		std::shared_ptr< SignalResponse > onStopRunning() override;
 		std::shared_ptr< SignalResponse > onUpdateSignalReceived() override;
@@ -39,7 +41,7 @@ namespace _2Real
 		std::shared_ptr< SignalResponse > onShutdownSignalReceived() override;
 		std::shared_ptr< SignalResponse > onEngineShutdownReceived() override;
 
-		BlockState getId() const { return mId; }
+		std::shared_ptr< SignalResponse > nextAction( std::deque< std::shared_ptr< SignalResponse > > & );
 
 	private:
 

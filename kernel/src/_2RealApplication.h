@@ -36,6 +36,7 @@
 
 #include "app/_2RealTimerHandle.h"
 #include "app/_2RealThreadpoolHandle.h"
+#include "app/_2RealLinkHandle.h"
 
 #include "app/_2RealBundleMetainfo.h"
 #include "app/_2RealBlockMetainfo.h"

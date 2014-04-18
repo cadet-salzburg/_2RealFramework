@@ -19,7 +19,7 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include "common/_2RealBlockState.h"
+#include "common/_2RealBlockResult.h"
 
 namespace _2Real
 {
@@ -42,12 +42,12 @@ namespace _2Real
 			bool							isValid() const;
 			BundleHandle					getBundle();
 
-			std::future< BlockState >		setup();
-			std::future< BlockState >		singlestep();
-			std::future< BlockState >		shutdown();
-			std::future< BlockState >		startUpdating( TimerHandle );
-			std::future< BlockState >		startUpdating();
-			std::future< BlockState >		stopUpdating();
+			std::future< BlockResult >		setup();
+			std::future< BlockResult >		singlestep();
+			std::future< BlockResult >		shutdown();
+			std::future< BlockResult >		startUpdating( TimerHandle );
+			std::future< BlockResult >		startUpdating();
+			std::future< BlockResult >		stopUpdating();
 
 			UpdatePolicyHandle				getUpdatePolicy();
 

@@ -16,6 +16,9 @@
 	limitations under the License.
 */
 
+#pragma warning( disable : 4996 )
+#pragma warning( disable : 4702 )
+
 #include "engine/_2RealTimerImpl.h"
 
 #include <boost/bind.hpp>
@@ -61,7 +64,7 @@ namespace _2Real
 		mMutex.lock();
 		if ( mShouldUpdate )
 		{
-			mEvent.notify();
+			mReady();
 			mMutex.unlock();
 
 			mTimer.expires_at( mTimer.expires_at() + boost::posix_time::milliseconds( mPeriod ) );
@@ -71,14 +74,9 @@ namespace _2Real
 			mMutex.unlock();
 	}
 
-	void TimerImpl::registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
+	boost::signals2::connection TimerImpl::registerToUpdate( boost::signals2::signal< void() >::slot_type listener ) const
 	{
-		mEvent.addListener( cb );
-	}
-
-	void TimerImpl::unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
-	{
-		mEvent.removeListener( cb );
+		return mReady.connect( listener );
 	}
 
 }

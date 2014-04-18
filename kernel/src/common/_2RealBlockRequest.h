@@ -1,6 +1,7 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
+
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,20 +23,5 @@
 
 namespace _2Real
 {
-	namespace bundle
-	{
-		class Block;
-		class BlockIo;
-	}
-
-	class BlockFactory_I
-	{
-
-	public:
-
-		virtual ~BlockFactory_I() = default;
-
-		virtual std::shared_ptr< bundle::Block > create( bundle::BlockIo const&, std::vector< std::shared_ptr< bundle::Block > > const& ) const = 0;
-	
-	};
+	enum class BlockRequest : uint8_t { SETUP, SHUTDOWN, START, STOP, SINGLESTEP, UPDATE, UNKNOWN };
 }

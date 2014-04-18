@@ -29,7 +29,7 @@ namespace _2Real
 {
 	class TimerImpl;
 
-	class TimerCollection : public std::enable_shared_from_this< TimerCollection >
+	class TimerCollection
 	{
 	
 	public:

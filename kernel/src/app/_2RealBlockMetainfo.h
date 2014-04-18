@@ -27,7 +27,6 @@ namespace _2Real
 
 	namespace app
 	{
-
 		class BlockMetainfo
 		{
 
@@ -35,18 +34,40 @@ namespace _2Real
 
 			explicit BlockMetainfo( std::shared_ptr< const BlockMetainfoImpl > );
 
+			/*
+			*	block metainfo is only valid as long as the dll stays loaded
+			*	@return:	true if the handle is still valid			
+			*/
 			bool			isValid() const;
 
-			bool			isSingleton() const;
+			/*
+			*	@return:	the export name
+			*/
 			std::string		getName() const;
+
+			/*
+			*	@return:	the description
+			*/
 			std::string		getDescription() const;
 
+			/*
+			*	@return:	the names of all other blocks that this block is dependent on
+			*				the user is responsible for creating those first
+			*				( blocks can only depend on other blocks exported by the same dll )
+			*/
 			std::vector< std::string >			getDependenciesByName() const;
 
+			/*
+			*	@ return:	all io slots of a particular type
+			*				in the same order they were declared @dll export
+			*/
 			std::vector< InletMetainfo >		getInlets() const;
 			std::vector< OutletMetainfo >		getOutlets() const;
 			std::vector< ParameterMetainfo >	getParameters() const;
 
+			/*
+			*	@ return:	metainfo of an io slot
+			*/
 			InletMetainfo		getInlet( std::string const& );
 			OutletMetainfo		getOutlet( std::string const& );
 			ParameterMetainfo	getParameter( std::string const& );

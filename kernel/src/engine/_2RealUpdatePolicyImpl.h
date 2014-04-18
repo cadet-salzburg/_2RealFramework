@@ -41,6 +41,24 @@ namespace _2Real
 
 	public:
 
+		class InletPolicy
+		{
+		public:
+			std::shared_ptr< const InletImpl_I >		mInlet;
+			bool										mWasUpdated;
+			SubinletPolicy								mSubInletPolicy;
+			std::vector< InletPolicy >					mSubInlets;
+		};
+
+		struct ConnectionInfo
+		{
+			std::shared_ptr< const InletImpl_I >		mInlet;
+			boost::signals2::connection					mAddedConnection;
+			boost::signals2::connection					mRemovedConnection;
+			boost::signals2::connection					mUpdatedConnection;
+			std::vector< ConnectionInfo >				mSubinlets;
+		};
+
 		static std::shared_ptr< UpdatePolicyImpl > createFromMetainfo( std::shared_ptr< BlockImpl >, std::shared_ptr< const UpdatePolicyMetainfoImpl >, std::vector< std::shared_ptr< InletImpl_I > > const& );
 
 		UpdatePolicyImpl() = delete;
@@ -53,55 +71,28 @@ namespace _2Real
 
 		void set( const DefaultUpdatePolicy );
 
-		void inletUpdated( std::shared_ptr< InletImpl > );
-		void subinletAdded( std::shared_ptr< InletImpl > );
-		void subinletRemoved( std::shared_ptr< InletImpl > );
-
-		void disable();
-		void enable();
-		bool reset();
+		void inletUpdated( std::shared_ptr< const InletImpl > );
+		void subinletAdded( std::shared_ptr< const InletImpl > );
+		void subinletRemoved( std::shared_ptr< const InletImpl > );
 
 		std::shared_ptr< const InstanceId > getId() const;
 		std::shared_ptr< BlockImpl > getParent();
 
-		void registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > );
-		void unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > );
+		boost::signals2::connection registerToUpdate( boost::signals2::signal< void() >::slot_type ) const;
 
 	private:
 
 		UpdatePolicyImpl( std::shared_ptr< BlockImpl >, std::shared_ptr< const UpdatePolicyMetainfoImpl >, std::shared_ptr< const InstanceId > );
 
-		class InletPolicy
-		{
-		public:
-			std::shared_ptr< InletImpl_I >		mInlet;
-			bool									mWasUpdated;
-			std::vector< InletPolicy >				mSubInlets;
-			SubinletPolicy							mSubInletPolicy;
-		};
+		std::weak_ptr< BlockImpl >							mParent;
+		std::weak_ptr< const UpdatePolicyMetainfoImpl >		mMetainfo;
+		std::shared_ptr< const InstanceId >					mId;
 
-		struct PtrCmp : public std::unary_function< std::string, bool >
-		{
-			explicit PtrCmp( std::shared_ptr< InletImpl_I > obj ) : mObj( obj ) { assert( mObj ); }
+		std::vector< ConnectionInfo >						mConnections;
+		std::vector< std::vector< InletPolicy > >			mPolicy;
 
-			bool operator()( UpdatePolicyImpl::InletPolicy const& other )
-			{
-				return mObj.get() == other.mInlet.get();
-			}
-
-			std::shared_ptr< InletImpl_I > mObj;
-		};
-
-		std::weak_ptr< BlockImpl >																	mParent;
-		std::weak_ptr< const UpdatePolicyMetainfoImpl >												mMetainfo;
-		std::shared_ptr< const InstanceId >														mId;
-		std::vector< std::shared_ptr< InletImpl_I > >											mInlets;
-		std::vector< std::vector< InletPolicy > >												mPolicy;
-		mutable	std::mutex																		mMutex;
-
-		bool																					mIsAlreadyFulfilled;
-		bool																					mIsEnabled;
-		Event_T< void >			mEvent;
+		mutable	std::mutex									mMutex;
+		mutable boost::signals2::signal< void() >			mReady;
 
 	};
 

@@ -21,13 +21,14 @@
 
 #include "common/_2RealStdIncludes.h"
 #include "common/_2RealPath.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
 	class BundleImpl;
 	class TypeCollection;
 
-	class BundleCollection : public std::enable_shared_from_this< BundleCollection >
+	class BundleCollection
 	{
 
 	public:
@@ -53,7 +54,7 @@ namespace _2Real
 
 		void updateBundleDirectory();
 
-		typedef std::vector< std::shared_ptr< BundleImpl > >	Bundles;
+		typedef std::vector< std::pair< boost::signals2::connection, std::shared_ptr< BundleImpl > > >	Bundles;
 
 		Path				mBundleDirectory;
 		Bundles				mBundles;

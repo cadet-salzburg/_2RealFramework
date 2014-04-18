@@ -22,7 +22,7 @@
 #include "common/_2RealStdIncludes.h"
 #include "engine/_2RealInletImpl_I.h"
 #include "engine/_2RealInSlot.h"
-#include "common/_2RealEvent_T.h"
+#include "common/_2RealSignals.h"
 #include "engine/_2RealDataSink_I.h"
 
 namespace _2Real
@@ -55,42 +55,34 @@ namespace _2Real
 		std::shared_ptr< const InstanceId >		getId() const;
 		std::shared_ptr< BlockImpl >			getParent();
 		void									update();
+		std::shared_ptr< const MultiInletImpl >	getParentInlet() const;
 
+		bool isLinked() const;
+		void unlink();
+		void linkTo( std::shared_ptr< DataSource_I > );
 		void receiveData( std::shared_ptr< const DataItem > );
+
 		void setData( DataItem );
-
-		std::shared_ptr< Link > linkTo( std::shared_ptr< DataSource_I > );
-
 		using InSlot::getValue;
 
-		template< typename TCallable >
-		void registerToValueUpdated( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< InletImpl > ) )
-		{
-			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< InletImpl > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< InletImpl > >( callable, callback ) );
-			mUpdateEvent.addListener( listener );
-		}
-
-		template< typename TCallable >
-		void unregisterFromValueUpdated( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< InletImpl > ) )
-		{
-			std::shared_ptr< AbstractCallback_T<  std::shared_ptr< InletImpl > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< InletImpl > >( callable, callback ) );
-			mUpdateEvent.removeListener( listener );
-		}
-
-		std::shared_ptr< MultiInletImpl > getParentInlet();
+		boost::signals2::connection registerToValueUpdated( boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >::slot_type ) const;
+		boost::signals2::connection registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSink_I > ) >::slot_type ) const;
 
 	private:
 
 		InletImpl( std::shared_ptr< BlockImpl >, std::shared_ptr< const IoSlotMetainfoImpl >, std::shared_ptr< const InstanceId > );
 		InletImpl( std::shared_ptr< BlockImpl >, std::shared_ptr< MultiInletImpl >, std::shared_ptr< const IoSlotMetainfoImpl >, std::shared_ptr< const InstanceId > );
 
-		std::weak_ptr< BlockImpl >						mParent;
-		std::weak_ptr< const IoSlotMetainfoImpl >		mMetainfo;
-		std::shared_ptr< const InstanceId >			mId;
+		std::weak_ptr< BlockImpl >										mParent;
+		std::weak_ptr< const IoSlotMetainfoImpl >						mMetainfo;
+		std::shared_ptr< const InstanceId >								mId;
+		std::weak_ptr< MultiInletImpl >									mParentInlet;
 
-		std::weak_ptr< MultiInletImpl >						mParentInlet;
-		std::shared_ptr< Link >							mLink;
-		Event_T< std::shared_ptr< InletImpl > >				mUpdateEvent;
+		std::shared_ptr< Link >											mLink;
+
+		boost::signals2::connection														mDataConnection;
+		mutable boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >	mValueUpdated;
+		mutable boost::signals2::signal< void( std::shared_ptr< const DataSink_I > ) >	mRemoved;
 
 	};
 }

@@ -23,7 +23,6 @@
 namespace _2Real
 {
 	TimerCollection::TimerCollection() :
-		std::enable_shared_from_this< TimerCollection >(),
 		mIoService(),
 		mWork( new boost::asio::io_service::work( mIoService ) ),
 		mThread( &TimerCollection::run, this )

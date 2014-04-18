@@ -60,37 +60,37 @@ namespace _2Real
 			return BundleHandle( bundle );
 		}
 
-		std::future< BlockState > BlockHandle::setup()
+		std::future< BlockResult > BlockHandle::setup()
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
 			return block->setup();
 		}
 
-		std::future< BlockState > BlockHandle::singlestep()
+		std::future< BlockResult > BlockHandle::singlestep()
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
 			return block->singlestep();
 		}
 
-		std::future< BlockState > BlockHandle::shutdown()
+		std::future< BlockResult > BlockHandle::shutdown()
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
 			return block->shutdown();
 		}
 
-		std::future< BlockState > BlockHandle::startUpdating( TimerHandle handle )
+		std::future< BlockResult > BlockHandle::startUpdating( TimerHandle handle )
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
 			return block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger_I > >( handle ) );
 		}
 
-		std::future< BlockState > BlockHandle::startUpdating()
+		std::future< BlockResult > BlockHandle::startUpdating()
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
 			return block->startUpdating();
 		}
 
-		std::future< BlockState > BlockHandle::stopUpdating()
+		std::future< BlockResult > BlockHandle::stopUpdating()
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
 			return block->stopUpdating();

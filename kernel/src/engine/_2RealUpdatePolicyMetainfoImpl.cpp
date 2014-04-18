@@ -54,7 +54,7 @@ namespace _2Real
 			for ( auto it : mInlets )
 			{
 				InletPolicyMetainfo info;
-				info.mName = it.second.mIsMulti;
+				info.mName = it.second.mName;
 				info.mIsMulti = it.second.mIsMulti;
 				info.mPolicy = it.second.mIsMulti ? SubinletPolicy::ALL : SubinletPolicy::DISABLED;
 				tmp.push_back( info );
@@ -66,7 +66,7 @@ namespace _2Real
 			{
 				tmp.clear();
 				InletPolicyMetainfo info;
-				info.mName = it.second.mIsMulti;
+				info.mName = it.second.mName;
 				info.mIsMulti = it.second.mIsMulti;
 				info.mPolicy = it.second.mIsMulti ? SubinletPolicy::ANY : SubinletPolicy::DISABLED;
 				tmp.push_back( info );

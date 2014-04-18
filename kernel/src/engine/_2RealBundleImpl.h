@@ -21,9 +21,7 @@
 
 #include "common/_2RealStdIncludes.h"
 #include "common/_2RealPath.h"
-
-#include "common/_2RealCallback_T.h"
-#include "common/_2RealEvent_T.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
@@ -45,8 +43,8 @@ namespace _2Real
 		BundleImpl() = delete;
 		BundleImpl( BundleImpl const& other ) = delete;
 		BundleImpl( BundleImpl && other ) = delete;
-		BundleImpl operator=( BundleImpl const& other ) = delete;
-		BundleImpl operator=( BundleImpl && other ) = delete;
+		BundleImpl operator=( BundleImpl const& other );
+		BundleImpl operator=( BundleImpl && other );
 
 		~BundleImpl() = default;
 
@@ -56,21 +54,7 @@ namespace _2Real
 		void										unload( const long timeout );
 		std::shared_ptr< BlockImpl >				createBlock( std::string const& name, std::shared_ptr< ThreadpoolImpl_I > system, std::vector< std::shared_ptr< BlockImpl > > const& dependencies );
 
-		// unload listener.... bundle collection registers here
-		///////////////////////////////////////////////////////
-		template< typename TCallable >
-		void registerToUnload( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const BundleImpl > ) )
-		{
-			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const BundleImpl > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const BundleImpl > >( callable, callback ) );
-			mUnloadNotifier.addListener( listener );
-		}
-		template< typename TCallable >
-		void unregisterFromUnload( TCallable *callable, void ( TCallable::*callback )( std::shared_ptr< const BundleImpl > ) )
-		{
-			std::shared_ptr< AbstractCallback_T< std::shared_ptr< const BundleImpl > > > listener( new MemberCallback_T< TCallable, std::shared_ptr< const BundleImpl > >( callable, callback ) );
-			mUnloadNotifier.removeListener( listener );
-		}
-		///////////////////////////////////////////////////////
+		boost::signals2::connection registerToUnload( boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >::slot_type ) const;
 
 	private:
 
@@ -82,10 +66,11 @@ namespace _2Real
 		std::shared_ptr< const InstanceId >						mId;
 
 		Path													mPath;
-		Event_T< std::shared_ptr< const BundleImpl > >			mUnloadNotifier;
 
 		std::vector< std::pair< std::string, std::shared_ptr< BlockLifetimeMgr_I > > >	mLifetimeMgrs;
 		std::vector< std::shared_ptr< BlockImpl > >										mBlocks;
+
+		mutable boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >	mUnloaded;
 
 	};
 

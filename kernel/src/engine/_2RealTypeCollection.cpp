@@ -42,6 +42,10 @@ namespace _2Real
 
 	};
 
+	TypeCollection::~TypeCollection()
+	{
+	}
+
 	void TypeCollection::addType( std::shared_ptr< const TypeMetainfoImpl_I > type )
 	{
 		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeNameCmp( type->getId()->toString() ) );

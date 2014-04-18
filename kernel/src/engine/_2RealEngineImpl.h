@@ -26,15 +26,19 @@
 
 namespace _2Real
 {
+	class TimerCollection;
+	class ThreadpoolCollection;
 	class TypeCollection;
 	class BundleCollection;
-	class ThreadpoolCollection;
-	class TimerCollection;
+	class LinkCollection;
 
-	class ThreadpoolImpl_I;
-	class TimerImpl;
 	class BundleImpl;
 	class BundleMetainfoImpl;
+	class TimerImpl;
+	class ThreadpoolImpl_I;
+	class InletImpl;
+	class OutletImpl;
+	class Link;
 
 	class EngineImpl : public std::enable_shared_from_this< EngineImpl >
 	{
@@ -43,27 +47,28 @@ namespace _2Real
 
 		EngineImpl();
 		~EngineImpl();
+		
+		EngineImpl( EngineImpl const& other ) = delete;
+		EngineImpl( EngineImpl && other ) = delete;
+		EngineImpl& operator=( EngineImpl const& other ) = delete;
+		EngineImpl& operator=( EngineImpl && other ) = delete;
 
-		void clear();
+		typedef std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > LoadedBundle;
 
-		std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > loadLibrary( std::string const& filename );
+		void									clear();
+		LoadedBundle							loadLibrary( std::string const& filename );
 		Path									getBundleDirectory() const;
-
 		std::shared_ptr< TimerImpl >			createTimer( const double fps );
-
 		std::shared_ptr< ThreadpoolImpl_I >		createThreadpool( const ThreadpoolPolicy );
+		std::shared_ptr< Link >					createLink( std::shared_ptr< InletImpl >, std::shared_ptr< OutletImpl > );
 
 	private:
 
-		EngineImpl( EngineImpl const& other ) = delete;
-		EngineImpl& operator=( EngineImpl const& other ) = delete;
-
-		// --- members already in correct order
-
-		std::shared_ptr< TimerCollection >			mTimerCollection;
-		std::shared_ptr< ThreadpoolCollection >		mThreadpoolCollection;
-		std::shared_ptr< TypeCollection >			mTypeCollection;
-		std::shared_ptr< BundleCollection >			mBundleCollection;
+		std::shared_ptr< TimerCollection >		mTimerCollection;
+		std::shared_ptr< ThreadpoolCollection >	mThreadpoolCollection;
+		std::shared_ptr< TypeCollection >		mTypeCollection;
+		std::shared_ptr< BundleCollection >		mBundleCollection;
+		std::shared_ptr< LinkCollection >		mLinkCollection;
 		
 	};
 

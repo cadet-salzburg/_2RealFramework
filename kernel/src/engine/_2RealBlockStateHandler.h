@@ -25,6 +25,12 @@
 
 #include <future>
 #include "common/_2RealBlockState.h"
+#include "common/_2RealSignals.h"
+
+#include "engine/_2RealPreSetupState.h"
+#include "engine/_2RealPostSetupState.h"
+#include "engine/_2RealPostSetupState_Running.h"
+#include "engine/_2RealPostShutdownState.h"
 
 namespace _2Real
 {
@@ -32,13 +38,6 @@ namespace _2Real
 	class UpdateTrigger_I;
 	class ThreadpoolImpl_I;
 	struct SignalResponse;
-
-	/*
-	*	the state machine is a bit weird, and i know this.
-	*	to put it bluntly, it was designed this way to keep the debugging easy for me
-	*	seing how ease of finding multi-threading related errors > design
-	*/
-
 	class BlockIo;
 
 	class BlockStateHandler
@@ -48,45 +47,39 @@ namespace _2Real
 
 		BlockStateHandler( std::shared_ptr< ThreadpoolImpl_I >, std::shared_ptr< BlockIo > );
 
-		~BlockStateHandler();
+		std::future< BlockResult > setup();
+		std::future< BlockResult > singlestep();
+		std::future< BlockResult > shutdown();
+		std::future< BlockResult > startRunning( std::shared_ptr< UpdateTrigger_I > );
+		std::future< BlockResult > stopRunning();
+		std::future< BlockResult > destroy();
 
-		// user input
-		std::future< BlockState > setup();
-		std::future< BlockState > singlestep();
-		std::future< BlockState > shutdown();
-		std::future< BlockState > startRunning( std::shared_ptr< UpdateTrigger_I > );
-		std::future< BlockState > stopRunning();
-
-		// trigger of some sort
+		// trigger
 		void update(); 	
-		// shutdown
-		std::future< BlockState > destroy();
 
 		// thread pool
 		void onActionComplete();
 
 	private:
 
+		std::shared_ptr< BlockState_I > createBlock( const BlockState, std::shared_ptr< SignalResponse > );
+
 		// these functions are called when the mutex mMutex is locked
-		std::future< BlockState > carryOut( std::shared_ptr< SignalResponse > );
+		std::future< BlockResult > carryOut( std::shared_ptr< SignalResponse > );
 		void finalizeStateTransition();
+		void enqueueJob();
 
-		std::weak_ptr< ThreadpoolImpl_I >						mThreads;
-
+		std::weak_ptr< ThreadpoolImpl_I >				mThreads;
 		std::shared_ptr< BlockState_I >					mState;
+		std::shared_ptr< BlockIo >						mServiceObj;
+
 		std::shared_ptr< SignalResponse >				mResponse;
-
-		std::shared_ptr< UpdateTrigger_I >				mUpdateTrigger;
-
 		bool											mIsActionInProcess;
 		std::deque< std::shared_ptr< SignalResponse > >	mQueuedResponses;	
 		mutable std::mutex								mMutex;
-
-		std::shared_ptr< BlockIo >						mServiceObj;	
-		ThreadpoolImpl_I::Id									mId;
-
-		uint64_t										mSkippedCounter;
-		uint64_t										mUpdatedCounter;
+		
+		ThreadpoolImpl_I::Id							mId;
 
 	};
+
 }

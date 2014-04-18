@@ -23,5 +23,5 @@
 
 namespace _2Real
 {
-	enum class BlockAction : uint8_t { DO_SETUP, DO_UPDATE, DO_SHUTDOWN, DO_NOTHING, UNKNOWN };	
+	enum class BlockAction : uint8_t { DO_SETUP, DO_UPDATE, DO_SHUTDOWN, DO_NOTHING };	
 }

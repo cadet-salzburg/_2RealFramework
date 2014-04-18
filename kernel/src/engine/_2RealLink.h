@@ -21,31 +21,49 @@
 
 #include "common/_2RealStdIncludes.h"
 #include "common/_2RealData.h"
+#include "common/_2RealSignals.h"
+
+#include "engine/_2RealDataSink_I.h"
+#include "engine/_2RealDataSource_I.h"
 
 namespace _2Real
 {
-	class DataSource_I;
-	class DataSink_I;
-
-	class Link : public std::enable_shared_from_this< Link >
+	class Link : public DataSink_I, public DataSource_I, public std::enable_shared_from_this< Link >
 	{
 
 	public:
 
-		Link( std::shared_ptr< DataSource_I >, std::shared_ptr< DataSink_I > );
-		~Link();
+		static std::shared_ptr< Link > createLink( std::shared_ptr< DataSink_I >, std::shared_ptr< DataSource_I > );
 
-		bool isValid() const;
+		Link() = default;
+		~Link() = default;
 
+		Link( Link const& other ) = delete;
+		Link( Link && other ) = delete;
+		Link& operator=( Link const& other ) = delete;
+		Link& operator=( Link && other ) = delete;
+
+		void linkTo( std::shared_ptr< DataSource_I > );
 		void receiveData( std::shared_ptr< const DataItem > );
+
+		boost::signals2::connection registerToUpdate( boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >::slot_type ) const;
+		boost::signals2::connection registerToLinkRemoved( boost::signals2::signal< void( std::shared_ptr< const Link > ) >::slot_type ) const;
+		boost::signals2::connection registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSource_I > ) >::slot_type ) const;
+		boost::signals2::connection registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSink_I > ) >::slot_type ) const;
+
+		void sinkRemoved();
+		void sourceRemoved();
+		void unlink();
 
 	private:
 
-		Link( Link const& other ) = delete;
-		Link& operator=( Link const& other ) = delete;
-
-		std::weak_ptr< DataSource_I > mSource;
-		std::weak_ptr< DataSink_I >	mSink;
+		boost::signals2::connection		mDataConnection;
+		boost::signals2::connection		mSinkRemovedConnection;
+		boost::signals2::connection		mSourceRemovedConnection;
+		mutable boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >		mDataSignal;
+		mutable boost::signals2::signal< void( std::shared_ptr< const Link > ) >			mUnlinkedSignal;
+		mutable boost::signals2::signal< void( std::shared_ptr< const DataSource_I > ) >	mSourceRemovedSignal;
+		mutable boost::signals2::signal< void( std::shared_ptr< const DataSink_I > ) >		mSinkRemovedSignal;
 
 	};
 }

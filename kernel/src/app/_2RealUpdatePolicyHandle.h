@@ -37,8 +37,7 @@ namespace _2Real
 			explicit UpdatePolicyHandle( std::shared_ptr< UpdatePolicyImpl > );
 
 			bool					isValid() const;
-
-			BlockHandle		getBlock();
+			BlockHandle				getBlock();
 			void					set( const DefaultUpdatePolicy );
 
 		private:

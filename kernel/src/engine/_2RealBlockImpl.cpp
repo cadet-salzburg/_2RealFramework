@@ -161,32 +161,32 @@ namespace _2Real
 		return mUpdatePolicy;
 	}
 
-	std::future< BlockState > BlockImpl::setup()
+	std::future< BlockResult > BlockImpl::setup()
 	{
 		return mStateHandler->setup();
 	}
 
-	std::future< BlockState > BlockImpl::singlestep()
+	std::future< BlockResult > BlockImpl::singlestep()
 	{
 		return mStateHandler->singlestep();
 	}
 
-	std::future< BlockState > BlockImpl::shutdown()
+	std::future< BlockResult > BlockImpl::shutdown()
 	{
 		return mStateHandler->shutdown();
 	}
 
-	std::future< BlockState > BlockImpl::startUpdating( std::shared_ptr< UpdateTrigger_I > trigger )
+	std::future< BlockResult > BlockImpl::startUpdating( std::shared_ptr< UpdateTrigger_I > trigger )
 	{
 		return mStateHandler->startRunning( trigger );
 	}
 
-	std::future< BlockState > BlockImpl::startUpdating()
+	std::future< BlockResult > BlockImpl::startUpdating()
 	{
 		return mStateHandler->startRunning( std::static_pointer_cast< UpdateTrigger_I >( mUpdatePolicy ) );
 	}
 
-	std::future< BlockState > BlockImpl::stopUpdating()
+	std::future< BlockResult > BlockImpl::stopUpdating()
 	{
 		return mStateHandler->stopRunning();
 	}

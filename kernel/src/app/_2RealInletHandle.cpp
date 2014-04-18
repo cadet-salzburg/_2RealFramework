@@ -17,6 +17,7 @@
 */
 
 #include "app/_2RealInletHandle.h"
+#include "app/_2RealOutletHandle.h"
 #include "app/_2RealLinkHandle.h"
 #include "app/_2RealBlockHandle.h"
 #include "app/_2RealTypeMetainfo.h"
@@ -56,18 +57,6 @@ namespace _2Real
 		{
 			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
 			inlet->setData( std::move( value ) );
-		}
-
-		InletHandle::operator std::shared_ptr< DataSink_I > ()
-		{
-			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
-			return std::static_pointer_cast< DataSink_I >( inlet );
-		}
-
-		LinkHandle InletHandle::linkTo( std::shared_ptr< DataSource_I > source )
-		{
-			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
-			return LinkHandle( inlet->linkTo( source ) );
 		}
 	}
 }

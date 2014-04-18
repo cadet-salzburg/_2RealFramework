@@ -20,7 +20,7 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include "common/_2RealEvent_T.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
@@ -37,12 +37,7 @@ namespace _2Real
 		UpdateTrigger_I& operator=( UpdateTrigger_I const& other ) = delete;
 		UpdateTrigger_I& operator=( UpdateTrigger_I && other ) = delete;
 
-		virtual void registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
-		virtual void unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > ) = 0;
-
-		virtual void enable() = 0;
-		virtual void disable() = 0;
-		virtual bool reset() = 0;
+		virtual boost::signals2::connection registerToUpdate( boost::signals2::signal< void() >::slot_type ) const = 0;
 
 	};
 }

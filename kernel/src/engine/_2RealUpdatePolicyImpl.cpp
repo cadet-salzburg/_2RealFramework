@@ -16,6 +16,9 @@
 	limitations under the License.
 */
 
+#pragma warning( disable : 4996 )
+#pragma warning( disable : 4702 )
+
 #include "engine/_2RealUpdatePolicyImpl.h"
 #include "engine/_2RealUpdatePolicyMetainfoImpl.h"
 #include "common/_2RealInletPolicy.h"
@@ -27,25 +30,57 @@
 
 namespace _2Real
 {
+	struct InfoCmp : public std::unary_function< bool, UpdatePolicyImpl::ConnectionInfo >
+	{
+		explicit InfoCmp( std::shared_ptr< const InletImpl_I > obj ) : mBaseline( obj ) { assert( mBaseline ); }
+
+		bool operator()( UpdatePolicyImpl::ConnectionInfo const& info )
+		{
+			return mBaseline.get() == info.mInlet.get();
+		}
+
+		std::shared_ptr< const InletImpl_I > mBaseline;
+	};
+
+	struct PolicyCmp : public std::unary_function< bool, UpdatePolicyImpl::InletPolicy >
+	{
+		explicit PolicyCmp( std::shared_ptr< const InletImpl_I > obj ) : mBaseline( obj ) { assert( mBaseline ); }
+
+		bool operator()( UpdatePolicyImpl::InletPolicy const& policy )
+		{
+			return mBaseline.get() == policy.mInlet.get();
+		}
+
+		std::shared_ptr< const InletImpl_I > mBaseline;
+	};
+
 	std::shared_ptr< UpdatePolicyImpl > UpdatePolicyImpl::createFromMetainfo( std::shared_ptr< BlockImpl > parent, std::shared_ptr< const UpdatePolicyMetainfoImpl > meta, std::vector< std::shared_ptr< InletImpl_I > > const& inlets )
 	{
 		std::shared_ptr< const InstanceId > id = InstanceId::create( meta->getId(), parent->getId(), InstanceType::POLICY, "update policy" );
 		std::shared_ptr< UpdatePolicyImpl > policy( new UpdatePolicyImpl( parent, meta, id ) );
 		
-		policy->mInlets = inlets;
-
+		std::vector< UpdatePolicyImpl::ConnectionInfo > connections;
 		for ( auto inlet : inlets )
 		{
+			ConnectionInfo info;
+			info.mInlet = inlet;
+
 			if ( inlet->isMultiInlet() )
 			{
 				auto multiinlet = std::static_pointer_cast< MultiInletImpl >( inlet );
-				multiinlet->registerToSubinletAdded( policy.get(), &UpdatePolicyImpl::subinletAdded );
-				multiinlet->registerToSubinletRemoved( policy.get(), &UpdatePolicyImpl::subinletRemoved );
+				info.mAddedConnection = multiinlet->registerToSubinletAdded( std::bind( &UpdatePolicyImpl::subinletAdded, policy.get(), std::placeholders::_1 ) );
+				info.mRemovedConnection = multiinlet->registerToSubinletRemoved( std::bind( &UpdatePolicyImpl::subinletRemoved, policy.get(), std::placeholders::_1 ) );
 			}
+			else
+			{
+				auto regularinlet = std::static_pointer_cast< InletImpl >( inlet );
+				info.mUpdatedConnection = regularinlet->registerToValueUpdated( std::bind( &UpdatePolicyImpl::inletUpdated, policy.get(), std::placeholders::_1 ) );
+			}
+
+			policy->mConnections.push_back( info );
 		}
 
 		std::vector< std::vector< UpdatePolicyMetainfoImpl::InletPolicyMetainfo > > condition = meta->getInternalRep();
-
 		for ( auto const& andTerm : condition )
 		{
 			std::vector< UpdatePolicyImpl::InletPolicy > tmp;
@@ -79,21 +114,22 @@ namespace _2Real
 		mParent( parent ),
 		mMetainfo( meta ),
 		mId( id ),
-		mPolicy(),
-		mIsAlreadyFulfilled( false ),
-		mIsEnabled( true )
+		mPolicy()
 	{
 	}
 
 	UpdatePolicyImpl::~UpdatePolicyImpl()
 	{
-		for ( auto inlet : mInlets )
+		for ( auto &it : mConnections )
 		{
-			if ( inlet->isMultiInlet() )
+			it.mAddedConnection.disconnect();
+			it.mRemovedConnection.disconnect();
+			it.mUpdatedConnection.disconnect();
+			for ( auto &subIt : it.mSubinlets )
 			{
-				auto multiinlet = std::static_pointer_cast< MultiInletImpl >( inlet );
-				multiinlet->unregisterFromSubinletAdded( this, &UpdatePolicyImpl::subinletAdded );
-				multiinlet->unregisterFromSubinletRemoved( this, &UpdatePolicyImpl::subinletRemoved );
+				subIt.mAddedConnection.disconnect();
+				subIt.mRemovedConnection.disconnect();
+				subIt.mUpdatedConnection.disconnect();
 			}
 		}
 	}
@@ -108,99 +144,21 @@ namespace _2Real
 		return mParent.lock();
 	}
 
-	void UpdatePolicyImpl::enable()
+	void UpdatePolicyImpl::subinletAdded( std::shared_ptr< const InletImpl > subinlet )
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 
-		mIsAlreadyFulfilled = false;
-		mIsEnabled = true;
+		auto parent = std::find_if( mConnections.begin(), mConnections.end(), InfoCmp( subinlet->getParentInlet() ) );
+		assert ( parent != mConnections.end() );
 
-		// first, reset the policy
-		for ( auto &andTerm : mPolicy )
-		{
-			for ( auto &inletPolicy : andTerm )
-			{
-				if ( inletPolicy.mInlet->isMultiInlet() )
-				{
-					for ( auto &subinletPolicy : inletPolicy.mSubInlets )
-						subinletPolicy.mWasUpdated = false;
-				}
-				else
-					inletPolicy.mWasUpdated = false;
-			}
-		}
-
-		for ( auto inlet : mInlets )
-		{
-			if ( inlet->isMultiInlet() )
-			{
-				auto multiinlet = std::static_pointer_cast< MultiInletImpl >( inlet );
-
-				for ( uint32_t idx = 0; idx < multiinlet->getSize(); ++idx )
-				{
-					auto subinlet = multiinlet->operator[]( idx );
-					subinlet->registerToValueUpdated( this, &UpdatePolicyImpl::inletUpdated );
-				}
-			}
-			else
-			{
-				auto regularinlet = std::static_pointer_cast< InletImpl >( inlet );
-				regularinlet->registerToValueUpdated( this, &UpdatePolicyImpl::inletUpdated );
-			}
-		}
-	}
-
-	void UpdatePolicyImpl::disable()
-	{
-		std::lock_guard< std::mutex > lock( mMutex );
-
-		for ( auto inlet : mInlets )
-		{
-			if ( inlet->isMultiInlet() )
-			{
-				auto multiinlet = std::static_pointer_cast< MultiInletImpl >( inlet );
-
-				for ( uint32_t idx = 0; idx < multiinlet->getSize(); ++idx )
-				{
-					auto subinlet = multiinlet->operator[]( idx );
-					subinlet->unregisterFromValueUpdated( this, &UpdatePolicyImpl::inletUpdated );
-				}
-			}
-			else
-			{
-				auto regularinlet = std::static_pointer_cast< InletImpl >( inlet );
-				regularinlet->unregisterFromValueUpdated( this, &UpdatePolicyImpl::inletUpdated );
-			}
-		}
-	}
-
-	bool UpdatePolicyImpl::reset()
-	{
-		std::lock_guard< std::mutex > lock( mMutex );
-
-		// could already have been fulfilled
-		// in that case, we don't even need to re-enable
-		if ( mIsAlreadyFulfilled )
-		{
-			mIsAlreadyFulfilled = false;
-			return true;
-		}
-		else
-		{
-			mIsEnabled = true;
-			return false;
-		}
-	}
-
-	void UpdatePolicyImpl::subinletAdded( std::shared_ptr< InletImpl > subinlet )
-	{
-		std::lock_guard< std::mutex > lock( mMutex );
-
-		subinlet->registerToValueUpdated( this, &UpdatePolicyImpl::inletUpdated );
+		ConnectionInfo subinletInfo;
+		subinletInfo.mInlet = subinlet;
+		subinletInfo.mUpdatedConnection = subinlet->registerToValueUpdated( std::bind( &UpdatePolicyImpl::inletUpdated, this, std::placeholders::_1 ) );
+		parent->mSubinlets.push_back( subinletInfo );
 
 		for ( auto &andTerm : mPolicy )
 		{
-			auto parentIter = std::find_if( andTerm.begin(), andTerm.end(), PtrCmp( subinlet->getParentInlet() ) );
+			auto parentIter = std::find_if( andTerm.begin(), andTerm.end(), PolicyCmp( subinlet->getParentInlet() ) );
 			if ( parentIter == andTerm.end() )
 				continue;
 
@@ -212,19 +170,23 @@ namespace _2Real
 		}
 	}
 
-	void UpdatePolicyImpl::subinletRemoved( std::shared_ptr< InletImpl > subinlet )
+	void UpdatePolicyImpl::subinletRemoved( std::shared_ptr< const InletImpl > subinlet )
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 
-		subinlet->unregisterFromValueUpdated( this, &UpdatePolicyImpl::inletUpdated );
-
+		auto parent = std::find_if( mConnections.begin(), mConnections.end(), InfoCmp( subinlet->getParentInlet() ) );
+		assert ( parent != mConnections.end() );
+		auto info = std::find_if( parent->mSubinlets.begin(), parent->mSubinlets.end(), InfoCmp( subinlet ) );
+		assert( info != parent->mSubinlets.end() );
+		info->mUpdatedConnection.disconnect();
+		
 		for ( auto &andTerm : mPolicy )
 		{
-			auto parentIter = std::find_if( andTerm.begin(), andTerm.end(), PtrCmp( subinlet->getParentInlet() ) );
+			auto parentIter = std::find_if( andTerm.begin(), andTerm.end(), PolicyCmp( subinlet->getParentInlet() ) );
 			if ( parentIter == andTerm.end() )
 				continue;
 
-			auto inletIter = std::find_if( parentIter->mSubInlets.begin(), parentIter->mSubInlets.end(), PtrCmp( subinlet ) );
+			auto inletIter = std::find_if( parentIter->mSubInlets.begin(), parentIter->mSubInlets.end(), PolicyCmp( subinlet ) );
 			if ( inletIter == parentIter->mSubInlets.end() )
 				continue;
 
@@ -232,7 +194,7 @@ namespace _2Real
 		}
 	}
 
-	void UpdatePolicyImpl::inletUpdated( std::shared_ptr< InletImpl > inlet )
+	void UpdatePolicyImpl::inletUpdated( std::shared_ptr< const InletImpl > inlet )
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 
@@ -290,7 +252,7 @@ namespace _2Real
 
 		if ( shouldFire )
 		{
-			// first, reset the policy
+			// 1st, reset
 			for ( auto &andTerm : mPolicy )
 			{
 				for ( auto &inletPolicy : andTerm )
@@ -305,18 +267,8 @@ namespace _2Real
 				}
 			}
 
-			// now deal with the notification
-			if ( mIsEnabled )
-			{
-				// keep recording updates, but don't trigger
-				mIsEnabled = false;
-				mEvent.notify();
-			}
-			else if ( !mIsEnabled )
-			{
-				// store that an update is ready
-				mIsAlreadyFulfilled = true;
-			}
+			// 2nd, notify
+			mReady();
 		}
 	}
 
@@ -324,22 +276,20 @@ namespace _2Real
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 
-		mIsAlreadyFulfilled = false;
-
 		mPolicy.clear();
 		std::vector< InletPolicy > tmp;
 		switch( code )
 		{
 		case DefaultUpdatePolicy::ALL:
-			for ( auto inlet : mInlets )
+			for ( auto const& info : mConnections )
 			{
 				InletPolicy policy;
-				policy.mInlet = inlet;
+				policy.mInlet = info.mInlet;
 				policy.mWasUpdated = false;
 
-				if ( inlet->isMultiInlet() )
+				if ( info.mInlet->isMultiInlet() )
 				{
-					std::shared_ptr< MultiInletImpl > multiinlet = std::static_pointer_cast< MultiInletImpl >( inlet );
+					auto multiinlet = std::static_pointer_cast< const MultiInletImpl >( info.mInlet );
 					for ( uint32_t idx = 0; idx < multiinlet->getSize(); ++idx )
 					{
 						InletPolicy subinletPolicy;
@@ -359,17 +309,17 @@ namespace _2Real
 			mPolicy.push_back( tmp );
 			break;
 		case DefaultUpdatePolicy::ANY:
-			for ( auto inlet : mInlets )
+			for ( auto const& info : mConnections )
 			{
 				tmp.clear();
 
 				InletPolicy policy;
-				policy.mInlet = inlet;
+				policy.mInlet = info.mInlet;
 				policy.mWasUpdated = false;
 
-				if ( inlet->isMultiInlet() )
+				if ( info.mInlet->isMultiInlet() )
 				{
-					std::shared_ptr< MultiInletImpl > multiinlet = std::static_pointer_cast< MultiInletImpl >( inlet );
+					auto multiinlet = std::static_pointer_cast< const MultiInletImpl >( info.mInlet );
 					for ( uint32_t idx = 0; idx < multiinlet->getSize(); ++idx )
 					{
 						InletPolicy subinletPolicy;
@@ -393,14 +343,9 @@ namespace _2Real
 		}
 	}
 
-	void UpdatePolicyImpl::registerToUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
+	boost::signals2::connection UpdatePolicyImpl::registerToUpdate( boost::signals2::signal< void() >::slot_type listener ) const
 	{
-		mEvent.addListener( cb );
-	}
-
-	void UpdatePolicyImpl::unregisterFromUpdate( std::shared_ptr< AbstractCallback_T< void > > cb )
-	{
-		mEvent.removeListener( cb );
+		return mReady.connect( listener );
 	}
 
 }

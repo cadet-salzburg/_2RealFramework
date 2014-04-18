@@ -33,6 +33,9 @@ namespace _2Real
 		class BundleMetainfo;
 		class TimerHandle;
 		class ThreadpoolHandle;
+		class InletHandle;
+		class OutletHandle;
+		class LinkHandle;
 
 		class Engine
 		{
@@ -53,6 +56,8 @@ namespace _2Real
 
 			// creates a timer with the desired framerate
 			TimerHandle createTimer( const double fps );
+
+			LinkHandle link( InletHandle, OutletHandle );
 
 		private:
 

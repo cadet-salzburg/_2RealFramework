@@ -16,6 +16,9 @@
 	limitations under the License.
 */
 
+#pragma warning( disable : 4996 )
+#pragma warning( disable : 4702 )
+
 #include "engine/_2RealBundleImpl.h"
 #include "engine/_2RealBundleCollection.h"
 #include "engine/_2RealBlockImpl.h"
@@ -73,8 +76,7 @@ namespace _2Real
 		mLibrary( lib ),
 		mMetainfo( meta ),
 		mId( id ),
-		mPath( path ),
-		mUnloadNotifier()
+		mPath( path )
 	{
 	}
 
@@ -90,8 +92,8 @@ namespace _2Real
 
 		// causes the bundle collection to release the bundle
 		// unless the call to unload was issued by the collection itsself
-		mUnloadNotifier.notify( shared_from_this() );
-		mUnloadNotifier.clear();
+		mUnloaded( shared_from_this() );
+		mUnloaded.disconnect_all_slots();
 
 		// TODO: kill child blocks etc.
 		( void ) ( timeout );
@@ -123,4 +125,8 @@ namespace _2Real
 		return block;
 	}
 
+	boost::signals2::connection BundleImpl::registerToUnload( boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >::slot_type slot ) const
+	{
+		return mUnloaded.connect( slot );
+	}
 }
