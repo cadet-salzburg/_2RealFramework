@@ -40,10 +40,9 @@ namespace _2Real
 			bool isMultiInlet() const;
 			BlockHandle getBlock();
 
-			InletHandle			operator[]( const uint32_t );
 			uint32_t			getSize() const;
 			bool				isEmpty() const;
-
+			InletHandle			operator[]( const uint32_t );
 			InletHandle			add();
 			void				remove( InletHandle );
 

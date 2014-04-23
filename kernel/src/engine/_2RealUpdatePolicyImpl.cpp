@@ -16,9 +16,6 @@
 	limitations under the License.
 */
 
-#pragma warning( disable : 4996 )
-#pragma warning( disable : 4702 )
-
 #include "engine/_2RealUpdatePolicyImpl.h"
 #include "engine/_2RealUpdatePolicyMetainfoImpl.h"
 #include "common/_2RealInletPolicy.h"
@@ -30,27 +27,29 @@
 
 namespace _2Real
 {
-	struct InfoCmp : public std::unary_function< bool, UpdatePolicyImpl::ConnectionInfo >
+	class InfoByInletAddress
 	{
-		explicit InfoCmp( std::shared_ptr< const InletImpl_I > obj ) : mBaseline( obj ) { assert( mBaseline ); }
-
+	public:
+		explicit InfoByInletAddress( std::shared_ptr< const InletImpl_I > inlet ) : mBaseline( inlet ) { assert( inlet.get() ); }
 		bool operator()( UpdatePolicyImpl::ConnectionInfo const& info )
 		{
+			assert( info.mInlet.get() );
 			return mBaseline.get() == info.mInlet.get();
 		}
-
+	private:
 		std::shared_ptr< const InletImpl_I > mBaseline;
 	};
 
-	struct PolicyCmp : public std::unary_function< bool, UpdatePolicyImpl::InletPolicy >
+	class PolicyByInletAddress
 	{
-		explicit PolicyCmp( std::shared_ptr< const InletImpl_I > obj ) : mBaseline( obj ) { assert( mBaseline ); }
-
+	public:
+		explicit PolicyByInletAddress( std::shared_ptr< const InletImpl_I > inlet ) : mBaseline( inlet ) { assert( inlet.get() ); }
 		bool operator()( UpdatePolicyImpl::InletPolicy const& policy )
 		{
+			assert( policy.mInlet.get() );
 			return mBaseline.get() == policy.mInlet.get();
 		}
-
+	private:
 		std::shared_ptr< const InletImpl_I > mBaseline;
 	};
 
@@ -148,7 +147,7 @@ namespace _2Real
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 
-		auto parent = std::find_if( mConnections.begin(), mConnections.end(), InfoCmp( subinlet->getParentInlet() ) );
+		auto parent = std::find_if( mConnections.begin(), mConnections.end(), InfoByInletAddress( subinlet->getParentInlet() ) );
 		assert ( parent != mConnections.end() );
 
 		ConnectionInfo subinletInfo;
@@ -158,7 +157,7 @@ namespace _2Real
 
 		for ( auto &andTerm : mPolicy )
 		{
-			auto parentIter = std::find_if( andTerm.begin(), andTerm.end(), PolicyCmp( subinlet->getParentInlet() ) );
+			auto parentIter = std::find_if( andTerm.begin(), andTerm.end(), PolicyByInletAddress( subinlet->getParentInlet() ) );
 			if ( parentIter == andTerm.end() )
 				continue;
 
@@ -174,19 +173,19 @@ namespace _2Real
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 
-		auto parent = std::find_if( mConnections.begin(), mConnections.end(), InfoCmp( subinlet->getParentInlet() ) );
+		auto parent = std::find_if( mConnections.begin(), mConnections.end(), InfoByInletAddress( subinlet->getParentInlet() ) );
 		assert ( parent != mConnections.end() );
-		auto info = std::find_if( parent->mSubinlets.begin(), parent->mSubinlets.end(), InfoCmp( subinlet ) );
+		auto info = std::find_if( parent->mSubinlets.begin(), parent->mSubinlets.end(), InfoByInletAddress( subinlet ) );
 		assert( info != parent->mSubinlets.end() );
 		info->mUpdatedConnection.disconnect();
 		
 		for ( auto &andTerm : mPolicy )
 		{
-			auto parentIter = std::find_if( andTerm.begin(), andTerm.end(), PolicyCmp( subinlet->getParentInlet() ) );
+			auto parentIter = std::find_if( andTerm.begin(), andTerm.end(), PolicyByInletAddress( subinlet->getParentInlet() ) );
 			if ( parentIter == andTerm.end() )
 				continue;
 
-			auto inletIter = std::find_if( parentIter->mSubInlets.begin(), parentIter->mSubInlets.end(), PolicyCmp( subinlet ) );
+			auto inletIter = std::find_if( parentIter->mSubInlets.begin(), parentIter->mSubInlets.end(), PolicyByInletAddress( subinlet ) );
 			if ( inletIter == parentIter->mSubInlets.end() )
 				continue;
 

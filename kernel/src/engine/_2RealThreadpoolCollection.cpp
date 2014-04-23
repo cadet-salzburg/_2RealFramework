@@ -22,12 +22,10 @@
 
 namespace _2Real
 {
-	ThreadpoolCollection::~ThreadpoolCollection()
+	void ThreadpoolCollection::clear()
 	{
 		for ( auto it : mThreadpools )	
-		{
 			it.reset();
-		}
 	}
 
 	std::shared_ptr< ThreadpoolImpl_I > ThreadpoolCollection::createThreadpool( const ThreadpoolPolicy p )

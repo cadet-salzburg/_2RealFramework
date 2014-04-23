@@ -19,6 +19,8 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
+#include "common/_2RealSignals.h"
+#include "common/_2RealData.h"
 
 namespace _2Real
 {
@@ -38,9 +40,11 @@ namespace _2Real
 			bool				isValid() const;
 			BlockHandle			getBlock();
 
+			std::shared_ptr< const DataItem > getData() const;
+			Connection registerToNewData( boost::function< void( std::shared_ptr< const DataItem > ) > );
+
 		private:
 
-			friend class InletHandle;
 			friend class Engine;
 
 			std::weak_ptr< OutletImpl >		mImpl;

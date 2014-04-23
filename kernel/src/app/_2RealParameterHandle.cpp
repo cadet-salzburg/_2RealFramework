@@ -17,6 +17,8 @@
 */
 
 #include "app/_2RealParameterHandle.h"
+#include "app/_2RealBlockHandle.h"
+
 #include "engine/_2RealParameterImpl.h"
 
 #include "common/_2RealWeakPtrCheck.h"
@@ -32,26 +34,20 @@ namespace _2Real
 
 		bool ParameterHandle::isValid() const
 		{
-			std::shared_ptr< ParameterImpl > param = mImpl.lock();
-			return ( nullptr != param.get() );
+			std::shared_ptr< ParameterImpl > parameter = mImpl.lock();
+			return ( nullptr != parameter.get() );
 		}
 
-		//DataItem ParameterHandle::getValue() const
-		//{
-		//	std::shared_ptr< ParameterImpl > parameter = checkValidity< ParameterImpl >( mImpl, "parameter" );
-		//	return *( parameter->getTmpValue().get() );
-		//}
+		BlockHandle ParameterHandle::getBlock()
+		{
+			std::shared_ptr< ParameterImpl > parameter = checkValidity< ParameterImpl >( mImpl, "parameter" );
+			return BlockHandle( parameter->getParent() );
+		}
 
-		//DataItem ParameterHandle::getCurrentValue() const
-		//{
-		//	std::shared_ptr< ParameterImpl > parameter = checkValidity< ParameterImpl >( mImpl, "parameter" );
-		//	return parameter->getValue();
-		//}
-
-		//void ParameterHandle::setValue( DataItem && value )
-		//{
-		//	std::shared_ptr< ParameterImpl > parameter = checkValidity< ParameterImpl >( mImpl, "parameter" );
-		//	parameter->setTmpValue( std::move( value ) );
-		//}
+		void ParameterHandle::setValue( DataItem value )
+		{
+			std::shared_ptr< ParameterImpl > parameter = checkValidity< ParameterImpl >( mImpl, "parameter" );
+			parameter->setData( std::move( value ) );
+		}
 	}
 }

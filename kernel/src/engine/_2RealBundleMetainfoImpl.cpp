@@ -31,44 +31,30 @@
 
 namespace _2Real
 {
-	class BlockMetainfoNameCmp : public std::unary_function< bool, std::shared_ptr< const BlockMetainfoImpl > >
+	class BlockMetainfoByName
 	{
-
 	public:
-
-		explicit BlockMetainfoNameCmp( const std::string name ) : mName( name )
+		explicit BlockMetainfoByName( const std::string name ) : mBaseline( name ) {}
+		bool operator()( std::shared_ptr< const BlockMetainfoImpl > val ) const
 		{
+			assert( val.get() );
+			return mBaseline == val->getName();
 		}
-
-		bool operator()( std::shared_ptr< const BlockMetainfoImpl > obj ) const
-		{
-			return mName == obj->getName();
-		}
-
 	private:
-
-		std::string mName;
-
+		std::string mBaseline;
 	};
 
-	class TypeMetainfoNameCmp : public std::unary_function< bool, std::shared_ptr< const CustomTypeMetainfoImpl > >
+	class TypeMetainfoByName
 	{
-
 	public:
-
-		explicit TypeMetainfoNameCmp( const std::string name ) : mName( name )
+		explicit TypeMetainfoByName( const std::string name ) : mBaseline( name ) {}
+		bool operator()( std::shared_ptr< const CustomTypeMetainfoImpl > val ) const
 		{
+			assert( val.get() );
+			return mBaseline == val->getName();
 		}
-
-		bool operator()( std::shared_ptr< const CustomTypeMetainfoImpl > obj ) const
-		{
-			return mName == obj->getName();
-		}
-
 	private:
-
-		std::string mName;
-
+		std::string mBaseline;
 	};
 
 	std::shared_ptr< BundleMetainfoImpl > BundleMetainfoImpl::make( std::shared_ptr< SharedLibrary > lib, Path const& path, std::shared_ptr< TypeCollection > types )
@@ -271,7 +257,7 @@ namespace _2Real
 
 	std::shared_ptr< const BlockMetainfoImpl > BundleMetainfoImpl::getServiceMetainfo( std::string const& name ) const
 	{
-		auto it = std::find_if( mBlocks.begin(), mBlocks.end(), BlockMetainfoNameCmp( name ) );
+		auto it = std::find_if( mBlocks.begin(), mBlocks.end(), BlockMetainfoByName( name ) );
 		if ( it == mBlocks.end() )
 		{
 			std::ostringstream msg;
@@ -284,7 +270,7 @@ namespace _2Real
 
 	std::shared_ptr< const CustomTypeMetainfoImpl > BundleMetainfoImpl::getTypeMetainfo( std::string const& name ) const
 	{
-		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeMetainfoNameCmp( name ) );
+		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeMetainfoByName( name ) );
 		if ( it == mTypes.end() )
 		{
 			std::ostringstream msg;

@@ -38,6 +38,7 @@ namespace _2Real
 
 			bool					isValid() const;
 			BlockHandle				createBlock( std::string const& name, ThreadpoolHandle threadpool, std::vector< BlockHandle > const& dependencies );
+			void					unload( const uint64_t timeout );
 
 		private:
 

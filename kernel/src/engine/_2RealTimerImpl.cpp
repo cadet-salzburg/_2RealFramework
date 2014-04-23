@@ -16,12 +16,7 @@
 	limitations under the License.
 */
 
-#pragma warning( disable : 4996 )
-#pragma warning( disable : 4702 )
-
 #include "engine/_2RealTimerImpl.h"
-
-#include <boost/bind.hpp>
 
 namespace _2Real
 {
@@ -30,10 +25,6 @@ namespace _2Real
 		mPeriod( period ),
 		mTimer( service ),
 		mShouldUpdate( false )
-	{
-	}
-
-	TimerImpl::~TimerImpl()
 	{
 	}
 
@@ -74,9 +65,26 @@ namespace _2Real
 			mMutex.unlock();
 	}
 
+	void TimerImpl::destroy()
+	{
+		std::shared_ptr< TimerImpl > tmp = shared_from_this();
+
+		stop();
+
+		mDestroyed( shared_from_this() );
+		mDestroyed.disconnect_all_slots();
+
+		tmp.reset();
+	}
+
 	boost::signals2::connection TimerImpl::registerToUpdate( boost::signals2::signal< void() >::slot_type listener ) const
 	{
 		return mReady.connect( listener );
+	}
+
+	boost::signals2::connection TimerImpl::registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const TimerImpl > ) >::slot_type listener ) const
+	{
+		return mDestroyed.connect( listener );
 	}
 
 }

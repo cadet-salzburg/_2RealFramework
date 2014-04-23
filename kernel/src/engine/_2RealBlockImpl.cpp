@@ -36,8 +36,46 @@
 
 namespace _2Real
 {
+	class InletByName : public std::unary_function< bool, std::shared_ptr< const InletImpl_I > >
+	{
+	public:
+		explicit InletByName( const std::string name ) : mBaseline( name ) {}
+		bool operator()( std::shared_ptr< const InletImpl_I > inlet ) const
+		{
+			return inlet->getId()->getName() == mBaseline;
+		}
+	private:
+		std::string mBaseline;
+	};
 
-	BlockIo::BlockIo( BlockAccess const& key ) : mKey( key ) {}
+	class OutletByName : public std::unary_function< bool, std::shared_ptr< const OutletImpl > >
+	{
+	public:
+		explicit OutletByName( const std::string name ) : mBaseline( name ) {}
+		bool operator()( std::shared_ptr< const OutletImpl > outlet ) const
+		{
+			return outlet->getId()->getName() == mBaseline;
+		}
+	private:
+		std::string mBaseline;
+	};
+
+	class ParameterByName : public std::unary_function< bool, std::shared_ptr< const ParameterImpl > >
+	{
+	public:
+		explicit ParameterByName( const std::string name ) : mBaseline( name ) {}
+		bool operator()( std::shared_ptr< const ParameterImpl > parameter ) const
+		{
+			return parameter->getId()->getName() == mBaseline;
+		}
+	private:
+		std::string mBaseline;
+	};
+
+	BlockIo::BlockIo( BlockAccess const& key ) :
+		mKey( key )
+	{
+	}
 
 	void BlockIo::doNothing()
 	{
@@ -55,7 +93,18 @@ namespace _2Real
 			it->update();
 		}
 
-		mBlockObj->doUpdate( mKey );
+		try
+		{
+			mBlockObj->doUpdate( mKey );
+		}
+		catch ( _2Real::Exception const& e )
+		{
+			mException( BlockUpdateFailure( e.message() ) );
+		}
+		catch ( ... )
+		{
+			mException( BlockUpdateFailure( "unknown" ) );
+		}
 
 		for ( auto it : mOutlets )
 		{
@@ -68,7 +117,18 @@ namespace _2Real
 		for ( auto it : mParameters )
 			it->update();
 
-		mBlockObj->doSetup( mKey );
+		try
+		{
+			mBlockObj->doSetup( mKey );
+		}
+		catch ( _2Real::Exception const& e )
+		{
+			mException( BlockSetupFailure( e.message() ) );
+		}
+		catch ( ... )
+		{
+			mException( BlockSetupFailure( "unknown" ) );
+		}
 
 		for ( auto it : mOutlets )
 		{
@@ -78,7 +138,63 @@ namespace _2Real
 
 	void BlockIo::doShutdown()
 	{
-		mBlockObj->doShutdown( mKey );
+		try
+		{
+			mBlockObj->doShutdown( mKey );
+		}
+		catch ( _2Real::Exception const& e )
+		{
+			mException( BlockShutdownFailure( e.message() ) );
+		}
+		catch ( ... )
+		{
+			mException( BlockShutdownFailure( "unknown" ) );
+		}
+	}
+
+	std::shared_ptr< InletImpl > BlockIo::getInlet( std::string const& name )
+	{
+		auto it = std::find_if( mInlets.begin(), mInlets.end(), InletByName( name ) );
+		if ( it == mInlets.end() )
+			throw NotFound( name );
+		if ( ( *it )->isMultiInlet() )
+			throw NotFound( name );
+
+		return std::static_pointer_cast< InletImpl >( *it );
+	}
+
+	std::shared_ptr< MultiInletImpl > BlockIo::getMultiInlet( std::string const& name )
+	{
+		auto it = std::find_if( mInlets.begin(), mInlets.end(), InletByName( name ) );
+		if ( it == mInlets.end() )
+			throw NotFound( name );
+		if ( !( *it )->isMultiInlet() )
+			throw NotFound( name );
+
+		return std::dynamic_pointer_cast< MultiInletImpl >( *it );
+	}
+
+	std::shared_ptr< OutletImpl > BlockIo::getOutlet( std::string const& name )
+	{
+		auto it = std::find_if( mOutlets.begin(), mOutlets.end(), OutletByName( name ) );
+		if ( it == mOutlets.end() )
+			throw NotFound( name );
+
+		return *it;
+	}
+
+	std::shared_ptr< ParameterImpl > BlockIo::getParameter( std::string const& name )
+	{
+		auto it = std::find_if( mParameters.begin(), mParameters.end(), ParameterByName( name ) );
+		if ( it == mParameters.end() )
+			throw NotFound( name );
+
+		return *it;
+	}
+
+	boost::signals2::connection BlockIo::registerToException( boost::signals2::signal< void( Exception ) >::slot_type listener ) const
+	{
+		return mException.connect( listener );
 	}
 
 	/////////////////////////
@@ -191,4 +307,56 @@ namespace _2Real
 		return mStateHandler->stopRunning();
 	}
 
+	void BlockImpl::destroy( const uint64_t timeout )
+	{
+		std::shared_ptr< BlockImpl > tmp = shared_from_this();
+
+		std::future< BlockResult > result = mStateHandler->shutdown();
+		auto res = result.wait_for( std::chrono::milliseconds( timeout ) );
+		if ( res == std::future_status::ready )
+		{
+			// bundle collection -> remove
+			mDestroyed( shared_from_this() );
+			mDestroyed.disconnect_all_slots();
+
+			tmp.reset();
+		}
+		else
+			throw Timeout( mId->getName() );
+	}
+
+	std::future< BlockResult > BlockImpl::parentUnloaded()
+	{
+		return mStateHandler->destroy();
+	}
+
+	std::shared_ptr< InletImpl > BlockImpl::getInlet( std::string const& name )
+	{
+		return mIo->getInlet( name );
+	}
+
+	std::shared_ptr< MultiInletImpl > BlockImpl::getMultiInlet( std::string const& name )
+	{
+		return mIo->getMultiInlet( name );
+	}
+
+	std::shared_ptr< OutletImpl > BlockImpl::getOutlet( std::string const& name )
+	{
+		return mIo->getOutlet( name );
+	}
+
+	std::shared_ptr< ParameterImpl > BlockImpl::getParameter( std::string const& name )
+	{
+		return mIo->getParameter( name );
+	}
+
+	boost::signals2::connection	BlockImpl::registerToException( boost::function< void( Exception ) > listener )
+	{
+		return mIo->registerToException( listener );
+	}
+
+	boost::signals2::connection	BlockImpl::registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const BlockImpl > ) >::slot_type listener )
+	{
+		return mDestroyed.connect( listener );
+	}
 }

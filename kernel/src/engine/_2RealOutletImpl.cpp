@@ -16,9 +16,6 @@
 	limitations under the License.
 */
 
-#pragma warning( disable : 4996 )
-#pragma warning( disable : 4702 )
-
 #include "engine/_2RealOutletImpl.h"
 #include "engine/_2RealBlockImpl.h"
 #include "engine/_2RealIoSlotMetainfoImpl.h"
@@ -59,6 +56,11 @@ namespace _2Real
 	DataItem & OutletImpl::getValue()
 	{
 		return *mValue.get();
+	}
+
+	std::shared_ptr< const DataItem > OutletImpl::getData() const
+	{
+		return mValue;
 	}
 
 	void OutletImpl::update()

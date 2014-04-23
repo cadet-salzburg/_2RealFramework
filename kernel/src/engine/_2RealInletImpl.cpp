@@ -16,9 +16,6 @@
 	limitations under the License.
 */
 
-#pragma warning( disable : 4996 )
-#pragma warning( disable : 4702 )
-
 #include "engine/_2RealInletImpl.h"
 #include "engine/_2RealIoSlotMetainfoImpl.h"
 #include "engine/_2RealBlockImpl.h"

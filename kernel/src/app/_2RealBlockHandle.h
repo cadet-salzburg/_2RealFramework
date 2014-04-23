@@ -20,6 +20,8 @@
 
 #include "common/_2RealStdIncludes.h"
 #include "common/_2RealBlockResult.h"
+#include "common/_2RealException.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
@@ -31,6 +33,10 @@ namespace _2Real
 		class TimerHandle;
 		class UpdatePolicyHandle;
 		class BlockIo;
+		class InletHandle;
+		class MultiInletHandle;
+		class OutletHandle;
+		class ParameterHandle;
 
 		class BlockHandle
 		{
@@ -40,6 +46,7 @@ namespace _2Real
 			explicit BlockHandle( std::shared_ptr< BlockImpl > );
 
 			bool							isValid() const;
+
 			BundleHandle					getBundle();
 
 			std::future< BlockResult >		setup();
@@ -48,10 +55,17 @@ namespace _2Real
 			std::future< BlockResult >		startUpdating( TimerHandle );
 			std::future< BlockResult >		startUpdating();
 			std::future< BlockResult >		stopUpdating();
+			void							destroy( const uint64_t );
 
 			UpdatePolicyHandle				getUpdatePolicy();
 
 			BlockIo							getBlockIo();
+			InletHandle						getInlet( std::string const& );
+			MultiInletHandle				getMultiInlet( std::string const& );
+			OutletHandle					getOutlet( std::string const& );
+			ParameterHandle					getParameter( std::string const& );
+
+			Connection						registerToException( boost::function< void( Exception ) > ); 
 
 		private:
 

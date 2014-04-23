@@ -44,8 +44,9 @@ namespace _2Real
 		~ParameterImpl() = default;
 
 		std::shared_ptr< const InstanceId > getId() const;
-		std::shared_ptr< BlockImpl >			getParent();
+		std::shared_ptr< BlockImpl >		getParent();
 
+		void setData( DataItem );
 		using InSlot::update;
 		using InSlot::getValue;
 

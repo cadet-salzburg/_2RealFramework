@@ -1,0 +1,77 @@
+@ c++11
+
+keywords like 
+- auto
+- default and delete ( for ctors etc )
+are used liberally,
+as are some new features like std::future & std::condition_variable
+
+the framework can definitely not be built with a vc++ compiler below v120 ( i.e., visual studio 2013 )
+
+////////////////////////////////////////////////////
+
+on windows, linking must be set to multithreaded-dynamic ( /MD or /MDd )
+-> dlls, framework and application must use same CRT
+
+////////////////////////////////////////////////////
+
+there exist two namespaces within _2Real,
+
+- _2Real::app
+- _2Real::bundle
+
+both containing classes with identical names( i.e. _2RealInletHandle @ app/_2RealInletHandle.cpp )
+ -> when building the lib, the .obj files need to go to different directories
+( for the vc++ project, this has been taken care of )
+
+////////////////////////////////////////////////////
+
+@ dll loading:
+
+engine/_2RealSharedLibrary_UNIX.cpp
+engine/_2RealSharedLibrary_WIN.cpp
+
+both provide an implementation of 'SharedLibraryImpl'
+depending on the os, one of these should be excluded from the build
+
+the unix version was taken from poco and never tested
+
+////////////////////////////////////////////////////
+
+environment variables:
+
+the framework tries to access the environment variable 
+_2REAL_BUNDLE_DIR
+on startup via std::getenv
+
+this is where all dlls will be searched. if this environment variable is not found,
+the bundle directory is assumed to be the execution directory of the application!
+
+---------------
+
+for building the framework with the vc++13 project
+
+BOOST_DIR
+
+is needed
+
+////////////////////////////////////////////////////
+
+boost:
+
+- version 1.55
+- build cmd for windows: bjam link=shared runtime-link=shared threading=multi toolset=msvc-12.0
+- include dir = BOOST_DIR, header files located @ BOOST_DIR/boost, libraries @ BOOST_DIR/stage/lib
+
+- #define BOOST_ALL_DYN_LINK for dynamic linking, otherwise linker looks for static libraries ( error msg: "libboost*.lib" vs "boost*.lib" )
+	-> this is defined in common/_2RealBoost.h
+
+( post-build step copying the boost dlls is currently missing from all test projects, dlls were copied manually )
+
+boost signals & slots are used heavily --- unfortunately, these generate shitloads of warnings, sorry.
+
+
+
+
+
+

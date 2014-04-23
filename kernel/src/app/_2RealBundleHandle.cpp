@@ -42,20 +42,21 @@ namespace _2Real
 		BlockHandle BundleHandle::createBlock( std::string const& name, ThreadpoolHandle system, std::vector< BlockHandle > const& dependencies )
 		{
 			std::shared_ptr< BundleImpl > bundle = checkValidity< BundleImpl >( mImpl, "bundle" );
-
-			std::shared_ptr< ThreadpoolImpl_I > threads = system.mImpl.lock();
-			if ( !threads.get() )
-				throw HandleAccessFailure( "threadpool" );
-
+			std::shared_ptr< ThreadpoolImpl_I > threads = checkValidity< ThreadpoolImpl_I >( system.mImpl, "threadpool" );
 			std::vector< std::shared_ptr< BlockImpl > > blocks;
 			for ( auto it : dependencies )
 			{
-				std::shared_ptr< BlockImpl > block = it.mImpl.lock();
-				if ( !block.get() )
-					throw HandleAccessFailure( "block" );
+				std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( it.mImpl, "block" );
+				blocks.push_back( block );
 			}
 
 			return BlockHandle( bundle->createBlock( name, threads, blocks ) );
+		}
+
+		void BundleHandle::unload( const uint64_t timeout )
+		{
+			std::shared_ptr< BundleImpl > bundle = checkValidity< BundleImpl >( mImpl, "bundle" );
+			bundle->unload( timeout );
 		}
 	}
 }

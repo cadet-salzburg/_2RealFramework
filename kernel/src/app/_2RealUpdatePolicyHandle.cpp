@@ -17,6 +17,8 @@
 */
 
 #include "app/_2RealUpdatePolicyHandle.h"
+#include "app/_2RealBlockHandle.h"
+
 #include "engine/_2RealUpdatePolicyImpl.h"
 
 #include "common/_2RealWeakPtrCheck.h"
@@ -34,6 +36,12 @@ namespace _2Real
 		{
 			std::shared_ptr< UpdatePolicyImpl > policy = mImpl.lock();
 			return ( nullptr != policy.get() );
+		}
+
+		BlockHandle UpdatePolicyHandle::getBlock()
+		{
+			std::shared_ptr< UpdatePolicyImpl > policy = checkValidity< UpdatePolicyImpl >( mImpl, "update policy" );
+			return BlockHandle( policy->getParent() );
 		}
 
 		void UpdatePolicyHandle::set( const DefaultUpdatePolicy code )

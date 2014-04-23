@@ -19,11 +19,11 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
 	class TimerImpl;
-	class UpdateTrigger_I;
 
 	namespace app
 	{
@@ -34,14 +34,15 @@ namespace _2Real
 
 			explicit TimerHandle( std::shared_ptr< TimerImpl > );
 
-			bool isValid() const;
-
-			void start();
-			void stop();
-
-			operator std::shared_ptr< UpdateTrigger_I > ();
+			bool			isValid() const;
+			void			start();
+			void			stop();
+			Connection		registerToTimer( boost::function< void() > );
+			void			destroy();
 
 		private:
+
+			friend class BlockHandle;
 
 			std::weak_ptr< TimerImpl >		mImpl;
 

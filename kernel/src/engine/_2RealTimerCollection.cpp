@@ -22,24 +22,41 @@
 
 namespace _2Real
 {
+	class TimerByAddress
+	{
+	public:
+		explicit TimerByAddress( std::shared_ptr< const TimerImpl > timer ) : mBaseline( timer ) { assert( timer.get() ); }
+		bool operator()( std::pair< Connection, std::shared_ptr< TimerImpl > > const& val ) const
+		{
+			assert( val.second.get() );
+			return mBaseline.get() == val.second.get();
+		}
+	private:
+		std::shared_ptr< const TimerImpl > mBaseline;
+	};
+
 	TimerCollection::TimerCollection() :
 		mIoService(),
 		mWork( new boost::asio::io_service::work( mIoService ) ),
 		mThread( &TimerCollection::run, this )
-	{
-		
+	{		
 	}
 
 	TimerCollection::~TimerCollection()
 	{
-		for ( auto it : mTimers )
-		{
-			it->stop();
-			it.reset();
-		}
-
 		mWork.reset();
 		mThread.join();
+	}
+
+	void TimerCollection::clear()
+	{
+		for ( auto it : mTimers )
+		{
+			it.first.disconnect();
+			it.second->stop();
+		}
+
+		mTimers.clear();
 	}
 
 	void TimerCollection::run()
@@ -51,7 +68,18 @@ namespace _2Real
 	{
 		uint64_t period = static_cast< uint64_t >( 1000 / fps );
 		std::shared_ptr< TimerImpl > timer( new TimerImpl( mIoService, period ) );
-		mTimers.insert( timer );
+		Connection connection = timer->registerToDestroyed( std::bind( &TimerCollection::timerDestroyed, this, std::placeholders::_1 ) );
+		mTimers.push_back( std::make_pair( connection, timer ) );
 		return timer;
+	}
+
+	void TimerCollection::timerDestroyed( std::shared_ptr< const TimerImpl > timer )
+	{
+		auto timerIter = std::find_if( mTimers.begin(), mTimers.end(), TimerByAddress( timer ) );
+		if ( timerIter != mTimers.end() )
+		{
+			timerIter->first.disconnect();
+			mTimers.erase( timerIter );
+		}
 	}
 }

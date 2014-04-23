@@ -24,17 +24,16 @@
 
 #include "common/_2RealBoost.h"
 #include <boost/asio.hpp>
-#include <atomic>
 
 namespace _2Real
 {
-	class TimerImpl : public UpdateTrigger_I
+	class TimerImpl : public UpdateTrigger_I, public std::enable_shared_from_this< TimerImpl >
 	{
 
 	public:
 
 		TimerImpl( boost::asio::io_service &service, const uint64_t period );
-		~TimerImpl();
+		~TimerImpl() = default;
 
 		void start();		
 		void stop();
@@ -42,6 +41,9 @@ namespace _2Real
 		void update();
 
 		boost::signals2::connection registerToUpdate( boost::signals2::signal< void() >::slot_type ) const;
+		boost::signals2::connection registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const TimerImpl > ) >::slot_type ) const;
+
+		void destroy();
 
 	private:
 
@@ -50,6 +52,7 @@ namespace _2Real
 		bool										mShouldUpdate;
 		mutable std::mutex							mMutex;
 		mutable boost::signals2::signal< void() >	mReady;
+		mutable boost::signals2::signal< void( std::shared_ptr< const TimerImpl > ) > mDestroyed;
 
 	};
 }

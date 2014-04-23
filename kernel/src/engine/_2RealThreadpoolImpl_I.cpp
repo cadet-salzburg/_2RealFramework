@@ -29,8 +29,8 @@ namespace _2Real
 		{
 		case ThreadpoolPolicy::FIFO:
 			return std::shared_ptr< ThreadpoolImpl_I >( new FifoThreadpool( 8 ) );
-		case ThreadpoolPolicy::DEDICATED:
-			return std::shared_ptr< ThreadpoolImpl_I >( new UniqueThreadpool );
+		//case ThreadpoolPolicy::DEDICATED:
+		//	return std::shared_ptr< ThreadpoolImpl_I >( new UniqueThreadpool );
 		default:
 			return std::shared_ptr< ThreadpoolImpl_I >();
 		}

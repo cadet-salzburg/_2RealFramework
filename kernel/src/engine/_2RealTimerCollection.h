@@ -19,11 +19,11 @@
 
 #pragma once
 
-#include "common/_2RealBoost.h"
 #include "common/_2RealStdIncludes.h"
 
+#include "common/_2RealSignals.h"
+#include "common/_2RealBoost.h"
 #include <boost/asio.hpp>
-#include <thread>
 
 namespace _2Real
 {
@@ -44,13 +44,14 @@ namespace _2Real
 
 		std::shared_ptr< TimerImpl >	createTimer( const double fps );
 
+		void clear();
 		void run();
+
+		void timerDestroyed( std::shared_ptr< const TimerImpl > );
 
 	private:
 
-		typedef std::set< std::shared_ptr< TimerImpl > > Timers;
-
-		Timers												mTimers;
+		std::vector< std::pair< Connection, std::shared_ptr< TimerImpl > > >			mTimers;
 		boost::asio::io_service								mIoService;
 		std::shared_ptr< boost::asio::io_service::work >	mWork;
 		std::thread											mThread;

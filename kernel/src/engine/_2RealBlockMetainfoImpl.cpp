@@ -25,16 +25,17 @@
 
 namespace _2Real
 {
-	struct NameCmp : public std::unary_function< std::string, bool >
+	class IoSlotByName
 	{
-		explicit NameCmp( const std::string name ) : mName( name ) {}
-
-		bool operator()( std::shared_ptr< IoSlotMetainfoImpl > arg )
+	public:
+		explicit IoSlotByName( const std::string name ) : mBaseline( name ) {}
+		bool operator()( std::shared_ptr< const IoSlotMetainfoImpl > val )
 		{
-			return mName == arg->getName();
+			assert( val.get() );
+			return mBaseline == val->getName();
 		}
-
-		std::string mName;
+	private:
+		std::string mBaseline;
 	};
 
 	std::shared_ptr< BlockMetainfoImpl > BlockMetainfoImpl::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< const TypeCollection > types, BlockDeclaration const& decl )
@@ -142,7 +143,7 @@ namespace _2Real
 
 	std::shared_ptr< const IoSlotMetainfoImpl > BlockMetainfoImpl::getInletMetainfo( std::string const& name ) const
 	{
-		auto it = std::find_if( mInlets.begin(), mInlets.end(), NameCmp( name ) );
+		auto it = std::find_if( mInlets.begin(), mInlets.end(), IoSlotByName( name ) );
 		if ( it == mInlets.end() )
 			throw NotFound( name );
 
@@ -151,7 +152,7 @@ namespace _2Real
 
 	std::shared_ptr< const IoSlotMetainfoImpl > BlockMetainfoImpl::getOutletMetainfo( std::string const& name ) const
 	{
-		auto it = std::find_if( mOutlets.begin(), mOutlets.end(), NameCmp( name ) );
+		auto it = std::find_if( mOutlets.begin(), mOutlets.end(), IoSlotByName( name ) );
 		if ( it == mOutlets.end() )
 			throw NotFound( name );
 
@@ -160,7 +161,7 @@ namespace _2Real
 
 	std::shared_ptr< const IoSlotMetainfoImpl > BlockMetainfoImpl::getParameterMetainfo( std::string const& name ) const
 	{
-		auto it = std::find_if( mParameters.begin(), mParameters.end(), NameCmp( name ) );
+		auto it = std::find_if( mParameters.begin(), mParameters.end(), IoSlotByName( name ) );
 		if ( it == mParameters.end() )
 			throw NotFound( name );
 
@@ -169,7 +170,7 @@ namespace _2Real
 
 	std::shared_ptr< IoSlotMetainfoImpl > BlockMetainfoImpl::getInletMetainfo( std::string const& name )
 	{
-		auto it = std::find_if( mInlets.begin(), mInlets.end(), NameCmp( name ) );
+		auto it = std::find_if( mInlets.begin(), mInlets.end(), IoSlotByName( name ) );
 		if ( it == mInlets.end() )
 			throw NotFound( name );
 
@@ -178,7 +179,7 @@ namespace _2Real
 
 	std::shared_ptr< IoSlotMetainfoImpl > BlockMetainfoImpl::getOutletMetainfo( std::string const& name )
 	{
-		auto it = std::find_if( mOutlets.begin(), mOutlets.end(), NameCmp( name ) );
+		auto it = std::find_if( mOutlets.begin(), mOutlets.end(), IoSlotByName( name ) );
 		if ( it == mOutlets.end() )
 			throw NotFound( name );
 
@@ -187,7 +188,7 @@ namespace _2Real
 
 	std::shared_ptr< IoSlotMetainfoImpl > BlockMetainfoImpl::getParameterMetainfo( std::string const& name )
 	{
-		auto it = std::find_if( mParameters.begin(), mParameters.end(), NameCmp( name ) );
+		auto it = std::find_if( mParameters.begin(), mParameters.end(), IoSlotByName( name ) );
 		if ( it == mParameters.end() )
 			throw NotFound( name );
 

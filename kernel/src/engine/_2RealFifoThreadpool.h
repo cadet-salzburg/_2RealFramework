@@ -21,10 +21,6 @@
 
 #include "engine/_2RealThreadpoolImpl_I.h"
 
-#include <thread>
-#include <atomic>
-#include <condition_variable>
-
 namespace _2Real
 {
 

@@ -27,7 +27,6 @@
 #include "app/_2RealParameterHandle.h"
 #include "app/_2RealUpdatePolicyHandle.h"
 
-#include "engine/_2RealBundleImpl.h"
 #include "engine/_2RealBlockImpl.h"
 #include "engine/_2RealTimerImpl.h"
 #include "engine/_2RealInletImpl_I.h"
@@ -81,7 +80,8 @@ namespace _2Real
 		std::future< BlockResult > BlockHandle::startUpdating( TimerHandle handle )
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
-			return block->startUpdating( static_cast< std::shared_ptr< UpdateTrigger_I > >( handle ) );
+			std::shared_ptr< TimerImpl > timer = checkValidity< TimerImpl >( handle.mImpl, "timer" );
+			return block->startUpdating( timer );
 		}
 
 		std::future< BlockResult > BlockHandle::startUpdating()
@@ -94,6 +94,18 @@ namespace _2Real
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
 			return block->stopUpdating();
+		}
+
+		void BlockHandle::destroy( const uint64_t timeout )
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return block->destroy( timeout );
+		}
+
+		UpdatePolicyHandle BlockHandle::getUpdatePolicy()
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return UpdatePolicyHandle( block->getUpdatePolicy() );
 		}
 
 		BlockIo BlockHandle::getBlockIo()
@@ -110,10 +122,34 @@ namespace _2Real
 			return result;
 		}
 
-		UpdatePolicyHandle BlockHandle::getUpdatePolicy()
+		InletHandle BlockHandle::getInlet( std::string const& name )
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
-			return UpdatePolicyHandle( block->getUpdatePolicy() );
+			return InletHandle( block->getInlet( name ) );
+		}
+
+		MultiInletHandle BlockHandle::getMultiInlet( std::string const& name )
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return MultiInletHandle( block->getMultiInlet( name ) );
+		}
+
+		OutletHandle BlockHandle::getOutlet( std::string const& name )
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return OutletHandle( block->getOutlet( name ) );
+		}
+
+		ParameterHandle BlockHandle::getParameter( std::string const& name )
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return ParameterHandle( block->getParameter( name ) );
+		}
+
+		Connection BlockHandle::registerToException( boost::function< void( Exception ) > listener )
+		{
+			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
+			return block->registerToException( listener );
 		}
 	}
 }

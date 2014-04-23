@@ -23,7 +23,6 @@
 #include "engine/_2RealSignalResponse.h"
 #include "engine/_2RealThreadpoolImpl_I.h"
 
-#include <future>
 #include "common/_2RealBlockState.h"
 #include "common/_2RealSignals.h"
 

@@ -48,10 +48,16 @@ namespace _2Real
 			timer->stop();
 		}
 
-		TimerHandle::operator std::shared_ptr< UpdateTrigger_I > ()
+		void TimerHandle::destroy()
 		{
 			std::shared_ptr< TimerImpl > timer = checkValidity< TimerImpl >( mImpl, "timer" );
-			return std::static_pointer_cast< UpdateTrigger_I >( timer );
+			timer->destroy();
+		}
+
+		Connection TimerHandle::registerToTimer( boost::function< void() > listener )
+		{
+			std::shared_ptr< TimerImpl > timer = checkValidity< TimerImpl >( mImpl, "timer" );
+			return timer->registerToUpdate( listener );
 		}
 	}
 }

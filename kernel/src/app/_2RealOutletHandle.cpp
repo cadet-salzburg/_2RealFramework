@@ -17,6 +17,8 @@
 */
 
 #include "app/_2RealOutletHandle.h"
+#include "app/_2RealBlockHandle.h"
+
 #include "engine/_2RealOutletImpl.h"
 
 #include "common/_2RealWeakPtrCheck.h"
@@ -36,10 +38,22 @@ namespace _2Real
 			return ( nullptr != outlet.get() );
 		}
 
-		//OutletHandle::operator std::shared_ptr< DataSource_I > ()
-		//{
-		//	std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
-		//	return std::static_pointer_cast< DataSource_I >( outlet );
-		//}
+		BlockHandle OutletHandle::getBlock()
+		{
+			std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
+			return BlockHandle( outlet->getParent() );
+		}
+
+		std::shared_ptr< const DataItem > OutletHandle::getData() const
+		{
+			std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
+			return outlet->getData();
+		}
+
+		Connection OutletHandle::registerToNewData( boost::function< void( std::shared_ptr< const DataItem > ) > listener )
+		{
+			std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
+			return outlet->registerToUpdate( listener );
+		}
 	}
 }

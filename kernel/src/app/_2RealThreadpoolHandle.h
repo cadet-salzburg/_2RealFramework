@@ -24,6 +24,14 @@ namespace _2Real
 {
 	class ThreadpoolImpl_I;
 
+	/*
+	*	new: added handle to threadpool to fw ( = concept of 'system' from earliest design )
+	*	created & managed by engine
+	*	a threadpool must exist to be able to create block instances
+	*	other than this, there is no functionality here ( yet )
+	*	all threadpools are removed once the engine is destroyed
+	*/
+
 	namespace app
 	{
 		class ThreadpoolHandle
@@ -34,6 +42,12 @@ namespace _2Real
 			explicit ThreadpoolHandle( std::shared_ptr< ThreadpoolImpl_I > );
 
 			bool isValid() const;
+
+			// TODO
+			// destroy of sorts
+			//	-> what happens to the blocks then
+			// resize
+			// etc.
 
 		private:
 

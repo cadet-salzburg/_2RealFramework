@@ -32,13 +32,14 @@ namespace _2Real
 	public:
 
 		ThreadpoolCollection() = default;
-		~ThreadpoolCollection();
+		~ThreadpoolCollection() = default;
 
 		ThreadpoolCollection( ThreadpoolCollection const& other ) = delete;
 		ThreadpoolCollection( ThreadpoolCollection && other ) = delete;
 		ThreadpoolCollection& operator=( ThreadpoolCollection const& other ) = delete;
 		ThreadpoolCollection& operator=( ThreadpoolCollection && other ) = delete;
 
+		void clear();
 		std::shared_ptr< ThreadpoolImpl_I >	createThreadpool( const ThreadpoolPolicy );
 
 	private:

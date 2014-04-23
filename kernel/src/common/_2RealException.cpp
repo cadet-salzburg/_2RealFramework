@@ -84,17 +84,14 @@ namespace _2Real
 	}
 
 	IMPLEMENT_EXCEPTION( BundleImportFailure, Exception, "a dll ( bundle ) failed to load properly ( BundleImportFailure Exception )" )
-	//IMPLEMENT_EXCEPTION( InvalidStateChangeException, Exception, "invalid state change exception" )
-	//IMPLEMENT_EXCEPTION( InvalidTypeException, Exception, "invalid type exception" )
 	IMPLEMENT_EXCEPTION( NotFound, Exception, "an object was not found ( NotFound Exception )" )
 	IMPLEMENT_EXCEPTION( AlreadyExists, Exception, "a named object already exists ( AlreadyExists Exception )" )
 	IMPLEMENT_EXCEPTION( TypeMismatch, Exception, "a type mismatch occured ( TypeMismatch Exception )" )
 	IMPLEMENT_EXCEPTION( HandleAccessFailure, Exception, "an uninitialized handle was accessed ( HandleAccessFailure Exception )" )
 	IMPLEMENT_EXCEPTION( CreationFailure, Exception, "an object could not be created ( CreationFailure Exception )" )
-	//IMPLEMENT_EXCEPTION( TimeOutException, Exception, "time out exception" )
-	//IMPLEMENT_EXCEPTION( InvalidNameException, Exception, "invalid name exception" )
-	//IMPLEMENT_EXCEPTION( XMLFormatException, Exception, "xml format exception" )
-	//IMPLEMENT_EXCEPTION( OutOfRangeException, Exception, "out of range exception" )
-	//IMPLEMENT_EXCEPTION( IllegalActionException, Exception, "illegal action exception" )
+	IMPLEMENT_EXCEPTION( BlockSetupFailure, Exception, "a block could not be setup ( BlockSetupFailure Exception )" )
+	IMPLEMENT_EXCEPTION( BlockUpdateFailure, Exception, "a block could not be updated ( BlockUpdateFailure Exception )" )
+	IMPLEMENT_EXCEPTION( BlockShutdownFailure, Exception, "a block could not be shutdown ( BlockShutdownFailure Exception )" )
+	IMPLEMENT_EXCEPTION( Timeout, Exception, "a timeout occurred ( Timeout Exception )" )
 
 }

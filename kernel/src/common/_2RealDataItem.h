@@ -20,8 +20,6 @@
 #pragma once
 
 #include "common/_2RealBoost.h"
-#include "common/_2RealException.h"
-
 #include <boost/variant.hpp>
 
 namespace _2Real

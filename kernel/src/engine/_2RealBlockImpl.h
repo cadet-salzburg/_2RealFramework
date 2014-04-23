@@ -20,8 +20,7 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-
-#include <future>
+#include "common/_2RealSignals.h"
 #include "common/_2RealBlockResult.h"
 
 #include "bundle/_2RealBlock.h"
@@ -38,6 +37,8 @@ namespace _2Real
 	class InstanceId;
 	class BundleImpl;
 	class InletImpl_I;
+	class InletImpl;
+	class MultiInletImpl;
 
 	class BlockIo
 	{
@@ -51,6 +52,13 @@ namespace _2Real
 		std::vector< std::shared_ptr< OutletImpl > >			mOutlets;
 		std::shared_ptr< bundle::Block >	mBlockObj;	
 
+		std::shared_ptr< InletImpl >		getInlet( std::string const& );
+		std::shared_ptr< MultiInletImpl >	getMultiInlet( std::string const& );
+		std::shared_ptr< OutletImpl >		getOutlet( std::string const& );
+		std::shared_ptr< ParameterImpl >	getParameter( std::string const& );
+
+		boost::signals2::connection			registerToException( boost::signals2::signal< void( Exception ) >::slot_type ) const;
+
 		void doSetup();
 		void doUpdate();
 		void doShutdown();
@@ -58,7 +66,8 @@ namespace _2Real
 
 	private:
 
-		BlockAccess		mKey;
+		mutable boost::signals2::signal< void( Exception ) >	mException;
+		BlockAccess							mKey;
 
 	};
 
@@ -80,8 +89,6 @@ namespace _2Real
 		std::shared_ptr< const InstanceId >			getId() const;
 		std::shared_ptr< BundleImpl >					getParent();
 
-		bool										isSingleton() const;
-
 		std::future< BlockResult > setup();
 		std::future< BlockResult > singlestep();
 		std::future< BlockResult > shutdown();
@@ -90,8 +97,19 @@ namespace _2Real
 		std::future< BlockResult > startUpdating( std::shared_ptr< UpdateTrigger_I > );
 		std::future< BlockResult > stopUpdating();
 
-		std::shared_ptr< BlockIo >		getBlockIo();
+		void						destroy( const uint64_t );
+		std::future< BlockResult >	parentUnloaded();
+
+		std::shared_ptr< BlockIo >			getBlockIo();
 		std::shared_ptr< UpdatePolicyImpl >	getUpdatePolicy();
+
+		std::shared_ptr< InletImpl >		getInlet( std::string const& );
+		std::shared_ptr< MultiInletImpl >	getMultiInlet( std::string const& );
+		std::shared_ptr< OutletImpl >		getOutlet( std::string const& );
+		std::shared_ptr< ParameterImpl >	getParameter( std::string const& );
+
+		boost::signals2::connection			registerToException( boost::function< void( Exception ) > );
+		boost::signals2::connection			registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const BlockImpl > ) >::slot_type );
 
 	private:
 
@@ -103,6 +121,8 @@ namespace _2Real
 		std::shared_ptr< UpdatePolicyImpl >						mUpdatePolicy;
 		std::shared_ptr< BlockStateHandler >						mStateHandler;
 		std::shared_ptr< BlockIo >							mIo;
+
+		boost::signals2::signal< void( std::shared_ptr< const BlockImpl > ) > mDestroyed;
 
 	};
 

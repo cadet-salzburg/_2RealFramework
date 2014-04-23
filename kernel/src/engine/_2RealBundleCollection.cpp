@@ -28,44 +28,30 @@
 
 namespace _2Real
 {
-	class BundlePtrCmp : public std::unary_function< bool, std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > >
+	class BundleByAddress
 	{
-
 	public:
-
-		explicit BundlePtrCmp( std::shared_ptr< const BundleImpl > obj ) : mBaseline( obj )
+		explicit BundleByAddress( std::shared_ptr< const BundleImpl > bundle ) : mBaseline( bundle ) { assert( bundle.get() ); }
+		bool operator()( std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > const& val ) const
 		{
+			assert( val.second.get() );
+			return mBaseline.get() == val.second.get();
 		}
-
-		bool operator()( std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > other ) const
-		{
-			return mBaseline.get() == other.second.get();
-		}
-
 	private:
-
 		std::shared_ptr< const BundleImpl > mBaseline;
-
 	};
 
-	class BundlePathCmp : public std::unary_function< bool, std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > >
+	class BundleByPath
 	{
-
 	public:
-
-		explicit BundlePathCmp( const Path path ) : mBaseline( path )
+		explicit BundleByPath( const Path path ) : mBaseline( path ) {}
+		bool operator()( std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > const& val ) const
 		{
+			assert( val.second.get() );
+			return mBaseline == val.second->getFilePath();
 		}
-
-		bool operator()( std::pair< boost::signals2::connection, std::shared_ptr< const BundleImpl > > other ) const
-		{
-			return mBaseline == other.second->getFilePath();
-		}
-
 	private:
-
 		Path mBaseline;
-
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -73,11 +59,6 @@ namespace _2Real
 	BundleCollection::BundleCollection( std::shared_ptr< TypeCollection > registry )
 	{
 		updateBundleDirectory();
-	}
-
-	BundleCollection::~BundleCollection()
-	{
-		clear( 1000 );
 	}
 
 	void BundleCollection::clear( const unsigned long timeout )
@@ -109,7 +90,7 @@ namespace _2Real
 	{
 		Path absPath = mBundleDirectory / path;
 
-		auto it = std::find_if( mBundles.begin(), mBundles.end(), BundlePathCmp( absPath ) );
+		auto it = std::find_if( mBundles.begin(), mBundles.end(), BundleByPath( absPath ) );
 		if ( it != mBundles.end() )
 		{
 			std::ostringstream msg;
@@ -131,7 +112,7 @@ namespace _2Real
 
 		std::shared_ptr< BundleImpl > bundle = BundleImpl::createFromMetainfo( bundleMetainfo, lib, absPath );
 
-		boost::signals2::connection con = bundle->registerToUnload( std::bind( &BundleCollection::bundleUnloaded, this, std::placeholders::_1 ) );
+		boost::signals2::connection con = bundle->registerToDestroyed( std::bind( &BundleCollection::bundleUnloaded, this, std::placeholders::_1 ) );
 
 		auto result = std::make_pair( bundle, bundleMetainfo );
 
@@ -141,7 +122,7 @@ namespace _2Real
 
 	void BundleCollection::bundleUnloaded( std::shared_ptr< const BundleImpl > bundle )
 	{
-		auto it = std::find_if( mBundles.begin(), mBundles.end(), BundlePtrCmp( bundle ) );
+		auto it = std::find_if( mBundles.begin(), mBundles.end(), BundleByAddress( bundle ) );
 		if ( it != mBundles.end() )
 			mBundles.erase( it );
 	}

@@ -19,7 +19,6 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include "app/_2RealInletHandle_I.h"
 #include "common/_2RealData.h"
 
 namespace _2Real
@@ -28,19 +27,18 @@ namespace _2Real
 
 	namespace app
 	{
+		class BlockHandle;
+
 		class ParameterHandle
 		{
-
-			class BlockHandle;
 
 		public:
 
 			explicit ParameterHandle( std::shared_ptr< ParameterImpl > );
 
-			bool			isValid() const;
-			BlockHandle		getBlock();
-
-			// TODO set stuff
+			bool				isValid() const;
+			BlockHandle			getBlock();
+			void				setValue( DataItem value );
 
 		private:
 

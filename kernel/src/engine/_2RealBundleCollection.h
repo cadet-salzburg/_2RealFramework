@@ -34,7 +34,7 @@ namespace _2Real
 	public:
 
 		BundleCollection( std::shared_ptr< TypeCollection > registry );
-		~BundleCollection();
+		~BundleCollection() = default;
 
 		BundleCollection( BundleCollection const& other ) = delete;
 		BundleCollection( BundleCollection && other ) = delete;

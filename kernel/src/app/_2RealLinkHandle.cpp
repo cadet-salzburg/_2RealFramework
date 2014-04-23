@@ -36,10 +36,10 @@ namespace _2Real
 			return ( nullptr != link.get() );
 		}
 
-		void LinkHandle::destroyUnderlyingLink()
+		void LinkHandle::destroy()
 		{
 			std::shared_ptr< Link > link = checkValidity< Link >( link, "link" );
-			link->unlink();
+			link->destroy();
 		}
 	}
 }

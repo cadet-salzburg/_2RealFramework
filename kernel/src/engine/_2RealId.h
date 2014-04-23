@@ -20,7 +20,6 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include <ostream>
 
 namespace _2Real
 {

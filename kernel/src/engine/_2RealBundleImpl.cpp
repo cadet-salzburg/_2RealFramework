@@ -16,9 +16,6 @@
 	limitations under the License.
 */
 
-#pragma warning( disable : 4996 )
-#pragma warning( disable : 4702 )
-
 #include "engine/_2RealBundleImpl.h"
 #include "engine/_2RealBundleCollection.h"
 #include "engine/_2RealBlockImpl.h"
@@ -32,24 +29,30 @@
 
 namespace _2Real
 {
-	class BlockNameCmp : public std::unary_function< bool, std::pair< std::string, std::shared_ptr< BlockLifetimeMgr_I > > >
+	class BlockFactoryByName
 	{
-
 	public:
-
-		explicit BlockNameCmp( const std::string name ) : mName( name )
-		{
-		}
-
+		explicit BlockFactoryByName( const std::string name ) : mBaseline( name ) {}
 		bool operator()( std::pair< std::string, std::shared_ptr< BlockLifetimeMgr_I > > const& val ) const
 		{
-			return mName == val.first;
+			assert( val.second.get() );
+			return mBaseline == val.first;
 		}
-
 	private:
+		std::string mBaseline;
+	};
 
-		std::string mName;
-
+	class BlockByAddress
+	{
+	public:
+		explicit BlockByAddress( std::shared_ptr< const BlockImpl > block ) : mBaseline( block ) { assert( block.get() ); }
+		bool operator()( std::pair< boost::signals2::connection, std::shared_ptr< const BlockImpl > > const& val ) const
+		{
+			assert( val.second.get() );
+			return mBaseline.get() == val.second.get();
+		}
+	private:
+		std::shared_ptr< const BlockImpl > mBaseline;
 	};
 
 	std::shared_ptr< BundleImpl > BundleImpl::createFromMetainfo( std::shared_ptr< const BundleMetainfoImpl > meta, std::shared_ptr< SharedLibrary > lib, Path const& path )
@@ -85,21 +88,49 @@ namespace _2Real
 		return mId;
 	}
 
-	void BundleImpl::unload( const long timeout )
+	void BundleImpl::unload( const uint64_t timeout )
 	{
 		// hold the ptr to the bundle until everything is cleared
 		std::shared_ptr< BundleImpl > tmp = shared_from_this();
 
-		// causes the bundle collection to release the bundle
-		// unless the call to unload was issued by the collection itsself
-		mUnloaded( shared_from_this() );
-		mUnloaded.disconnect_all_slots();
+		std::vector< std::pair< std::shared_ptr< BlockImpl >, std::future< BlockResult > > > blocks;
+		for ( auto it : mBlocks )
+			blocks.push_back( std::make_pair( it.second, it.second->parentUnloaded() ) );
 
-		// TODO: kill child blocks etc.
-		( void ) ( timeout );
+		if ( !blocks.empty() )
+			std::this_thread::sleep_for( std::chrono::milliseconds( timeout ) );
 
-		// this should kill the bundle, finally
-		tmp.reset();
+		std::ostringstream msg;
+		bool isOk = true;
+		for ( auto &it : blocks )
+		{
+			try
+			{
+				BlockResult result = it.second.get();
+				( void )( result );
+				auto blockIter = std::find_if( mBlocks.begin(), mBlocks.end(), BlockByAddress( it.first ) );
+				mBlocks.erase( blockIter );
+				it.first.reset();
+			}
+			catch ( std::future_error &e )
+			{
+				msg << it.first->getId()->getName() << " : " << e.what() << " " << e.code() << std::endl;
+				isOk = false;
+			}
+		}
+
+		if ( isOk )
+		{
+			// causes the bundle collection to release the bundle
+			// unless the call to unload was issued by the collection itsself
+			mDestroyed( shared_from_this() );
+			mDestroyed.disconnect_all_slots();
+
+			tmp.reset();
+		}
+		else
+			throw Timeout( msg.str() );
+		
 	}
 
 	Path BundleImpl::getFilePath() const
@@ -109,7 +140,7 @@ namespace _2Real
 
 	std::shared_ptr< BlockImpl > BundleImpl::createBlock( std::string const& name, std::shared_ptr< ThreadpoolImpl_I > threads, std::vector< std::shared_ptr< BlockImpl > > const& dependencies )
 	{
-		auto it = std::find_if( mLifetimeMgrs.begin(), mLifetimeMgrs.end(), BlockNameCmp( name ) );
+		auto it = std::find_if( mLifetimeMgrs.begin(), mLifetimeMgrs.end(), BlockFactoryByName( name ) );
 		if ( it == mLifetimeMgrs.end() )
 		{
 			std::ostringstream msg;
@@ -121,12 +152,23 @@ namespace _2Real
 		auto metainfo = mMetainfo->getServiceMetainfo( name );
 
 		std::shared_ptr< BlockImpl > block = BlockImpl::createFromMetainfo( shared_from_this(), metainfo, threads, dependencies, 0 /* TODO instance */ );
-		mBlocks.push_back( block );
+		auto connection = block->registerToDestroyed( std::bind( &BundleImpl::blockDestroyed, this, std::placeholders::_1 ) );
+		mBlocks.push_back( std::make_pair( connection, block ) );
 		return block;
 	}
 
-	boost::signals2::connection BundleImpl::registerToUnload( boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >::slot_type slot ) const
+	boost::signals2::connection BundleImpl::registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >::slot_type slot ) const
 	{
-		return mUnloaded.connect( slot );
+		return mDestroyed.connect( slot );
+	}
+
+	void BundleImpl::blockDestroyed( std::shared_ptr< const BlockImpl > block )
+	{
+		auto blockIter = std::find_if( mBlocks.begin(), mBlocks.end(), BlockByAddress( block ) );
+		if ( blockIter != mBlocks.end() )
+		{
+			blockIter->first.disconnect();
+			mBlocks.erase( blockIter );
+		}
 	}
 }

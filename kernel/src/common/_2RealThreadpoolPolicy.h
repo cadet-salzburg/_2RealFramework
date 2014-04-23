@@ -23,5 +23,5 @@
 
 namespace _2Real
 {
-	enum class ThreadpoolPolicy : uint8_t { FIFO, DEDICATED, INVALID };
+	enum class ThreadpoolPolicy : uint8_t { FIFO, /*DEDICATED,*/ INVALID };
 }

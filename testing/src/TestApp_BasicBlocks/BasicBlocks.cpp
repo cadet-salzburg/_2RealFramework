@@ -226,8 +226,6 @@ int main( int argc, char *argv[] )
 		std::getline( std::cin, line, lineEnd );
 		if ( line == "q" )
 			break;
-		else
-			std::cout << "doh" << std::endl;
 	}
 
 	return 0;

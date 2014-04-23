@@ -51,10 +51,11 @@ namespace _2Real
 		std::shared_ptr< const InstanceId >			getId() const;
 
 		Path 										getFilePath() const;
-		void										unload( const long timeout );
+		void										unload( const uint64_t timeout );
 		std::shared_ptr< BlockImpl >				createBlock( std::string const& name, std::shared_ptr< ThreadpoolImpl_I > system, std::vector< std::shared_ptr< BlockImpl > > const& dependencies );
+		void										blockDestroyed( std::shared_ptr< const BlockImpl > );
 
-		boost::signals2::connection registerToUnload( boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >::slot_type ) const;
+		boost::signals2::connection registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >::slot_type ) const;
 
 	private:
 
@@ -67,10 +68,10 @@ namespace _2Real
 
 		Path													mPath;
 
-		std::vector< std::pair< std::string, std::shared_ptr< BlockLifetimeMgr_I > > >	mLifetimeMgrs;
-		std::vector< std::shared_ptr< BlockImpl > >										mBlocks;
+		std::vector< std::pair< std::string, std::shared_ptr< BlockLifetimeMgr_I > > >			mLifetimeMgrs;
+		std::vector< std::pair< boost::signals2::connection, std::shared_ptr< BlockImpl > > >	mBlocks;
 
-		mutable boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >	mUnloaded;
+		mutable boost::signals2::signal< void( std::shared_ptr< const BundleImpl > ) >	mDestroyed;
 
 	};
 

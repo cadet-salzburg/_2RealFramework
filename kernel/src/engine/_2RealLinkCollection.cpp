@@ -24,32 +24,20 @@
 
 namespace _2Real
 {
-	class LinkCmp : public std::unary_function< bool, std::pair< boost::signals2::connection, std::shared_ptr< Link > > >
+	class LinkByAddress : public std::unary_function< bool, std::pair< boost::signals2::connection, std::shared_ptr< Link > > >
 	{
-
 	public:
-
-		explicit LinkCmp( std::shared_ptr< const Link > link ) : mBaseline( link )
+		explicit LinkByAddress( std::shared_ptr< const Link > link ) : mBaseline( link ) { assert( link.get() ); }
+		bool operator()( std::pair< boost::signals2::connection, std::shared_ptr< Link > > const& val ) const
 		{
+			assert( val.second.get() );
+			return mBaseline.get() == val.second.get();
 		}
-
-		bool operator()( const std::pair< boost::signals2::connection, std::shared_ptr< Link > > other ) const
-		{
-			return mBaseline.get() == other.second.get();
-		}
-
 	private:
-
 		std::shared_ptr< const Link > mBaseline;
-
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	LinkCollection::~LinkCollection()
-	{
-		clear();
-	}
 
 	void LinkCollection::clear()
 	{
@@ -65,14 +53,14 @@ namespace _2Real
 		auto source = std::static_pointer_cast< DataSource_I >( outlet );
 		std::shared_ptr< Link > link = Link::createLink( sink, source );
 
-		auto connection = link->registerToLinkRemoved( std::bind( &LinkCollection::linkRemoved, this, std::placeholders::_1 ) );
+		auto connection = link->registerToDestroyed( std::bind( &LinkCollection::linkDestroyed, this, std::placeholders::_1 ) );
 		mLinks.push_back( std::make_pair( connection, link ) );
 		return link;
 	}
 
-	void LinkCollection::linkRemoved( std::shared_ptr< const Link > link )
+	void LinkCollection::linkDestroyed( std::shared_ptr< const Link > link )
 	{
-		auto it = std::find_if( mLinks.begin(), mLinks.end(), LinkCmp( link ) );
+		auto it = std::find_if( mLinks.begin(), mLinks.end(), LinkByAddress( link ) );
 		if ( it != mLinks.end() )
 		{
 			it->first.disconnect();

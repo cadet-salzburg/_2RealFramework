@@ -16,9 +16,6 @@
 	limitations under the License.
 */
 
-#pragma warning( disable : 4996 )
-#pragma warning( disable : 4702 )
-
 #include "engine/_2RealMultiInletImpl.h"
 #include "engine/_2RealInletImpl.h"
 #include "engine/_2RealBlockImpl.h"
@@ -27,18 +24,17 @@
 
 namespace _2Real
 {
-
-	struct PtrCmp : public std::unary_function< std::string, bool >
+	class SubinletByAddress
 	{
-		explicit PtrCmp( std::shared_ptr< InletImpl > inlet ) : mInlet( inlet ) { assert( mInlet ); }
-
-		bool operator()( std::shared_ptr< InletImpl > other )
+	public:
+		explicit SubinletByAddress( std::shared_ptr< const InletImpl > inlet ) : mBaseline( inlet ) { assert( inlet.get() ); }
+		bool operator()( std::shared_ptr< const InletImpl > val )
 		{
-			assert( other );
-			return mInlet.get() == other.get();
+			assert( val.get() );
+			return mBaseline.get() == val.get();
 		}
-
-		std::shared_ptr< InletImpl > mInlet;
+	private:
+		std::shared_ptr< const InletImpl > mBaseline;
 	};
 
 	std::shared_ptr< InletImpl_I > MultiInletImpl::createFromMetainfo( std::shared_ptr< BlockImpl > parent, std::shared_ptr< const IoSlotMetainfoImpl > meta )
@@ -129,7 +125,7 @@ namespace _2Real
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
 
-		auto it = std::find_if( mInlets.begin(), mInlets.end(), PtrCmp( inlet ) );
+		auto it = std::find_if( mInlets.begin(), mInlets.end(), SubinletByAddress( inlet ) );
 		if ( it == mInlets.end() )
 			throw NotFound( inlet->getId()->getName() );
 

@@ -40,6 +40,9 @@ namespace _2Real
 			BlockHandle				getBlock();
 			void					set( const DefaultUpdatePolicy );
 
+			// TODO:
+			// set: more complex condition than ANY / ALL
+
 		private:
 
 			std::weak_ptr< UpdatePolicyImpl >		mImpl;

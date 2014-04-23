@@ -22,8 +22,6 @@
 #include "engine/_2RealUpdateTrigger_I.h"
 #include "engine/_2RealBlockImpl.h"
 
-#include <boost/bind.hpp>
-
 namespace _2Real
 {
 	BlockStateHandler::BlockStateHandler( std::shared_ptr< ThreadpoolImpl_I > threads, std::shared_ptr< BlockIo > service ) :

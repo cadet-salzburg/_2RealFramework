@@ -20,6 +20,7 @@
 
 #include "common/_2RealStdIncludes.h"
 #include "common/_2RealData.h"
+
 #include "app/_2RealInletHandle_I.h"
 
 namespace _2Real
@@ -38,12 +39,10 @@ namespace _2Real
 
 			explicit InletHandle( std::shared_ptr< InletImpl > );
 	
-			bool isValid() const;
-			bool isMultiInlet() const;
-			BlockHandle getBlock();
-
-			// TODO should definitely throw an exception in case of a datatype mismatch
-			void setValue( DataItem value );
+			bool				isValid() const;
+			bool				isMultiInlet() const;
+			BlockHandle			getBlock();
+			void				setValue( DataItem value );
 
 		private:
 

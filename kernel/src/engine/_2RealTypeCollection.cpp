@@ -18,37 +18,47 @@
 
 #include "engine/_2RealTypeCollection.h"
 #include "engine/_2RealTypeMetainfoImpl_I.h"
+#include "engine/_2RealCustomTypeMetainfoImpl.h"
 #include "engine/_2RealId.h"
 
 namespace _2Real
 {
-	class TypeNameCmp : public std::unary_function< bool, std::shared_ptr< const TypeMetainfoImpl_I > >
+	class TypeByName
 	{
-
 	public:
-
-		explicit TypeNameCmp( const std::string name ) : mName( name )
+		explicit TypeByName( const std::string name ) : mBaseline( name ) {}
+		bool operator()( std::pair< Connection, std::shared_ptr< const TypeMetainfoImpl_I > > const& val ) const
 		{
+			assert( val.second.get() );
+			return mBaseline == val.second->getId()->toString();
 		}
-
-		bool operator()( std::shared_ptr< const TypeMetainfoImpl_I > type ) const
-		{
-			return mName == type->getId()->toString();
-		}
-
 	private:
-
-		std::string mName;
-
+		std::string mBaseline;
 	};
 
-	TypeCollection::~TypeCollection()
+	class TypeByAddress
 	{
+	public:
+		explicit TypeByAddress( std::shared_ptr< const TypeMetainfoImpl_I > type ) : mBaseline( type ) { assert( type.get() ); }
+		bool operator()( std::pair< Connection, std::shared_ptr< const TypeMetainfoImpl_I > > const& val ) const
+		{
+			assert( val.second.get() );
+			return mBaseline.get() == val.second.get();
+		}
+	private:
+		std::shared_ptr< const TypeMetainfoImpl_I > mBaseline;
+	};
+
+	void TypeCollection::clear()
+	{
+		for ( auto it : mTypes )
+			it.first.disconnect();
+		mTypes.clear();
 	}
 
 	void TypeCollection::addType( std::shared_ptr< const TypeMetainfoImpl_I > type )
 	{
-		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeNameCmp( type->getId()->toString() ) );
+		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeByName( type->getId()->toString() ) );
 		if ( it != mTypes.end() )
 		{
 			std::ostringstream msg;
@@ -56,21 +66,33 @@ namespace _2Real
 			throw AlreadyExists( msg.str() );
 		}
 
-		mTypes.push_back( type );
+		if ( !type->isBasicType() )
+		{
+			auto custom = std::static_pointer_cast< const CustomTypeMetainfoImpl >( type );
+			auto connection = custom->registerToDestroyed( std::bind( &TypeCollection::typeDestroyed, this, std::placeholders::_1 ) );
+			mTypes.push_back( std::make_pair( connection, type ) );
+		}
+		else
+		{
+			mTypes.push_back( std::make_pair( Connection(), type ) );
+		}
 	}
 
-	void TypeCollection::typeRemoved( std::shared_ptr< const TypeMetainfoImpl_I > type )
+	void TypeCollection::typeDestroyed( std::shared_ptr< const TypeMetainfoImpl_I > type )
 	{
-		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeNameCmp( type->getId()->toString() ) );
-		if ( it != mTypes.end() )
-			mTypes.erase( it );
+		auto typeIter = std::find_if( mTypes.begin(), mTypes.end(), TypeByAddress( type ) );
+		if ( typeIter != mTypes.end() )
+		{
+			typeIter->first.disconnect();
+			mTypes.erase( typeIter );
+		}
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeCollection::getTypeMetainfo( const std::string name ) const
 	{
-		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeNameCmp( name ) );
+		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeByName( name ) );
 		if ( it != mTypes.end() )
-			return *it;
+			return it->second;
 		else
 			return nullptr;
 	}

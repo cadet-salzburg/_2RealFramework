@@ -21,6 +21,7 @@
 #include "common/_2RealStdIncludes.h"
 #include "engine/_2RealTypeMetainfoImpl_I.h"
 #include "common/_2RealData.h"
+#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
@@ -48,7 +49,9 @@ namespace _2Real
 		std::string getName() const;
 		std::shared_ptr< const MetainfoId > getId() const;
 
-		void unregisterFromTypeCollection();
+		void destroy();
+
+		Connection registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const CustomTypeMetainfoImpl > ) >::slot_type ) const;
 
 	private:
 
@@ -58,6 +61,8 @@ namespace _2Real
 		std::string									mDescription;
 		CustomDataItem								mTemplate;
 		std::weak_ptr< TypeCollection >				mTypes;
+
+		mutable boost::signals2::signal< void( std::shared_ptr< const CustomTypeMetainfoImpl > ) > mDestroyed;
 
 	};
 

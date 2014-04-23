@@ -104,16 +104,13 @@ namespace _2Real
 
 	DECLARE_EXCEPTION( CreationFailure, Exception )
 	DECLARE_EXCEPTION( BundleImportFailure, Exception )
-	//DECLARE_EXCEPTION( InvalidStateChangeException, Exception )
-	//DECLARE_EXCEPTION( InvalidTypeException, Exception )
 	DECLARE_EXCEPTION( NotFound, Exception )
 	DECLARE_EXCEPTION( AlreadyExists, Exception )
 	DECLARE_EXCEPTION( TypeMismatch, Exception )
 	DECLARE_EXCEPTION( HandleAccessFailure, Exception )
-	//DECLARE_EXCEPTION( TimeOutException, Exception )
-	//DECLARE_EXCEPTION( InvalidNameException, Exception )
-	//DECLARE_EXCEPTION( XMLFormatException, Exception )
-	//DECLARE_EXCEPTION( OutOfRangeException, Exception )
-	//DECLARE_EXCEPTION( IllegalActionException, Exception )
+	DECLARE_EXCEPTION( BlockSetupFailure, Exception )
+	DECLARE_EXCEPTION( BlockUpdateFailure, Exception )
+	DECLARE_EXCEPTION( BlockShutdownFailure, Exception )
+	DECLARE_EXCEPTION( Timeout, Exception )
 
 }

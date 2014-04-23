@@ -54,4 +54,9 @@ namespace _2Real
 		return mParent.lock();
 	}
 
+	void ParameterImpl::setData( DataItem data )
+	{
+		InSlot::setTmpValueExt( data );
+	}
+
 }

@@ -43,10 +43,10 @@ namespace _2Real
 	{
 	}
 
-	void CustomTypeMetainfoImpl::unregisterFromTypeCollection()
+	void CustomTypeMetainfoImpl::destroy()
 	{
-		std::shared_ptr< TypeCollection > types = mTypes.lock();
-		if ( types.get() != nullptr ) types->typeRemoved( shared_from_this() );
+		mDestroyed( shared_from_this() );
+		mDestroyed.disconnect_all_slots();
 	}
 
 	bool CustomTypeMetainfoImpl::isBasicType() const
@@ -97,6 +97,11 @@ namespace _2Real
 			result.push_back( std::make_pair( it.getName(), boost::apply_visitor( TypeMetainfoVisitor( mTypes.lock() ), it.getValue() ) ) );
 
 		return result;
+	}
+
+	Connection CustomTypeMetainfoImpl::registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const CustomTypeMetainfoImpl > ) >::slot_type listener ) const
+	{
+		return mDestroyed.connect( listener );
 	}
 
 }

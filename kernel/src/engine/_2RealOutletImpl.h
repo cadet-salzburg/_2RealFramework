@@ -45,10 +45,11 @@ namespace _2Real
 		~OutletImpl() = default;
 
 		DataItem & getValue();
+		std::shared_ptr< const DataItem > getData() const;
 		void update();
 
 		std::shared_ptr< const InstanceId > getId() const;
-		std::shared_ptr< BlockImpl >			getParent();
+		std::shared_ptr< BlockImpl >		getParent();
 
 		void unlink();
 

@@ -66,9 +66,9 @@ namespace _2Real
 	{
 		mLinkCollection->clear();
 		mBundleCollection->clear( Constants::EngineDefaultTimeout );
-		//mTypeCollection->clear();
-		//mTimerCollection->clear();
-		//mThreadpoolCollection->clear();
+		mTypeCollection->clear();
+		mTimerCollection->clear();
+		mThreadpoolCollection->clear();
 	}
 
 	std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > EngineImpl::loadLibrary( std::string const& filename )

@@ -34,7 +34,7 @@ namespace _2Real
 	public:
 
 		LinkCollection() = default;
-		~LinkCollection();
+		~LinkCollection() = default;
 
 		LinkCollection( LinkCollection const& other ) = delete;
 		LinkCollection( LinkCollection && other ) = delete;
@@ -43,7 +43,7 @@ namespace _2Real
 
 		void					clear();
 		std::shared_ptr< Link > createLink( std::shared_ptr< InletImpl >, std::shared_ptr< OutletImpl > );
-		void					linkRemoved( std::shared_ptr< const Link > );
+		void					linkDestroyed( std::shared_ptr< const Link > );
 
 	private:
 

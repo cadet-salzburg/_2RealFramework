@@ -21,8 +21,6 @@
 #include "engine/_2RealDataSink_I.h"
 #include "common/_2RealException.h"
 
-#pragma warning( disable : 4100 )
-
 namespace _2Real
 {
 	std::shared_ptr< Link > Link::createLink( std::shared_ptr< DataSink_I > sink, std::shared_ptr< DataSource_I > source )
@@ -51,7 +49,7 @@ namespace _2Real
 
 	void Link::receiveData( std::shared_ptr< const DataItem > data )
 	{
-		mDataSignal( data );
+		mData( data );
 	}
 
 	void Link::sinkRemoved()
@@ -67,7 +65,7 @@ namespace _2Real
 
 		// collection: listens to link removal
 		// this causes the collection to drop the shared ptr
-		mUnlinkedSignal( shared_from_this() );
+		mDestroyed( shared_from_this() );
 	}
 
 	void Link::sourceRemoved()
@@ -78,15 +76,15 @@ namespace _2Real
 		mSourceRemovedConnection.disconnect();
 
 		// sink: still listens to link-as-source
-		mSourceRemovedSignal( std::static_pointer_cast< DataSource_I >( shared_from_this() ) );
+		mSourceRemoved( std::static_pointer_cast< DataSource_I >( shared_from_this() ) );
 		mSinkRemovedConnection.disconnect();
 
 		// collection: listens to link removal
 		// this causes the collection to drop the shared ptr
-		mUnlinkedSignal( shared_from_this() );
+		mDestroyed( shared_from_this() );
 	}
 
-	void Link::unlink()
+	void Link::destroy()
 	{
 		// source: listens to nothing, anyway
 		// link-as-sink removal does not matter
@@ -95,31 +93,31 @@ namespace _2Real
 
 		// sink: still listens to link-as-source
 		// this will be stopped now
-		mSourceRemovedSignal( std::static_pointer_cast< DataSource_I >( shared_from_this() ) );
+		mSourceRemoved( std::static_pointer_cast< DataSource_I >( shared_from_this() ) );
 		mSinkRemovedConnection.disconnect();
 
 		// collection: listens to link removal
 		// this causes the collection to drop the shared ptr
-		mUnlinkedSignal( shared_from_this() );
+		mDestroyed( shared_from_this() );
 	}
 
 	boost::signals2::connection Link::registerToUpdate( boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >::slot_type listener ) const
 	{
-		return mDataSignal.connect( listener );
+		return mData.connect( listener );
 	}
 
-	boost::signals2::connection Link::registerToLinkRemoved( boost::signals2::signal< void( std::shared_ptr< const Link > ) >::slot_type listener ) const
+	boost::signals2::connection Link::registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const Link > ) >::slot_type listener ) const
 	{
-		return mUnlinkedSignal.connect( listener );
+		return mDestroyed.connect( listener );
 	}
 
 	boost::signals2::connection Link::registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSource_I > ) >::slot_type listener ) const
 	{
-		return mSourceRemovedSignal.connect( listener );
+		return mSourceRemoved.connect( listener );
 	}
 
 	boost::signals2::connection Link::registerToRemoved( boost::signals2::signal< void( std::shared_ptr< const DataSink_I > ) >::slot_type listener ) const
 	{
-		return mSinkRemovedSignal.connect( listener );
+		return mSinkRemoved.connect( listener );
 	}
 }

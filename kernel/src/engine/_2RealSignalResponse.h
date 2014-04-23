@@ -20,8 +20,6 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include <future>
-
 #include "common/_2RealBlockState.h"
 #include "common/_2RealBlockAction.h"
 #include "common/_2RealBlockResult.h"
