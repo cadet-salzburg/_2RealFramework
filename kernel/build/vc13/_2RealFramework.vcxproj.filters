@@ -621,6 +621,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="boost.txt" />
+    <Text Include="info.txt" />
   </ItemGroup>
 </Project>

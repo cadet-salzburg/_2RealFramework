@@ -38,9 +38,20 @@ namespace _2Real
 
 			bool isMultiInlet() const;
 
+			/*
+			*	@return: number of subinlets
+			*/
 			uint32_t getSize() const;
+
+			/*
+			*	@return: true if empty
+			*/
 			bool isEmpty() const;
-			InletHandle operator[]( const uint32_t );
+
+			/*
+			*	@return: subinlet at index idx
+			*/
+			InletHandle operator[]( const uint32_t indx );
 		
 		private:
 

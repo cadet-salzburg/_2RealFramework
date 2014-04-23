@@ -18,6 +18,11 @@
 
 #pragma once
 
+/*
+*	inlet handle interface: because BlockHandle::getBlockIo will return all inlets in one std::vector,
+*	regardless of whether or not they are multiinlets or not
+*/
+
 namespace _2Real
 {
 	namespace app
@@ -29,10 +34,21 @@ namespace _2Real
 
 		public:
 
-			virtual ~InletHandle_I() = default;
+			virtual ~InletHandle_I() = default;	
 
+			/*
+			*	@return: true if underlying object is valid ( all io slots are destroyed when the parent block is destroyed )
+			*/
 			virtual bool			isValid() const = 0;
+	
+			/*
+			*	@return: true if inlet is a multiinlet, false otherwise
+			*/
 			virtual bool			isMultiInlet() const = 0;
+
+			/*
+			*	@return: handle to owning block
+			*/
 			virtual BlockHandle		getBlock() = 0;
 
 		};

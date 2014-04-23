@@ -34,16 +34,49 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	created by block handle via BlockHandle::getMultiinlet
+			*/
 			explicit MultiInletHandle( std::shared_ptr< MultiInletImpl > );
-
+	
+			/*
+			*	@return: true if underlying object is valid ( all io slots are destroyed when the parent block is destroyed )
+			*/
 			bool isValid() const;
+
+			/*
+			*	@return: always true
+			*/
 			bool isMultiInlet() const;
+
+			/*
+			*	@return: handle to parent block
+			*/
 			BlockHandle getBlock();
 
+			/*
+			*	@return: number of subinlets
+			*/
 			uint32_t			getSize() const;
+
+			/*
+			*	@return: true if empty
+			*/
 			bool				isEmpty() const;
-			InletHandle			operator[]( const uint32_t );
+
+			/*
+			*	@return: subinlet at index dix ( contains a range check )
+			*/
+			InletHandle			operator[]( const uint32_t idx );
+
+			/*
+			*	adds one subinlet at the back
+			*/
 			InletHandle			add();
+
+			/*
+			*	removes a subinlet
+			*/
 			void				remove( InletHandle );
 
 		private:

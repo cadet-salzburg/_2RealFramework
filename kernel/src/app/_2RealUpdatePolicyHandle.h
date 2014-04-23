@@ -34,14 +34,31 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	created by block handle via BlockHandle::getUpdatePolicy
+			*/
 			explicit UpdatePolicyHandle( std::shared_ptr< UpdatePolicyImpl > );
 
+			/*
+			*	@return: true if the underlying object is valid ( only as long as the parent block exists )
+			*/
 			bool					isValid() const;
+
+			/*
+			*	@return: handle to parent block
+			*/
 			BlockHandle				getBlock();
+
+			/*
+			*	sets the blocks internal update policy:
+			*	either all inlets must have new data ( DefaultUpdatePolicy::ALL ),
+			*	any inlet must have new data ( DefaultUpdatePolicy::ANY ),
+			*	or no update based on inlets is going to happen ( DefaultUpdatePolicy::DISABLED )
+			*/
 			void					set( const DefaultUpdatePolicy );
 
 			// TODO:
-			// set: more complex condition than ANY / ALL
+			// set: more complex condition than ANY / ALL, is pretty much implemented but not yet in interface
 
 		private:
 

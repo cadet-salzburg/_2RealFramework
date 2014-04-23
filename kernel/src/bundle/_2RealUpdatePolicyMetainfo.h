@@ -35,6 +35,12 @@ namespace _2Real
 
 			UpdatePolicyMetainfo( std::shared_ptr< UpdatePolicyMetainfoImpl > );
 
+			/*
+			*	sets the default update policy for block instances:
+			*	either all inlets must have new data ( DefaultUpdatePolicy::ALL ),
+			*	any inlet must have new data ( DefaultUpdatePolicy::ANY ),
+			*	or no update based on inlets is going to happen ( DefaultUpdatePolicy::DISABLED )
+			*/
 			void set( const DefaultUpdatePolicy );
 
 		private:

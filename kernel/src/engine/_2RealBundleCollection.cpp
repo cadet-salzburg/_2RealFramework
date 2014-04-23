@@ -83,6 +83,8 @@ namespace _2Real
 		if ( nullptr != dir )
 			mBundleDirectory = Path( dir );
 
+		std::cout << mBundleDirectory << std::endl;
+
 		// TODO: exception? or some reasonable default value
 	}
 

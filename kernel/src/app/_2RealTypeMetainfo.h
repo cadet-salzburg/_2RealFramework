@@ -23,6 +23,10 @@
 
 #include "app/_2RealTypeMetainfo_I.h"
 
+/*
+*	metainfo of a 'basic' type: these are types that are exported by the engine itsself
+*/
+
 namespace _2Real
 {
 	class BasicTypeMetainfoImpl;
@@ -35,11 +39,22 @@ namespace _2Real
 		public:
 
 			explicit TypeMetainfo( std::shared_ptr< const BasicTypeMetainfoImpl > );
-			virtual ~TypeMetainfo() = default;
 
+			/*
+			*	@return: true is underlying object is valid ( destroyed when the engine is destroyed )
+			*/
 			bool			isValid() const;
+
+			/*
+			*	always true
+			*/
 			bool			isBasicType() const;
+
 			std::string		getName() const;
+
+			/*
+			*	returns a data item, which will never be a custom type
+			*/
 			DataItem		makeData() const;
 
 		private:

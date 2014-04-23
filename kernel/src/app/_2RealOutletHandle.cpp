@@ -44,13 +44,7 @@ namespace _2Real
 			return BlockHandle( outlet->getParent() );
 		}
 
-		std::shared_ptr< const DataItem > OutletHandle::getData() const
-		{
-			std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
-			return outlet->getData();
-		}
-
-		Connection OutletHandle::registerToNewData( boost::function< void( std::shared_ptr< const DataItem > ) > listener )
+		Connection OutletHandle::registerToNewData( boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >::slot_type listener )
 		{
 			std::shared_ptr< OutletImpl > outlet = checkValidity< OutletImpl >( mImpl, "outlet" );
 			return outlet->registerToUpdate( listener );

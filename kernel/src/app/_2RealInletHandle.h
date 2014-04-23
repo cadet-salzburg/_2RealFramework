@@ -38,10 +38,25 @@ namespace _2Real
 		public:
 
 			explicit InletHandle( std::shared_ptr< InletImpl > );
-	
+			
+			/*
+			*	@return: true if underlying object is valid ( all io slots are destroyed when the parent block is destroyed )
+			*/
 			bool				isValid() const;
+
+			/*
+			*	@return: always true
+			*/
 			bool				isMultiInlet() const;
+
+			/*
+			*	@return: handle to parent block
+			*/
 			BlockHandle			getBlock();
+
+			/*
+			*	set inlet value - will overwrite any other set value
+			*/
 			void				setValue( DataItem value );
 
 		private:

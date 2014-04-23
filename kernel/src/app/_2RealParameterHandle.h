@@ -34,10 +34,24 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	created by block handle via BlockHandle::getParameter
+			*/
 			explicit ParameterHandle( std::shared_ptr< ParameterImpl > );
 
+			/*
+			*	@return: true id underlying object is valid ( all io slots are destroied once the parent block is removed ) 
+			*/
 			bool				isValid() const;
+
+			/*
+			*	@return: handle to parent block
+			*/
 			BlockHandle			getBlock();
+
+			/*
+			*	sets the parameter value
+			*/
 			void				setValue( DataItem value );
 
 		private:

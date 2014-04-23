@@ -34,7 +34,15 @@ namespace _2Real
 
 			explicit IoSlotMetainfo( std::shared_ptr< IoSlotMetainfoImpl > );
 
+			/*
+			*	set description
+			*/
 			void setDescription( std::string const& description );
+
+			/*
+			*	sets the initial value: careful, this causes the datatype to also be set
+			*	- so setDataTypeAndInitialValue( -5 ) will set to int32_t, for example
+			*/
 			void setDatatypeAndInitialValue( DataItem const& initialValue );
 
 		protected:

@@ -34,6 +34,9 @@ namespace _2Real
 
 			explicit OutletHandle( std::shared_ptr< OutletImpl > );
 
+			/*
+			*	@return: value ( writeable )
+			*/
 			DataItem & getValue();
 
 		private:

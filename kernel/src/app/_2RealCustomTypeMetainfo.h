@@ -36,14 +36,40 @@ namespace _2Real
 
 			explicit CustomTypeMetainfo( std::shared_ptr< const CustomTypeMetainfoImpl > );
 
+			/*
+			*	@return: true is underlying object is valid
+			*/
 			bool			isValid() const;
+
+			/*
+			*	inherited, always returns true
+			*/
 			bool			isBasicType() const;
+
+			/*
+			*	@return: name
+			*/
 			std::string		getName() const;
+
+			/*
+			*	@return: description
+			*/
+			std::string		getDescription() const;
+
+			/*
+			*	creates & initializes a data item ( a boost::variant, see common/_2RealDataItem.h )
+			*/
 			DataItem		makeData() const;
 
-			std::string		getDescription() const;
+			/*
+			*	creates a custom data item - since this is a custom type metainfo, so you don't have to call boost::get
+			*	a custom data item is basically a collection od DataItems ( see common/:2RealCustomdataItem )
+			*/
 			CustomDataItem	makeCustomData() const;
 
+			/*
+			*	@return: all data fields + their type metainfos
+			*/
 			std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfo_I > > > getDataFields() const;
 
 		private:

@@ -275,7 +275,7 @@
     <ClInclude Include="..\..\src\_2RealBundle.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="boost.txt" />
+    <Text Include="info.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2BB60466-18B9-428F-BCDF-E992ACC60997}</ProjectGuid>

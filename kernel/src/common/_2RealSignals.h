@@ -19,10 +19,8 @@
 #pragma once
 
 #include "common/_2RealBoost.h"
-#pragma warning(disable: 4512)
-#pragma warning(disable: 4996)
-#include <boost/signals2.hpp>
-#include <boost/bind.hpp>
+#include "boost/signals2.hpp"
+#include "boost/bind.hpp"
 
 namespace _2Real
 {

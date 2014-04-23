@@ -17,6 +17,7 @@
 */
 
 #include "engine/_2RealFifoThreadpool.h"
+#include "common/_2RealException.h"
 
 namespace _2Real
 {
@@ -45,12 +46,11 @@ namespace _2Real
 		try
 		{
 			for ( std::unique_ptr< std::thread > &worker: mWorkerThreads )
-			{
-				worker->join();
-			}
+				worker->detach();
 		}
 		catch( std::system_error const& e )
 		{
+			throw Exception( e.what() );
 		}
 	}
 

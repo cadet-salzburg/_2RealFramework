@@ -108,7 +108,7 @@ namespace _2Real
 		std::shared_ptr< OutletImpl >		getOutlet( std::string const& );
 		std::shared_ptr< ParameterImpl >	getParameter( std::string const& );
 
-		boost::signals2::connection			registerToException( boost::function< void( Exception ) > );
+		boost::signals2::connection			registerToException( boost::signals2::signal< void( Exception ) >::slot_type );
 		boost::signals2::connection			registerToDestroyed( boost::signals2::signal< void( std::shared_ptr< const BlockImpl > ) >::slot_type );
 
 	private:

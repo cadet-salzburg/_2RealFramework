@@ -24,3 +24,14 @@
 #define BOOST_MPL_LIMIT_LIST_SIZE 40
 
 #include <sdkddkver.h>
+
+//#ifndef _DEBUG
+
+// removes silly warning related to assignment operator
+#pragma warning(disable: 4512)
+// removes silly warning related to unreachable code in boost/signals2/detail/variadic_slot_invoker.hpp
+#pragma warning(disable: 4702)
+// removes silly warning related to unused args in boost/signals2/detail/variadic_slot_invoker.hpp
+#pragma warning(disable: 4100)
+
+//#endif

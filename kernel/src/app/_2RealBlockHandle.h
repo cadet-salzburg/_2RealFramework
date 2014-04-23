@@ -43,29 +43,102 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	created by bundle handle via BundleHandle::createBlock
+			*/
 			explicit BlockHandle( std::shared_ptr< BlockImpl > );
-
+			
+			/*
+			*	@return: true if underlying object is valid ( BlockHandle::destroy or BundleHandle::unload or engine destruction will remove blocks )
+			*/
 			bool							isValid() const;
 
+			/*
+			*	@return: handle to parent bundle
+			*/
 			BundleHandle					getBundle();
 
-			std::future< BlockResult >		setup();
-			std::future< BlockResult >		singlestep();
-			std::future< BlockResult >		shutdown();
-			std::future< BlockResult >		startUpdating( TimerHandle );
-			std::future< BlockResult >		startUpdating();
-			std::future< BlockResult >		stopUpdating();
-			void							destroy( const uint64_t );
+			/*
+			*	@state changes
+			*	basically, you create a block, you call setup, and then you may update it,
+			*	either by calling singlestep repeatedly or by calling startUpdating
+			*	all functions are non-blocking and return a std::future
+			*/
 
+			/*
+			*	attempts to set up block: this request is carried out if the underlying block is not currently running
+			*	and has not been shut down already
+			*/
+			std::future< BlockResult >		setup();
+
+			/*
+			*	attempts to carry out a single update: this request is carried out if the underlying block has been set up,
+			*	has not yet been shutdown and is not currently running
+			*/
+			std::future< BlockResult >		singlestep();
+
+			/*
+			*	attempts to shut down block: this request is carried out if the underlying block is not currently running
+			*/
+			std::future< BlockResult >		shutdown();
+
+			/*
+			*	attempts to 'start' the block, meaning it will update based on the timer signal; must have been set up and not shut down yet
+			*/
+			std::future< BlockResult >		startUpdating( TimerHandle );
+
+			/*
+			*	attempts to 'start' the block, meaning it will update based on the update policy; must have been set up and not shut down yet
+			*/
+			std::future< BlockResult >		startUpdating();
+
+			/*
+			*	if the block has been started, it will stop 
+			*/
+			std::future< BlockResult >		stopUpdating();
+
+			/*
+			*	attempts to shut the block down, if necessary, and removes it
+			*	blocks up to timeout milliseconds, throws an exception if the shutdown has not happened until then
+			*/
+			void							destroy( const uint64_t timeout );
+
+			/*
+			*	@return: a handle to the update policy
+			*/
 			UpdatePolicyHandle				getUpdatePolicy();
 
+			/*
+			*	@return: a collection of all inlet handles, outlet handles and parameter handles
+			*/
 			BlockIo							getBlockIo();
+
+			/*
+			*	@return: handle to an inlet
+			*/
 			InletHandle						getInlet( std::string const& );
+
+			/*
+			*	@return: handle to a subinlet
+			*/
 			MultiInletHandle				getMultiInlet( std::string const& );
+
+			/*
+			*	@return: handle to an outlet
+			*/
 			OutletHandle					getOutlet( std::string const& );
+
+			/*
+			*	@return: handle to a parameter
+			*/
 			ParameterHandle					getParameter( std::string const& );
 
-			Connection						registerToException( boost::function< void( Exception ) > ); 
+			/*
+			*	allows you to register a function taht is called if the block instance throws an exception in setup/update/shutdown
+			*	( consider using boost::bind, but std::bind also works fine )
+			*	@return: the connection
+			*/
+			Connection						registerToException( boost::signals2::signal< void( Exception ) >::slot_type ); 
 
 		private:
 

@@ -69,6 +69,7 @@ namespace _2Real
 			}
 			catch ( boost::bad_get const& e )
 			{
+				( void )( e );
 				throw TypeMismatch( fieldName );
 			}
 		}
@@ -88,6 +89,7 @@ namespace _2Real
 			}
 			catch ( boost::bad_get const& e )
 			{
+				( void )( e );
 				throw TypeMismatch( fieldName );
 			}
 		}

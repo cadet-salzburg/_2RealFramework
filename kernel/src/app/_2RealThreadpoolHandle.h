@@ -39,8 +39,14 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	created by engine via Engine::createThreadpool
+			*/
 			explicit ThreadpoolHandle( std::shared_ptr< ThreadpoolImpl_I > );
 
+			/*
+			*	@return : true if underlying object is valid ( all threadpools are destroyed once the engine is destroyed )
+			*/
 			bool isValid() const;
 
 			// TODO

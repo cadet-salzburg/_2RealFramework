@@ -21,6 +21,10 @@
 #include "common/_2RealStdIncludes.h"
 #include "common/_2RealData.h"
 
+/*
+*	metainfo of an inlet, outlet or parameter of a block
+*/
+
 namespace _2Real
 {
 	class IoSlotMetainfoImpl;
@@ -34,13 +38,39 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	@created by block metainfo
+			*/
 			explicit IoSlotMetainfo( std::shared_ptr< const IoSlotMetainfoImpl > );
 
+			/*
+			*	@return: true is underlying object is valid
+			*/
 			bool			isValid() const;
+
+			/*
+			*	@return: name
+			*/
 			std::string		getName() const;
+
+			/*
+			*	@return: description
+			*/
 			std::string		getDescription() const;
+
+			/*
+			*	@return: metainfo of datatype
+			*/
 			std::shared_ptr< TypeMetainfo_I >	getTypeMetainfo() const;
-			DataItem		getInitialValue() const;
+
+			/*
+			*	@return: inital value, use boost::get to extract correct type or better, use boost::apply_visitor
+			*/
+			DataItem							getInitialValue() const;
+
+			/*
+			*	currently, only inlets may be multi inlets -> everything else will always return false
+			*/
 			bool			isMulti() const;
 	
 		private:

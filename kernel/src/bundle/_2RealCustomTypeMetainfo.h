@@ -34,11 +34,24 @@ namespace _2Real
 
 			explicit CustomTypeMetainfo( std::shared_ptr< CustomTypeMetainfoImpl > );
 
+			/*
+			*	@return: name
+			*/
 			std::string getName() const;
 
+			/*
+			*	set description
+			*/
 			void setDescription( std::string );
+
+			/*
+			*	add a field + initial value
+			*/
 			void addField( std::string const& fieldName, DataItem value );
 
+			/*
+			*	creates a custom data item
+			*/
 			CustomDataItem makeData() const;
 
 		private:

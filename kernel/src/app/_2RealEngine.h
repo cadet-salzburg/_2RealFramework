@@ -45,19 +45,28 @@ namespace _2Real
 			Engine();
 			~Engine();
 
-			void clear();
+			// returns the absolute path to the bundle directory ( _2REAL_BUNDLE_DIR )
+			// ? set instead of env variable ?
+			Path getBundleDirectory() const;
 
-			// returns the absolute path to the bundle directory
-			Path		 getBundleDirectory() const;
 			// loads a bundle, path must be relative to bundle dir, with or without the suffix
+			// throws a _2Real::Exception if anything goes wrong
 			std::pair< BundleHandle, BundleMetainfo > loadBundle( std::string const& libname );
 
+			// creates a threadpool w. an assignment policy
+			// which currently must be ThreadpoolPolicy::FIFO
+			// you can't do anything w. the threadpool, so far, but you need one to create block instances
 			ThreadpoolHandle createThreadpool( const ThreadpoolPolicy );
 
 			// creates a timer with the desired framerate
+			// timers can be used to periodically update block instances
 			TimerHandle createTimer( const double fps );
 
+			// links and inlet & and outlet
 			LinkHandle link( InletHandle, OutletHandle );
+
+			// destroys everything inside the engine: bundles, timers, threadpools, etc
+			void clear();
 
 		private:
 

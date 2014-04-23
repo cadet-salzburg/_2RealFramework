@@ -18,6 +18,11 @@
 
 #pragma once
 
+/*
+*	inlet handle interface: getBlockIo will return all inlets in one std::vector,
+*	regardless of whether or not they are multiinlets or not
+*/
+
 namespace _2Real
 {
 	namespace bundle
@@ -29,6 +34,9 @@ namespace _2Real
 
 			virtual ~InletHandle_I() = default;
 
+			/*
+			*	@return: true if multiinlet, false otherwise
+			*/
 			virtual bool isMultiInlet() const = 0;
 
 		};

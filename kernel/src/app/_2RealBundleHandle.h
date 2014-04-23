@@ -34,10 +34,25 @@ namespace _2Real
 
 		public:
 
-			explicit BundleHandle( std::shared_ptr< BundleImpl > );
+			/*
+			*	created by engine via Engine::loadBundle
+			*/
+			explicit BundleHandle( std::shared_ptr< BundleImpl > );	
 
+			/*
+			*	@return: true if underlying object is valid ( BundleHandle::unload or engine destruction will remove a bundle )
+			*/
 			bool					isValid() const;
+
+			/*
+			*	creates a block instance; throws if block does not exist, if threadpool is invalid, if dependencies are incorrect
+			*/
 			BlockHandle				createBlock( std::string const& name, ThreadpoolHandle threadpool, std::vector< BlockHandle > const& dependencies );
+
+			/*
+			*	attempts to shut down all blocks, then unloads the dll
+			*	throws an exception if any block takes longer to shutdown than timeout
+			*/
 			void					unload( const uint64_t timeout );
 
 		private:

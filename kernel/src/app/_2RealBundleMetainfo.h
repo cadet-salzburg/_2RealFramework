@@ -35,20 +35,59 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	created by engine, via Engine::loadBundle
+			*/
 			explicit BundleMetainfo( std::shared_ptr< const BundleMetainfoImpl > );
 
+			/*
+			*	@return: true is underlying object is valid
+			*/
 			bool			isValid() const;
 
+			/*
+			*	@return: description
+			*/
 			std::string		getDescription() const;
+
+			/*
+			*	@return: author
+			*/
 			std::string		getAuthor() const;
+
+			/*
+			*	@return:contact address
+			*/
 			std::string		getContact() const;
+
+			/*
+			*	@return: category
+			*/
 			std::string		getCategory() const;
+			
+			/*
+			*	@return: version
+			*/
 			Version			getVersion() const;
 
+			/*
+			*	@return: the metainjfos of all exported blocks
+			*/
 			std::vector< BlockMetainfo >		getExportedBlocks() const;
+
+			/*
+			*	@return: the metainfos of all exported types
+			*/
 			std::vector< CustomTypeMetainfo >	getExportedTypes() const;
 
+			/*
+			*	@ return: specific block metainfo, by name
+			*/
 			BlockMetainfo						getExportedBlock( std::string const& );
+
+			/*
+			*	@ return: specific type metainfo, by name
+			*/
 			CustomTypeMetainfo					getExportedType( std::string const& );
 
 		private:

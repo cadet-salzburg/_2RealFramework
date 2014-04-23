@@ -34,6 +34,9 @@ namespace _2Real
 
 			explicit ParameterHandle( std::shared_ptr< const ParameterImpl > );
 
+			/*
+			*	@return: value ( readable )
+			*/
 			DataItem const& getValue() const;
 
 		private:

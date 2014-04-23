@@ -20,6 +20,11 @@
 
 #include "common/_2RealStdIncludes.h"
 
+/*
+*	links represent connections between inlets and outlets: when an outlet changes its value
+*	( right after a block update ), the inlet will receive this value.
+*/
+
 namespace _2Real
 {
 	class Link;
@@ -31,9 +36,19 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	create by engine via Engine::link
+			*/
 			explicit LinkHandle( std::shared_ptr< Link > );
 
+			/*
+			*	 @return: true id underlying object is still valid ( LinkHandle::destroy, removing the inlet or oulet OR destrying the engine will remove a link )
+			*/
 			bool			isValid() const;
+			
+			/*
+			*	destroys the underlying object
+			*/
 			void			destroy();
 
 		private:

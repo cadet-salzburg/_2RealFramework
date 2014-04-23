@@ -54,7 +54,7 @@ namespace _2Real
 			timer->destroy();
 		}
 
-		Connection TimerHandle::registerToTimer( boost::function< void() > listener )
+		Connection TimerHandle::registerToTimer( boost::signals2::signal< void() >::slot_type listener )
 		{
 			std::shared_ptr< TimerImpl > timer = checkValidity< TimerImpl >( mImpl, "timer" );
 			return timer->registerToUpdate( listener );

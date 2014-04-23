@@ -146,7 +146,7 @@ namespace _2Real
 			return ParameterHandle( block->getParameter( name ) );
 		}
 
-		Connection BlockHandle::registerToException( boost::function< void( Exception ) > listener )
+		Connection BlockHandle::registerToException( boost::signals2::signal< void( Exception ) >::slot_type listener )
 		{
 			std::shared_ptr< BlockImpl > block = checkValidity< BlockImpl >( mImpl, "block" );
 			return block->registerToException( listener );

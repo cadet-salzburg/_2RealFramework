@@ -35,41 +35,58 @@ namespace _2Real
 			explicit BlockMetainfo( std::shared_ptr< const BlockMetainfoImpl > );
 
 			/*
-			*	block metainfo is only valid as long as the dll stays loaded
-			*	@return:	true if the handle is still valid			
+			*	@ return: specific block metainfo, by name
 			*/
 			bool			isValid() const;
 
 			/*
-			*	@return:	the export name
+			*	@ return: name
 			*/
 			std::string		getName() const;
 
 			/*
-			*	@return:	the description
+			*	@ return: description
 			*/
 			std::string		getDescription() const;
 
 			/*
-			*	@return:	the names of all other blocks that this block is dependent on
-			*				the user is responsible for creating those first
-			*				( blocks can only depend on other blocks exported by the same dll )
+			*	@return:the names of all other blocks that this block is dependent on
+			*			the user is responsible for creating those first
+			*			( blocks can only depend on other blocks exported by the same dll )
 			*/
 			std::vector< std::string >			getDependenciesByName() const;
 
 			/*
-			*	@ return:	all io slots of a particular type
+			*	@ return:	all inlets
 			*				in the same order they were declared @dll export
 			*/
 			std::vector< InletMetainfo >		getInlets() const;
+
+			/*
+			*	@ return:	all outlets
+			*				in the same order they were declared @dll export
+			*/
 			std::vector< OutletMetainfo >		getOutlets() const;
+
+			/*
+			*	@ return:	all parmeters
+			*				in the same order they were declared @dll export
+			*/
 			std::vector< ParameterMetainfo >	getParameters() const;
 
 			/*
-			*	@ return:	metainfo of an io slot
+			*	@ return:	metainfo of an inlet
 			*/
 			InletMetainfo		getInlet( std::string const& );
+
+			/*
+			*	@ return:	metainfo of an outlet
+			*/
 			OutletMetainfo		getOutlet( std::string const& );
+
+			/*
+			*	@ return:	metainfo of a parameter
+			*/
 			ParameterMetainfo	getParameter( std::string const& );
 			
 		private:

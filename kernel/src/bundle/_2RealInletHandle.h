@@ -35,7 +35,14 @@ namespace _2Real
 
 			explicit InletHandle( std::shared_ptr< InletImpl > );
 
+			/*
+			*	@return: current value
+			*/
 			DataItem const& getValue() const;
+
+			/*
+			*	@return: always false
+			*/
 			bool isMultiInlet() const;
 
 		private:

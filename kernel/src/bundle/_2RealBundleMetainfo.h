@@ -37,15 +37,23 @@ namespace _2Real
 
 			explicit BundleMetainfo( std::shared_ptr< BundleMetainfoImpl > );
 
-			// setters for basic bundle info
+			/*
+			*	@setters for basic info
+			*/
 			void setAuthor( const std::string );
 			void setDescription( const std::string );
 			void setContact( const std::string  );
 			void setCategory( const std::string );
 			void setVersion( const unsigned int, const unsigned int, const unsigned int );
 
+			/*
+			*	declares a type, incl. fields
+			*/
 			void exportsType( const std::string name, const std::vector< FieldDeclaration > fields );
-			// removed 'singleton' attrib, may be re-added if necessary
+
+			/*
+			*	declares a type incl. inlets, outlets and parameters
+			*/
 			void exportsBlock( const std::string name, const std::vector< InletDeclaration > inlets, const std::vector< OutletDeclaration > outlets, const std::vector< ParameterDeclaration > parameters );
 
 		private:

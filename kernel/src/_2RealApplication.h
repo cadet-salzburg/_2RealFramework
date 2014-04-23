@@ -18,10 +18,16 @@
 
 #pragma once
 
+#include "common/_2RealStdIncludes.h"
+#include "common/_2RealBoost.h"
 #include "common/_2RealDefaultUpdatePolicy.h"
-#include "common/_2RealBlockState.h"
+#include "common/_2RealBlockResult.h"
 #include "common/_2RealThreadpoolPolicy.h"
 #include "common/_2RealData.h"
+#include "common/_2RealSignals.h"
+#include "common/_2RealException.h"
+#include "common/_2RealVersion.h"
+#include "common/_2RealPath.h"
 
 #include "app/_2RealEngine.h"
 #include "app/_2RealBundleHandle.h"
@@ -43,5 +49,3 @@
 #include "app/_2RealIoSlotMetainfo.h"
 #include "app/_2RealTypeMetainfo.h"
 #include "app/_2RealCustomTypeMetainfo.h"
-
-#include "common/_2RealException.h"

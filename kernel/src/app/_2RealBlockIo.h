@@ -18,6 +18,12 @@
 
 #pragma once
 
+/*
+*	helper object, contains handles to all inlets, outlets and parameters
+*	in the order they were declared in
+*	inlet handles must be downcasted properly ( see InletHandle_I::isMultiinlet )
+*/
+
 #include "common/_2RealStdIncludes.h"
 #include "app/_2RealInletHandle_I.h"
 #include "app/_2RealOutletHandle.h"

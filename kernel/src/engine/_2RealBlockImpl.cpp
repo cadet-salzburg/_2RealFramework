@@ -350,7 +350,7 @@ namespace _2Real
 		return mIo->getParameter( name );
 	}
 
-	boost::signals2::connection	BlockImpl::registerToException( boost::function< void( Exception ) > listener )
+	boost::signals2::connection	BlockImpl::registerToException( boost::signals2::signal< void( Exception ) >::slot_type listener )
 	{
 		return mIo->registerToException( listener );
 	}

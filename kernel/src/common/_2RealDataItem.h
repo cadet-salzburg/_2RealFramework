@@ -20,7 +20,7 @@
 #pragma once
 
 #include "common/_2RealBoost.h"
-#include <boost/variant.hpp>
+#include "boost/variant.hpp"
 
 namespace _2Real
 {

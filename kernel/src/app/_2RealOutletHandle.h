@@ -35,13 +35,28 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	created by block handle via BlockHandle::getOutlet
+			*/
 			explicit OutletHandle( std::shared_ptr< OutletImpl > );
 
+			/*
+			*	@return: true if underlying object is valid ( all io slots are destroyed when the parent block is destroyed )
+			*/
 			bool				isValid() const;
+
+			/*
+			*	@return: handle to parent block
+			*/
 			BlockHandle			getBlock();
 
-			std::shared_ptr< const DataItem > getData() const;
-			Connection registerToNewData( boost::function< void( std::shared_ptr< const DataItem > ) > );
+			/*
+			*	allows you to register a function that is called whenever the outlet value changes
+			*	( i.e., once after each parent update )
+			*	the returned DataItem is constant and must absolutely not be modified
+			*	( because the value may be read by other blocks any time )
+			*/
+			Connection registerToNewData( boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >::slot_type );
 
 		private:
 

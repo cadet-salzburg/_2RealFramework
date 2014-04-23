@@ -37,8 +37,14 @@ namespace _2Real
 
 			explicit BlockMetainfo( std::shared_ptr< BlockMetainfoImpl > );
 
+			/*
+			*	@return: name
+			*/
 			std::string getName() const;
 
+			/*
+			*	sets the actual block object
+			*/
 			template< typename TBlock >
 			void setBlockClass()
 			{
@@ -46,13 +52,34 @@ namespace _2Real
 				setBlockClassInternal( f );
 			}
 
+			/*
+			*	sets the description
+			*/
 			void setDescription( std::string const& );
+
+			/*
+			*	set the dependencies: i.e., all other blocks that must exist before this one can be created
+			*/
 			void setDependencies( std::vector< std::string > const& );
 
+			/*
+			*	@return: outlet metainfo
+			*/
 			OutletMetainfo			getOutletMetainfo( std::string const& name );
+
+			/*
+			*	@return: inlet metainfo
+			*/
 			InletMetainfo			getInletMetainfo( std::string const& name );
+
+			/*
+			*	@return: parameter metainfo
+			*/
 			ParameterMetainfo		getParameterMetainfo( std::string const& name );
 
+			/*
+			*	@return: update policy metainfo
+			*/
 			UpdatePolicyMetainfo	getUpdatePolicyMetainfo();
 
 		private:

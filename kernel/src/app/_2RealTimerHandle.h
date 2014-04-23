@@ -32,12 +32,34 @@ namespace _2Real
 
 		public:
 
+			/*
+			*	created by engine via Engine::createTimer
+			*/
 			explicit TimerHandle( std::shared_ptr< TimerImpl > );
 
+			/*
+			*	@return: true if the underlying object is valid ( timers stay valid until TimerHandle::destroy is called or the engine is destroyed )
+			*/
 			bool			isValid() const;
+
+			/*
+			*	starts the timer: should be called after creation
+			*/
 			void			start();
+
+			/*
+			*	stops the timer from updating
+			*/
 			void			stop();
-			Connection		registerToTimer( boost::function< void() > );
+
+			/*
+			*	allows you to register to the timer signal
+			*/
+			Connection		registerToTimer( boost::signals2::signal< void() >::slot_type );
+
+			/*
+			*	destroys the timer
+			*/
 			void			destroy();
 
 		private:

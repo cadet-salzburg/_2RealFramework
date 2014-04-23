@@ -18,6 +18,13 @@
 
 #pragma once
 
+//#ifndef _DEBUG
+
+// removes silly warning related to boost::auto_buffer and std::copy
+#pragma warning(disable: 4996)
+
+//#endif
+
 #include <memory>
 #include <limits>
 #include <vector>
@@ -39,5 +46,3 @@
 #include <thread>
 #include <atomic>
 #include <condition_variable>
-
-// TODO: resolve
