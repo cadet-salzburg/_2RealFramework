@@ -22,6 +22,8 @@
 #include "common/_2RealBoost.h"
 #include "boost/variant.hpp"
 
+#include "common/_2RealStdIncludes.h"
+
 namespace _2Real
 {
 	class CustomDataItem;
@@ -39,17 +41,16 @@ namespace _2Real
 	*	i've changed it here to 40, and if necessary, it can be further increased.
 	*/
 
-	typedef boost::variant< uint8_t,// std::vector< uint8_t >,
-							int8_t,// std::vector< int8_t >,
-							uint32_t,// std::vector< uint32_t >,
-							int32_t,// std::vector< int32_t >,
-							uint64_t,// std::vector< uint64_t >,
-							int64_t,// std::vector< int64_t >,
-							double,// std::vector< double >,
-							float,// std::vector< float >,
-							std::string,// std::vector< std::string >,
-							bool,// std::vector< bool >,
-							boost::recursive_wrapper< CustomDataItem >//, std::vector< boost::recursive_wrapper< CustomType > > >
-							> DataItem;
+	typedef boost::variant< uint8_t,		std::vector< uint8_t >,
+							int8_t,			std::vector< int8_t >,
+							uint32_t,		std::vector< uint32_t >,
+							int32_t,		std::vector< int32_t >,
+							uint64_t,		std::vector< uint64_t >,
+							int64_t,		std::vector< int64_t >,
+							double,			std::vector< double >,
+							float,			std::vector< float >,
+							std::string,	std::vector< std::string >,
+							bool,			std::vector< bool >,
+							boost::recursive_wrapper< CustomDataItem > > DataItem;
 
 }

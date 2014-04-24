@@ -20,6 +20,7 @@
 #include "engine/_2RealCustomTypeMetainfoImpl.h"
 #include "engine/_2RealTypeCollection.h"
 #include "engine/_2RealId.h"
+#include "engine/_2RealHumanReadableNameVisitor.h"
 
 namespace _2Real
 {
@@ -31,62 +32,72 @@ namespace _2Real
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const uint8_t val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "uchar" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const int8_t val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "char" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const uint32_t val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "uint" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const int32_t val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "int" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const uint64_t val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "ulong" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const int64_t val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "long" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const double val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "double" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const float val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "float" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( std::string const& val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "string" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const bool val ) const
 	{
-		( void )( val );
-		return mTypes->getTypeMetainfo( "bool" );
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
 	}
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( CustomDataItem const& val ) const

@@ -57,7 +57,7 @@ namespace _2Real
 			/*
 			*	set inlet value - will overwrite any other set value
 			*/
-			void				setValue( DataItem value );
+			void				setValue( std::shared_ptr< const DataItem > );
 
 		private:
 

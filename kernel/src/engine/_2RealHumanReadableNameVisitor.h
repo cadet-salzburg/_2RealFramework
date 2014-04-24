@@ -30,6 +30,15 @@ namespace _2Real
 
 	public:
 
+		template< typename TData >
+		std::string operator()( std::vector< TData > const& data ) const
+		{
+			std::string result = "vector of ";
+			TData *dummyval = new TData;
+			result.append( this->operator()( *dummyval ) );
+			return result;
+		}
+
 		std::string operator()( const uint8_t val ) const;
 		std::string operator()( const int8_t val ) const;
 		std::string operator()( const uint32_t val ) const;

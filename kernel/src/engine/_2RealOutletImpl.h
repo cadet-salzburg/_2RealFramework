@@ -48,6 +48,7 @@ namespace _2Real
 		std::shared_ptr< const DataItem > getData() const;
 		void update();
 
+		std::shared_ptr< const IoSlotMetainfoImpl > getMetainfo() const;
 		std::shared_ptr< const InstanceId > getId() const;
 		std::shared_ptr< BlockImpl >		getParent();
 

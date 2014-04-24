@@ -93,4 +93,12 @@ namespace _2Real
 		return boost::apply_visitor( TypeMetainfoVisitor( mTypes.lock() ), mInitialValue );
 	}
 
+	bool IoSlotMetainfoImpl::isRequiredType( std::shared_ptr< const DataItem > data ) const
+	{
+		auto t1 = boost::apply_visitor( TypeMetainfoVisitor( mTypes.lock() ), *data.get() );
+		auto t2 = boost::apply_visitor( TypeMetainfoVisitor( mTypes.lock() ), mInitialValue );
+
+		return t1.get() == t2.get();
+	}
+
 }

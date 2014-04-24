@@ -46,7 +46,8 @@ namespace _2Real
 		std::shared_ptr< const InstanceId > getId() const;
 		std::shared_ptr< BlockImpl >		getParent();
 
-		void setData( DataItem );
+		void setData( std::shared_ptr< const DataItem > );
+
 		using InSlot::update;
 		using InSlot::getValue;
 

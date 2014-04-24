@@ -34,6 +34,14 @@ namespace _2Real
 
 		explicit TypeMetainfoVisitor( std::shared_ptr< const TypeCollection > );
 
+		template< typename TData >
+		std::shared_ptr< const TypeMetainfoImpl_I > operator()( std::vector< TData > const& val ) const
+		{
+			HumanReadableNameVisitor visitor;
+			std::string name = visitor( val );
+			return mTypes->getTypeMetainfo( name );
+		}
+
 		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const uint8_t val ) const;
 		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const int8_t val ) const;
 		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const uint32_t val ) const;

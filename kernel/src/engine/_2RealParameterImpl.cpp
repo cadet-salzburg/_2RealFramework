@@ -54,9 +54,12 @@ namespace _2Real
 		return mParent.lock();
 	}
 
-	void ParameterImpl::setData( DataItem data )
+	void ParameterImpl::setData( std::shared_ptr< const DataItem > data )
 	{
-		InSlot::setTmpValueExt( data );
+		assert( data.get() );
+		if ( !mMetainfo.lock()->isRequiredType( data ) )
+			throw TypeMismatch( mId->toString() );
+		InSlot::setTmpValue( data );
 	}
 
 }

@@ -69,7 +69,7 @@ void PrintInfo::setup()
 {		
 	for ( auto it : mIo.mParameters )
 	{
-		std::cout << "parameter " << /*it->getName() <<*/ " : " << it->getValue() << std::endl;
+		//std::cout << "parameter " << /*it->getName() <<*/ " : " << it->getValue() << std::endl;
 	}
 }
 
@@ -79,21 +79,21 @@ void PrintInfo::update()
 	{
 		if ( it->isMultiInlet() )
 		{
-			auto inlet = std::dynamic_pointer_cast< _2Real::bundle::MultiInletHandle >( it );
-			std::cout << "inlet " << /*inlet->getName() << */" is a multiinlet, size " << inlet->getSize() << std::endl;
+			//auto inlet = std::dynamic_pointer_cast< _2Real::bundle::MultiInletHandle >( it );
+			//std::cout << "inlet " << /*inlet->getName() << */" is a multiinlet, size " << inlet->getSize() << std::endl;
 		}
 		else
 		{
 			auto inlet = std::dynamic_pointer_cast< _2Real::bundle::InletHandle >( it );
 			_2Real::DataItem const& item = inlet->getValue();
-			std::cout << "inlet " << /*inlet->getName() <<*/ " : " << item << std::endl;
+			//std::cout << "inlet " << /*inlet->getName() <<*/ " : " << item << std::endl;
 		}
 	}
 
 	for ( auto it : mIo.mOutlets )
 	{
 		_2Real::DataItem const& item = it->getValue();
-		std::cout << "outlet " << /*it->getName() <<*/ " : " << item << std::endl;
+		//std::cout << "outlet " << /*it->getName() <<*/ " : " << item << std::endl;
 	}
 }
 

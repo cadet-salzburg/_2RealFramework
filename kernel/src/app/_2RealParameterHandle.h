@@ -52,7 +52,7 @@ namespace _2Real
 			/*
 			*	sets the parameter value
 			*/
-			void				setValue( DataItem value );
+			void				setValue( std::shared_ptr< const DataItem > );
 
 		private:
 

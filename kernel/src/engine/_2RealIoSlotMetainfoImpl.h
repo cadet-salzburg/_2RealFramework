@@ -55,6 +55,8 @@ namespace _2Real
 		std::shared_ptr< const TypeMetainfoImpl_I >	getTypeMetainfo() const;
 		bool isMulti() const;
 
+		bool isRequiredType( std::shared_ptr< const DataItem > ) const;
+
 	private:
 
 		IoSlotMetainfoImpl( std::shared_ptr< const MetainfoId >, std::shared_ptr< const TypeCollection > );

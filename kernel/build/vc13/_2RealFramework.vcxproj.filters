@@ -308,6 +308,9 @@
     <ClCompile Include="..\..\src\engine\_2RealLinkCollection.cpp">
       <Filter>Source Files\engine\collections</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealPrintOutVisitor.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\app\_2RealEngine.h">
@@ -618,6 +621,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\engine\_2RealLinkCollection.h">
       <Filter>Header Files\engine\collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealPrintOutVisitor.h">
+      <Filter>Header Files\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

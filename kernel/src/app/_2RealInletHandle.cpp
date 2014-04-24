@@ -51,10 +51,10 @@ namespace _2Real
 			return BlockHandle( inlet->getParent() );
 		}
 
-		void InletHandle::setValue( DataItem value )
+		void InletHandle::setValue( std::shared_ptr< const DataItem > value )
 		{
 			std::shared_ptr< InletImpl > inlet = checkValidity< InletImpl >( mImpl, "inlet" );
-			inlet->setData( std::move( value ) );
+			inlet->receiveData( value );
 		}
 	}
 }

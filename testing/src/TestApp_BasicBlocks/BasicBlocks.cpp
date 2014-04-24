@@ -51,7 +51,7 @@ void handleFuture( std::future< _2Real::BlockResult > &obj, std::string const& i
 int main( int argc, char *argv[] )
 {
 	try
-	{
+	{	
 		_2Real::app::Engine testEngine;
 
 		std::cout << "loading bundle" << std::endl;
@@ -89,7 +89,7 @@ int main( int argc, char *argv[] )
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
 				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
-				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tinitial "; boost::apply_visitor< _2Real::PrintOutVisitor >( _2Real::PrintOutVisitor( std::cout ), it.getInitialValue() ); std::cout << std::endl;
 				std::cout << "\t\tis multi " << std::boolalpha << it.isMulti() << std::endl;
 			}
 
@@ -101,7 +101,7 @@ int main( int argc, char *argv[] )
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
 				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
-				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tinitial "; boost::apply_visitor< _2Real::PrintOutVisitor >( _2Real::PrintOutVisitor( std::cout ), it.getInitialValue() ); std::cout << std::endl;
 			}
 
 			std::vector< _2Real::app::ParameterMetainfo > paraminfos = it.getParameters();
@@ -112,7 +112,7 @@ int main( int argc, char *argv[] )
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
 				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
-				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tinitial "; boost::apply_visitor< _2Real::PrintOutVisitor >( _2Real::PrintOutVisitor( std::cout ), it.getInitialValue() ); std::cout << std::endl;
 			}
 		}
 

@@ -43,6 +43,11 @@ namespace _2Real
 	{
 	}
 
+	std::shared_ptr< const IoSlotMetainfoImpl > OutletImpl::getMetainfo() const
+	{
+		return mMetainfo.lock();
+	}
+
 	std::shared_ptr< const InstanceId > OutletImpl::getId() const
 	{
 		return mId;

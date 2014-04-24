@@ -44,10 +44,10 @@ namespace _2Real
 			return BlockHandle( parameter->getParent() );
 		}
 
-		void ParameterHandle::setValue( DataItem value )
+		void ParameterHandle::setValue( std::shared_ptr< const DataItem > value )
 		{
 			std::shared_ptr< ParameterImpl > parameter = checkValidity< ParameterImpl >( mImpl, "parameter" );
-			parameter->setData( std::move( value ) );
+			parameter->setData( value );
 		}
 	}
 }

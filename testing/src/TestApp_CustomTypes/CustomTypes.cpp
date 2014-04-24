@@ -103,8 +103,8 @@ int main( int argc, char *argv[] )
 
 	// -------init some types---------
 
-		_2Real::CustomDataItem aSimple = typeinfos[ 1 ].makeCustomData();
-		_2Real::CustomDataItem aComplex = typeinfos[ 0 ].makeCustomData();
+		_2Real::CustomDataItem aSimple = typeinfos[ 0 ].makeCustomData();
+		_2Real::CustomDataItem aComplex = typeinfos[ 1 ].makeCustomData();
 
 		std::cout << "------" << std::endl;
 

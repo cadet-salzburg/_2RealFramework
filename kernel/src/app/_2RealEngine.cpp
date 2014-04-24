@@ -28,6 +28,10 @@
 #include "engine/_2RealEngineImpl.h"
 #include "common/_2RealBoost.h"
 
+#include "engine/_2RealInletImpl.h"
+#include "engine/_2RealOutletImpl.h"
+#include "engine/_2RealIoSlotMetainfoImpl.h"
+
 namespace _2Real
 {
 	namespace app
@@ -74,6 +78,9 @@ namespace _2Real
 		{
 			if ( inlet.mImpl.lock().get() == nullptr || outlet.mImpl.lock().get() == nullptr )
 				throw HandleAccessFailure( "could not create link" );
+
+			if ( inlet.mImpl.lock()->getMetainfo()->getTypeMetainfo().get() != outlet.mImpl.lock()->getMetainfo()->getTypeMetainfo().get() )
+				throw TypeMismatch( "could not create link. types don't match" );
 
 			auto link = mImpl->createLink( inlet.mImpl.lock(), outlet.mImpl.lock() );
 			return LinkHandle( link );

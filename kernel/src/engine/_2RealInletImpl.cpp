@@ -22,6 +22,7 @@
 #include "engine/_2RealLink.h"
 #include "engine/_2RealId.h"
 #include "engine/_2RealMultiInletImpl.h"
+#include "engine/_2RealTypeMetainfoVisitor.h"
 
 namespace _2Real
 {
@@ -82,6 +83,11 @@ namespace _2Real
 	{
 	}
 
+	std::shared_ptr< const IoSlotMetainfoImpl > InletImpl::getMetainfo() const
+	{
+		return mMetainfo.lock();
+	}
+
 	bool InletImpl::isMultiInlet() const
 	{
 		return mMetainfo.lock()->isMulti();
@@ -120,15 +126,19 @@ namespace _2Real
 
 	void InletImpl::receiveData( std::shared_ptr< const DataItem > data )
 	{
+		assert( data.get() );
+		if ( !mMetainfo.lock()->isRequiredType( data ) )
+			throw TypeMismatch( mId->toString() );
+
 		InSlot::setTmpValue( data );
 		mValueUpdated( shared_from_this() );
 	}
 
-	void InletImpl::setData( DataItem data )
-	{
-		InSlot::setTmpValueExt( data );
-		mValueUpdated( shared_from_this() );
-	}
+	//void InletImpl::setData( DataItem data )
+	//{
+	//	InSlot::setTmpValueExt( data );
+	//	mValueUpdated( shared_from_this() );
+	//}
 
 	void InletImpl::linkTo( std::shared_ptr< DataSource_I > source )
 	{

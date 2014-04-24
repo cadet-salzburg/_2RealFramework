@@ -20,14 +20,21 @@
 #include "engine/_2RealCustomTypeMetainfoImpl.h"
 #include "engine/_2RealHumanReadableNameVisitor.h"
 #include "common/_2RealException.h"
+#include "common/_2RealPrintOutVisitor.h"
 #include "engine/_2RealId.h"
 
 namespace _2Real
 {
 	std::ostream& operator<<( std::ostream& out, CustomDataItem const& val )
 	{
+		std::cout << "[ ";
 		for ( auto const& it : val.mDataFields )
-			out << it.getName() << " : " << it.getValue();
+		{
+			if ( &it != &val.mDataFields.front() ) std::cout << " / ";
+			out << it.getName() << " : ";
+			boost::apply_visitor< PrintOutVisitor >( PrintOutVisitor( std::cout ), it.getValue() );
+		}
+		std::cout << " ]";
 		return out;
 	}
 

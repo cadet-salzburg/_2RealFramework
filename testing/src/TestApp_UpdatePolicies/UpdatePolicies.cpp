@@ -127,7 +127,7 @@ int main( int argc, char *argv[] )
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
 				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
-				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tinitial "; boost::apply_visitor< _2Real::PrintOutVisitor >( _2Real::PrintOutVisitor( std::cout ), it.getInitialValue() ); std::cout << std::endl;
 				std::cout << "\t\tis multi " << std::boolalpha << it.isMulti() << std::endl;
 			}
 
@@ -138,7 +138,7 @@ int main( int argc, char *argv[] )
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
 				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
-				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tinitial "; boost::apply_visitor< _2Real::PrintOutVisitor >( _2Real::PrintOutVisitor( std::cout ), it.getInitialValue() ); std::cout << std::endl;
 			}
 
 			std::vector< _2Real::app::ParameterMetainfo > paraminfos = it.getParameters();
@@ -148,7 +148,7 @@ int main( int argc, char *argv[] )
 				std::cout << "\t\tname " << it.getName() << std::endl;
 				std::cout << "\t\tdescription " << it.getDescription() << std::endl;
 				std::cout << "\t\tdatatype " << it.getTypeMetainfo()->getName() << std::endl;
-				std::cout << "\t\tinitial " << it.getInitialValue() << std::endl;
+				std::cout << "\t\tinitial "; boost::apply_visitor< _2Real::PrintOutVisitor >( _2Real::PrintOutVisitor( std::cout ), it.getInitialValue() ); std::cout << std::endl;
 			}
 		}
 
@@ -208,7 +208,10 @@ int main( int argc, char *argv[] )
 				//stringy->setValue( aString );
 
 				for ( auto it : subinlets )
-					it.setValue( ( uint32_t )10 );
+				{
+					std::shared_ptr< _2Real::DataItem > data( new _2Real::DataItem( ( uint32_t ) 10 ) );
+					it.setValue( data );
+				}
 
 				Sleep( 200 );
 

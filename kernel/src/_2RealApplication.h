@@ -28,6 +28,7 @@
 #include "common/_2RealException.h"
 #include "common/_2RealVersion.h"
 #include "common/_2RealPath.h"
+#include "common/_2RealPrintOutVisitor.h"
 
 #include "app/_2RealEngine.h"
 #include "app/_2RealBundleHandle.h"

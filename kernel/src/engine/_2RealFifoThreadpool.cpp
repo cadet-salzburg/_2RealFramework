@@ -46,7 +46,7 @@ namespace _2Real
 		try
 		{
 			for ( std::unique_ptr< std::thread > &worker: mWorkerThreads )
-				worker->detach();
+				worker->join();
 		}
 		catch( std::system_error const& e )
 		{

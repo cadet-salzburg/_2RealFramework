@@ -52,6 +52,7 @@ namespace _2Real
 		~InletImpl() = default;
 
 		bool									isMultiInlet() const;
+		std::shared_ptr< const IoSlotMetainfoImpl > getMetainfo() const;
 		std::shared_ptr< const InstanceId >		getId() const;
 		std::shared_ptr< BlockImpl >			getParent();
 		void									update();
@@ -62,7 +63,7 @@ namespace _2Real
 		void linkTo( std::shared_ptr< DataSource_I > );
 		void receiveData( std::shared_ptr< const DataItem > );
 
-		void setData( DataItem );
+		//void setData( DataItem );
 		using InSlot::getValue;
 
 		boost::signals2::connection registerToValueUpdated( boost::signals2::signal< void( std::shared_ptr< const InletImpl > ) >::slot_type ) const;

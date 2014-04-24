@@ -75,99 +75,226 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\app\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\app\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\bundle\_2RealBlock.cpp" />
+    <ClCompile Include="..\..\src\bundle\_2RealBlock.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealBlockMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealBundleMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealInletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealUpdatePolicyMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealIoSlotMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealMultiInletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealOutletHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealParameterHandle.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealCustomTypeMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\common\_2RealConstants.cpp" />
-    <ClCompile Include="..\..\src\common\_2RealCustomDataItem.cpp" />
-    <ClCompile Include="..\..\src\common\_2RealDataField.cpp" />
-    <ClCompile Include="..\..\src\common\_2RealDeclarations.cpp" />
-    <ClCompile Include="..\..\src\common\_2RealException.cpp" />
-    <ClCompile Include="..\..\src\common\_2RealInletPolicy.cpp" />
-    <ClCompile Include="..\..\src\common\_2RealVersion.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealBasicTypeMetainfoImpl.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealBlockImpl.cpp" />
+    <ClCompile Include="..\..\src\common\_2RealConstants.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\common\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\common\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealCustomDataItem.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\common\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\common\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealDataField.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\common\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\common\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealDeclarations.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\common\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\common\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealException.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\common\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\common\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealInletPolicy.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\common\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\common\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealPrintOutVisitor.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\common\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\common\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\_2RealVersion.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\common\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\common\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBasicTypeMetainfoImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealBlockImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundleImpl.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundleCollection.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealFifoThreadpool.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealLinkCollection.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealUniqueThreadpool.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealUpdatePolicyImpl.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealFifoThreadpool.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealLinkCollection.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealUniqueThreadpool.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealUpdatePolicyImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealEngineImpl.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealHumanReadableNameVisitor.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealId.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealInletImpl.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealInSlot.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealLink.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealMultiInletImpl.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealOutletImpl.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealParameterImpl.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealPostSetupState.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealPostShutdownState.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealPreSetupState.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealPostSetupState_Running.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealHumanReadableNameVisitor.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealId.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealInletImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealInSlot.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealLink.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealMultiInletImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealOutletImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealParameterImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealPostSetupState.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealPostShutdownState.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealPreSetupState.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealPostSetupState_Running.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealSharedLibrary.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBundleMetainfoImpl.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealSharedLibrary_UNIX.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealSharedLibrary_WIN.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealBlockMetainfoImpl.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealIoSlotMetainfoImpl.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealIoSlotMetainfoImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\engine\_2RealCustomTypeMetainfoImpl.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\src\engine\_2RealBlockStateHandler.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealThreadpoolCollection.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealThreadpoolImpl_I.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealTimerImpl.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealTimerCollection.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealTypeCollection.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealTypeMetainfoVisitor.cpp" />
-    <ClCompile Include="..\..\src\engine\_2RealUpdatePolicyMetainfoImpl.cpp" />
+    <ClCompile Include="..\..\src\engine\_2RealBlockStateHandler.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealThreadpoolCollection.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealThreadpoolImpl_I.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTimerImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTimerCollection.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTypeCollection.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealTypeMetainfoVisitor.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\engine\_2RealUpdatePolicyMetainfoImpl.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\engine\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\engine\</ObjectFileName>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\app\_2RealBlockIo.h" />
@@ -213,6 +340,7 @@
     <ClInclude Include="..\..\src\common\_2RealDataItem.h" />
     <ClInclude Include="..\..\src\common\_2RealDeclarations.h" />
     <ClInclude Include="..\..\src\common\_2RealDefaultUpdatePolicy.h" />
+    <ClInclude Include="..\..\src\common\_2RealPrintOutVisitor.h" />
     <ClInclude Include="..\..\src\common\_2RealSignals.h" />
     <ClInclude Include="..\..\src\common\_2RealException.h" />
     <ClInclude Include="..\..\src\common\_2RealInletPolicy.h" />
