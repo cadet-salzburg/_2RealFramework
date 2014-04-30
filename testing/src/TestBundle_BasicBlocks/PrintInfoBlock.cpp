@@ -19,8 +19,10 @@
 
 #include "PrintInfoBlock.h"
 
-void PrintInfo::getBlockMetainfo( _2Real::bundle::BlockMetainfo &printinfo, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& previousTypes )
+void PrintInfo::getBlockMetainfo( _2Real::bundle::BlockMetainfo &printinfo, _2Real::bundle::TypeMetainfoCollection const& types )
 {
+	( void )( types );
+
 	printinfo.setBlockClass< PrintInfo >();
 	printinfo.setDescription( "test block - prints the name/value of all io slots in setup, update & shutdown" );
 

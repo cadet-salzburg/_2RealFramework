@@ -19,8 +19,10 @@
 
 #include "CounterBlock.h"
 
-void Counter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &counterinfo, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& previousTypes )
+void Counter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &counterinfo, _2Real::bundle::TypeMetainfoCollection const& types )
 {
+	( void )( types );
+
 	counterinfo.setBlockClass< Counter >();
 	counterinfo.setDescription( "test block - some simple counters" );
 

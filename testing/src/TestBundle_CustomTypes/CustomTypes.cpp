@@ -32,7 +32,7 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	// -- types ( by name )
 
 	info.exportsType( "simpleType", { _2Real::declareField( "int_field", "int" ), _2Real::declareField( "string_field", "string" ) } );
-	info.exportsType( "complexType", { _2Real::declareField( "simple_field1", "simpleType" ), _2Real::declareField( "simple_field2", "simpleType" ), _2Real::declareField( "simple_field3", "simpleType" ), _2Real::declareField( "simple_field4", "simpleType" ), _2Real::declareField( "flota_field", "float" ) } );
+	info.exportsType( "complexType", { _2Real::declareField( "simple_field1", "simpleType" ), _2Real::declareField( "simple_field2", "simpleType" ), _2Real::declareField( "simple_field3", "simpleType" ), _2Real::declareField( "simple_field4", "simpleType" ), _2Real::declareField( "float_field", "float" ) } );
 }
 
 struct FindType : public std::unary_function< bool, const _2Real::bundle::CustomTypeMetainfo >

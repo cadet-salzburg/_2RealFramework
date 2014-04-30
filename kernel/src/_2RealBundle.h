@@ -50,5 +50,5 @@ extern "C"	/* used to prevent name mangling under windows */
 {
 	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::bundle::BundleMetainfo & info );
 	void _2REAL_LIBRARY_API getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, _2Real::bundle::TypeMetainfoCollection const& types );
-	void _2REAL_LIBRARY_API getBlockMetainfo(  _2Real::bundle::BlockMetainfo & info, _2Real::bundle::TypeMetainfoCollection const& types );
+	void _2REAL_LIBRARY_API getBlockMetainfo( _2Real::bundle::BlockMetainfo & info, _2Real::bundle::TypeMetainfoCollection const& types );
 }

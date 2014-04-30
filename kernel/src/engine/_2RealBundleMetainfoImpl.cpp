@@ -74,8 +74,6 @@ namespace _2Real
 			bundle::BundleMetainfo bundleMetainfo( bundleinfo );
 			bundlefunc( bundleMetainfo );
 
-			// TODO: check basic attribs
-
 			bundle::TypeMetainfoCollection previousTypes( types );
 
 			if ( !bundleinfo->mTypePreinfos.empty() && lib->hasSymbol( "getTypeMetainfo" ) )
@@ -96,18 +94,10 @@ namespace _2Real
 			}
 			else if ( !bundleinfo->mTypePreinfos.empty() && !lib->hasSymbol( "getTypeMetainfo" ) )
 			{
-				throw NotFound( "function getTypeMetainfo not found in bundle" );
+				throw NotFound( "bundle exports types, but function getTypeMetainfo not found" );
 			}
 
-			if ( bundleinfo->mBlockPreinfos.empty() )
-			{	
-				// TODO: EXCEPTION
-			}
-			else if ( !lib->hasSymbol( "getBlockMetainfo" ) )
-			{
-				// TODO: EXCEPTION
-			}
-			else
+			if ( !bundleinfo->mBlockPreinfos.empty() && lib->hasSymbol( "getBlockMetainfo" ) )
 			{
 				BlockMetainfoFunc blockfunc = ( BlockMetainfoFunc ) lib->getSymbol( "getBlockMetainfo" );
 
@@ -122,12 +112,16 @@ namespace _2Real
 
 				bundleinfo->mBlockPreinfos.clear();
 			}
+			else if ( !bundleinfo->mBlockPreinfos.empty() && !lib->hasSymbol( "getBlockMetainfo" ) )
+			{
+				throw NotFound( "bundle exports blocks, but function getBlockMetainfo not found" );
+			}
 
 			return bundleinfo;
 		}
 		else
 		{
-			return nullptr;
+			throw NotFound( "function getBundleMetainfo not found" );
 		}
 	}
 

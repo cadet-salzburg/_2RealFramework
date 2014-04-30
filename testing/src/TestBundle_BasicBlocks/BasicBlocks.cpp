@@ -33,10 +33,10 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.exportsBlock( "counterBlock", { _2Real::declareInlet( "inA" ), _2Real::declareInlet( "inB" ), _2Real::declareInlet( "inC" ) }, { _2Real::declareOutlet( "outA" ), _2Real::declareOutlet( "outB" ), _2Real::declareOutlet( "outC" ) }, { _2Real::declareParameter( "paramA" ), _2Real::declareParameter( "paramB" ), _2Real::declareParameter( "paramC" ) } );
 }
 
-void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& allTypes )
+void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, _2Real::bundle::TypeMetainfoCollection const& existingTypes )
 {
 	if ( info.getName() == "printInfoBlock" )
-		PrintInfo::getBlockMetainfo( info, allTypes );
+		PrintInfo::getBlockMetainfo( info, existingTypes );
 	else if ( info.getName() == "counterBlock" )
-		Counter::getBlockMetainfo( info, allTypes );
+		Counter::getBlockMetainfo( info, existingTypes );
 }
