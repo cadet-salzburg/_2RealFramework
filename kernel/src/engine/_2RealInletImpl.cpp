@@ -128,7 +128,7 @@ namespace _2Real
 	{
 		assert( data.get() );
 		if ( !mMetainfo.lock()->isRequiredType( data ) )
-			throw TypeMismatch( mId->toString() );
+			throw TypeMismatch( mId->getName() );
 
 		InSlot::setTmpValue( data );
 		mValueUpdated( shared_from_this() );

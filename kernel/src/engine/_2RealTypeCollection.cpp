@@ -27,10 +27,10 @@ namespace _2Real
 	{
 	public:
 		explicit TypeByName( const std::string name ) : mBaseline( name ) {}
-		bool operator()( std::pair< Connection, std::shared_ptr< const TypeMetainfoImpl_I > > const& val ) const
+		bool operator()( std::pair< Connection, std::shared_ptr< TypeMetainfoImpl_I > > const& val ) const
 		{
 			assert( val.second.get() );
-			return mBaseline == val.second->getId()->toString();
+			return mBaseline == val.second->getId()->getName();
 		}
 	private:
 		std::string mBaseline;
@@ -40,7 +40,7 @@ namespace _2Real
 	{
 	public:
 		explicit TypeByAddress( std::shared_ptr< const TypeMetainfoImpl_I > type ) : mBaseline( type ) { assert( type.get() ); }
-		bool operator()( std::pair< Connection, std::shared_ptr< const TypeMetainfoImpl_I > > const& val ) const
+		bool operator()( std::pair< Connection, std::shared_ptr< TypeMetainfoImpl_I > > const& val ) const
 		{
 			assert( val.second.get() );
 			return mBaseline.get() == val.second.get();
@@ -56,13 +56,13 @@ namespace _2Real
 		mTypes.clear();
 	}
 
-	void TypeCollection::addType( std::shared_ptr< const TypeMetainfoImpl_I > type )
+	void TypeCollection::addType( std::shared_ptr< TypeMetainfoImpl_I > type )
 	{
-		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeByName( type->getId()->toString() ) );
+		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeByName( type->getId()->getName() ) );
 		if ( it != mTypes.end() )
 		{
 			std::ostringstream msg;
-			msg << "type " << type->getId()->toString() << " already exists" << std::endl;
+			msg << "type " << type->getId()->getName() << " already exists" << std::endl;
 			throw AlreadyExists( msg.str() );
 		}
 
@@ -88,7 +88,7 @@ namespace _2Real
 		}
 	}
 
-	std::shared_ptr< const TypeMetainfoImpl_I > TypeCollection::getTypeMetainfo( const std::string name ) const
+	std::shared_ptr< TypeMetainfoImpl_I > TypeCollection::getTypeMetainfo( const std::string name ) const
 	{
 		auto it = std::find_if( mTypes.begin(), mTypes.end(), TypeByName( name ) );
 		if ( it != mTypes.end() )

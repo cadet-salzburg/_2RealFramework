@@ -26,7 +26,10 @@
 
 #include "bundle/_2RealBundleMetainfo.h"
 #include "bundle/_2RealBlockMetainfo.h"
+#include "bundle/_2RealTypeMetainfo_I.h"
+#include "bundle/_2RealTypeMetainfo.h"
 #include "bundle/_2RealCustomTypeMetainfo.h"
+#include "bundle/_2RealTypeMetainfoCollection.h"
 #include "bundle/_2RealIoSlotMetainfo.h"
 #include "bundle/_2RealUpdatePolicyMetainfo.h"
 
@@ -46,6 +49,6 @@
 extern "C"	/* used to prevent name mangling under windows */
 {
 	void _2REAL_LIBRARY_API getBundleMetainfo( _2Real::bundle::BundleMetainfo & info );
-	void _2REAL_LIBRARY_API getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& );
-	void _2REAL_LIBRARY_API getBlockMetainfo(  _2Real::bundle::BlockMetainfo & info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& );
+	void _2REAL_LIBRARY_API getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, _2Real::bundle::TypeMetainfoCollection const& types );
+	void _2REAL_LIBRARY_API getBlockMetainfo(  _2Real::bundle::BlockMetainfo & info, _2Real::bundle::TypeMetainfoCollection const& types );
 }

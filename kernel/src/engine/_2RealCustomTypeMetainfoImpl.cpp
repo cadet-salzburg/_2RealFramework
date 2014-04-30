@@ -25,11 +25,21 @@
 namespace _2Real
 {
 
-	std::shared_ptr< CustomTypeMetainfoImpl > CustomTypeMetainfoImpl::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, const std::string name )
+	std::shared_ptr< CustomTypeMetainfoImpl > CustomTypeMetainfoImpl::make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, TypeDeclaration const& decl )
 	{
-		std::shared_ptr< const MetainfoId > sharedtypeId = MetainfoId::create( id, MetainfoType::CUSTOMTYPE, name );
+		std::shared_ptr< const MetainfoId > sharedtypeId = MetainfoId::create( id, MetainfoType::CUSTOMTYPE, decl.mName );
 		std::shared_ptr< CustomTypeMetainfoImpl > sharedtypeInfo( new CustomTypeMetainfoImpl( sharedtypeId, types ) );
+
 		sharedtypeInfo->mTemplate = CustomDataItem( sharedtypeId );
+
+		for ( auto const& it : decl.mFields )
+		{
+			DataItem init;
+			auto type = types->getTypeMetainfo( it.mType );
+			init = type->makeData();
+			sharedtypeInfo->mTemplate.addField( DataField( it.mName, std::move( init ) ) );
+		}
+
 		return sharedtypeInfo;
 	}
 
@@ -84,9 +94,9 @@ namespace _2Real
 		mDescription = description;
 	}
 
-	void CustomTypeMetainfoImpl::addField( std::string fieldName, DataItem value )
+	void CustomTypeMetainfoImpl::setInitialFieldValue( std::string fieldName, DataItem value )
 	{
-		mTemplate.addField( DataField( std::move( fieldName ), std::move( value ) ) );
+		mTemplate.set( fieldName, std::move( value ) );
 	}
 
 	std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfoImpl_I > > > CustomTypeMetainfoImpl::getDataFields() const

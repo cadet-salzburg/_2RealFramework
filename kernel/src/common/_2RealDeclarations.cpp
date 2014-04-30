@@ -20,7 +20,7 @@
 
 namespace _2Real
 {
-	FieldDeclaration::FieldDeclaration( const std::string name, const bool isCustom ) : mName( name ), mIsCustom( isCustom )
+	FieldDeclaration::FieldDeclaration( const std::string name, const std::string type ) : mName( name ), mType( type )
 	{
 	}
 
@@ -36,14 +36,9 @@ namespace _2Real
 	{
 	}
 
-	FieldDeclaration declareBasicField( const std::string name )
+	FieldDeclaration declareField( const std::string name, const std::string type )
 	{
-		return FieldDeclaration( name, false );
-	}
-
-	FieldDeclaration declareCustomField( const std::string name )
-	{
-		return FieldDeclaration( name, true );
+		return FieldDeclaration( name, type );
 	}
 
 	InletDeclaration declareInlet( const std::string name )

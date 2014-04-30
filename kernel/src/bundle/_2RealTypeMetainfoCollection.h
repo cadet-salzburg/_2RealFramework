@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,36 +19,28 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include "common/_2RealSignals.h"
 
 namespace _2Real
 {
-	class TypeMetainfoImpl_I;
+	class TypeCollection;
 
-	class TypeCollection
+	namespace bundle
 	{
+		class TypeMetainfo_I;
 
-	public:
+		class TypeMetainfoCollection
+		{
 
-		TypeCollection() = default;
-		~TypeCollection() = default;
+		public:
 
-		TypeCollection( TypeCollection const& other ) = delete;
-		TypeCollection( TypeCollection && other ) = delete;
-		TypeCollection& operator=( TypeCollection const& other ) = delete;
-		TypeCollection& operator=( TypeCollection && other ) = delete;
+			explicit TypeMetainfoCollection( std::shared_ptr< TypeCollection > );
 
-		void clear();
-		void addType( std::shared_ptr< TypeMetainfoImpl_I > );
-		std::shared_ptr< TypeMetainfoImpl_I > getTypeMetainfo( const std::string ) const;
-		void typeDestroyed( std::shared_ptr< const TypeMetainfoImpl_I > );
+			std::shared_ptr< const TypeMetainfo_I > getTypeMetainfo( std::string const& ) const;
 
-	private:
+		private:
 
-		typedef std::vector< std::pair< Connection, std::shared_ptr< TypeMetainfoImpl_I > > > Types;
+			std::shared_ptr< TypeCollection >	mImpl;
 
-		Types	mTypes;
-
-	};
-
+		};
+	}
 }

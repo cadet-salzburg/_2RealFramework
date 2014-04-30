@@ -91,6 +91,14 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealTypeMetainfo.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealTypeMetainfoCollection.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\bundle\_2RealUpdatePolicyMetainfo.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\bundle\</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)\bundle\</ObjectFileName>
@@ -323,6 +331,9 @@
     <ClInclude Include="..\..\src\bundle\_2RealBundleMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealInletHandle.h" />
     <ClInclude Include="..\..\src\bundle\_2RealCustomTypeMetainfo.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfoCollection.h" />
+    <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo_I.h" />
     <ClInclude Include="..\..\src\bundle\_2RealUpdatePolicyMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealIoSlotMetainfo.h" />
     <ClInclude Include="..\..\src\bundle\_2RealMultiInletHandle.h" />

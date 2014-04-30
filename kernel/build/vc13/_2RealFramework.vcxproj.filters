@@ -311,6 +311,12 @@
     <ClCompile Include="..\..\src\common\_2RealPrintOutVisitor.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealTypeMetainfoCollection.cpp">
+      <Filter>Source Files\bundle\metainfo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bundle\_2RealTypeMetainfo.cpp">
+      <Filter>Source Files\bundle\metainfo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\app\_2RealEngine.h">
@@ -624,6 +630,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\common\_2RealPrintOutVisitor.h">
       <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfoCollection.h">
+      <Filter>Header Files\bundle\metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo_I.h">
+      <Filter>Header Files\bundle\metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo.h">
+      <Filter>Header Files\bundle\metainfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

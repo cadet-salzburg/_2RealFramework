@@ -29,19 +29,29 @@ namespace _2Real
 		{
 		}
 
+		bool CustomTypeMetainfo::isBasicType() const
+		{
+			return false;
+		}
+
 		void CustomTypeMetainfo::setDescription( std::string description )
 		{
 			mImpl->setDescription( description );
 		}
 
-		void CustomTypeMetainfo::addField( std::string const& fieldName, DataItem value )
+		void CustomTypeMetainfo::setInitialFieldValue( std::string const& fieldName, DataItem value )
 		{
-			mImpl->addField( fieldName, std::move( value ) );
+			mImpl->setInitialFieldValue( fieldName, std::move( value ) );
 		}
 
-		CustomDataItem CustomTypeMetainfo::makeData() const
+		CustomDataItem CustomTypeMetainfo::makeCustomData() const
 		{
 			return mImpl->makeCustomData();
+		}
+	
+		DataItem CustomTypeMetainfo::makeData() const
+		{
+			return mImpl->makeData();
 		}
 
 		std::string CustomTypeMetainfo::getName() const

@@ -31,8 +31,8 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 
 	// -- types ( by name )
 
-	info.exportsType( "simpleType", {} );
-	info.exportsType( "complexType", {} );
+	info.exportsType( "simpleType", { _2Real::declareField( "int_field", "int" ), _2Real::declareField( "string_field", "string" ) } );
+	info.exportsType( "complexType", { _2Real::declareField( "simple_field1", "simpleType" ), _2Real::declareField( "simple_field2", "simpleType" ), _2Real::declareField( "simple_field3", "simpleType" ), _2Real::declareField( "simple_field4", "simpleType" ), _2Real::declareField( "flota_field", "float" ) } );
 }
 
 struct FindType : public std::unary_function< bool, const _2Real::bundle::CustomTypeMetainfo >
@@ -42,27 +42,27 @@ struct FindType : public std::unary_function< bool, const _2Real::bundle::Custom
 	std::string mBaseline;
 };
 
-void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& previousTypes )
+void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, _2Real::bundle::TypeMetainfoCollection const& existingTypes )
 {
 	if ( info.getName() == "simpleType" )
 	{
 		info.setDescription( "testing simple types, that is, types where all fields are not custom types" );
-		info.addField( "int_field", ( int32_t )15 );
-		info.addField( "string_field", std::string( "poit" ) );
+		info.setInitialFieldValue( "int_field", ( int32_t )15 );
+		info.setInitialFieldValue( "string_field", std::string( "poit" ) );
 	}
 	else if ( info.getName() == "complexType" )
 	{
 		// ordering is preserved
-		const _2Real::bundle::CustomTypeMetainfo simpleInfo = previousTypes[ 0 ];
-		_2Real::CustomDataItem aSimple = simpleInfo.makeData();
+		auto simpleInfo = std::static_pointer_cast< const _2Real::bundle::CustomTypeMetainfo >( existingTypes.getTypeMetainfo( "simpleType" ) );
+		_2Real::CustomDataItem aSimple = simpleInfo->makeCustomData();
 		aSimple.set( "int_field", ( int32_t )64 );
 		aSimple.set( "string_field", std::string( "narf" ) );
 
 		info.setDescription( "testing complex types, that is, types where at least one field is a custom type" );
-		info.addField( "simple_field1", aSimple );	
-		info.addField( "simple_field2", std::move( aSimple ) );
-		info.addField( "simple_field3", std::move( simpleInfo.makeData() ) );
-		info.addField( "simple_field4", simpleInfo.makeData() );
-		info.addField( "float_field", 10.5f );
+		info.setInitialFieldValue( "simple_field1", aSimple );	
+		info.setInitialFieldValue( "simple_field2", std::move( aSimple ) );
+		info.setInitialFieldValue( "simple_field3", std::move( simpleInfo->makeData() ) );
+		info.setInitialFieldValue( "simple_field4", simpleInfo->makeData() );
+		info.setInitialFieldValue( "float_field", 10.5f );
 	}
 }

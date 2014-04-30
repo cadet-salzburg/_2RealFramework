@@ -102,7 +102,7 @@ namespace _2Real
 
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( CustomDataItem const& val ) const
 	{
-		return mTypes->getTypeMetainfo( val.mTypeMetainfo->toString() );
+		return mTypes->getTypeMetainfo( val.mTypeMetainfo->getName() );
 	}
 
 }

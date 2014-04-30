@@ -26,9 +26,9 @@ namespace _2Real
 	class FieldDeclaration
 	{
 	public:
-		FieldDeclaration( const std::string, const bool );
+		FieldDeclaration( const std::string name, const std::string type );
 		std::string mName;
-		bool		mIsCustom;
+		std::string mType;
 	};
 
 	class InletDeclaration
@@ -74,8 +74,7 @@ namespace _2Real
 		std::vector< ParameterDeclaration > mParameters;
 	};
 
-	FieldDeclaration declareCustomField( const std::string );
-	FieldDeclaration declareBasicField( const std::string );
+	FieldDeclaration declareField( const std::string, const std::string );
 	InletDeclaration declareInlet( const std::string );
 	InletDeclaration declareMultiInlet( const std::string );
 	OutletDeclaration declareOutlet( const std::string );

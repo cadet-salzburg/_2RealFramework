@@ -1,7 +1,6 @@
 /*
 	CADET - Center for Advances in Digital Entertainment Technologies
 	Copyright 2011 Fachhochschule Salzburg GmbH
-
 		http://www.cadet.at
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,36 +19,38 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include "common/_2RealSignals.h"
+#include "common/_2RealData.h"
+#include "bundle/_2RealTypeMetainfo_I.h"
 
 namespace _2Real
 {
-	class TypeMetainfoImpl_I;
+	class BasicTypeMetainfoImpl;
 
-	class TypeCollection
+	namespace bundle
 	{
+		class TypeMetainfo : public TypeMetainfo_I
+		{
 
-	public:
+		public:
 
-		TypeCollection() = default;
-		~TypeCollection() = default;
+			explicit TypeMetainfo( std::shared_ptr< const BasicTypeMetainfoImpl > );
 
-		TypeCollection( TypeCollection const& other ) = delete;
-		TypeCollection( TypeCollection && other ) = delete;
-		TypeCollection& operator=( TypeCollection const& other ) = delete;
-		TypeCollection& operator=( TypeCollection && other ) = delete;
+			/*
+			*	@return:always true
+			*/
+			bool isBasicType() const;
 
-		void clear();
-		void addType( std::shared_ptr< TypeMetainfoImpl_I > );
-		std::shared_ptr< TypeMetainfoImpl_I > getTypeMetainfo( const std::string ) const;
-		void typeDestroyed( std::shared_ptr< const TypeMetainfoImpl_I > );
+			/*
+			*	@return: name
+			*/
+			std::string getName() const;
 
-	private:
+			DataItem makeData() const;
 
-		typedef std::vector< std::pair< Connection, std::shared_ptr< TypeMetainfoImpl_I > > > Types;
+		private:
 
-		Types	mTypes;
+			std::shared_ptr< const BasicTypeMetainfoImpl >		mImpl;
 
-	};
-
+		};
+	}
 }

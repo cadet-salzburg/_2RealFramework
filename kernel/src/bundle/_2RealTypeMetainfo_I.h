@@ -18,56 +18,34 @@
 
 #pragma once
 
-#include "common/_2RealStdIncludes.h"
 #include "common/_2RealData.h"
-#include "bundle/_2RealTypeMetainfo_I.h"
 
 namespace _2Real
 {
-	class CustomTypeMetainfoImpl;
-
 	namespace bundle
 	{
-		class CustomTypeMetainfo : public TypeMetainfo_I
+		class TypeMetainfo_I
 		{
 
 		public:
 
-			explicit CustomTypeMetainfo( std::shared_ptr< CustomTypeMetainfoImpl > );
+			virtual ~TypeMetainfo_I() = default;
 
 			/*
-			*	@return:always true
+			*	@return: true if the type is within the set types that make up our DataItem, except for CustomType
+			*	( see common/_2RealDataItem.h )
 			*/
-			bool isBasicType() const;
+			virtual bool isBasicType() const = 0;
 
 			/*
-			*	@return: name
+			*	@return: the name
 			*/
-			std::string getName() const;
+			virtual std::string getName() const = 0;
 
 			/*
-			*	set description
+			*	@return: a boost::variant of the correct type
 			*/
-			void setDescription( std::string );
-
-			/*
-			*	sets initial value of a field
-			*/
-			void setInitialFieldValue( std::string const& fieldName, DataItem value );
-
-			/*
-			*	creates a custom data item
-			*/
-			CustomDataItem makeCustomData() const;
-
-			/*
-			*	creates a data item
-			*/
-			DataItem makeData() const;
-
-		private:
-
-			std::shared_ptr< CustomTypeMetainfoImpl >		mImpl;
+			virtual DataItem makeData() const = 0;
 
 		};
 	}

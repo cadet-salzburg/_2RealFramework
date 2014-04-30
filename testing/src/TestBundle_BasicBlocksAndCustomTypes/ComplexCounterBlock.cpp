@@ -22,12 +22,12 @@
 
 #include <Windows.h>
 
-void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& types )
+void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, _2Real::bundle::TypeMetainfoCollection const& types )
 {
 	_2Real::bundle::BlockMetainfo &counterinfo = dynamic_cast< _2Real::bundle::BlockMetainfo & >( info );
 
-	const _2Real::bundle::CustomTypeMetainfo simpleInfo = types[ 0 ];
-	const _2Real::bundle::CustomTypeMetainfo complexInfo = types[ 1 ];
+	auto simpleInfo = std::static_pointer_cast< const _2Real::bundle::CustomTypeMetainfo >( types.getTypeMetainfo( "simpleType" ) );
+	auto complexInfo = std::static_pointer_cast< const _2Real::bundle::CustomTypeMetainfo >( types.getTypeMetainfo( "complexType" ) );
 
 	counterinfo.setBlockClass< ComplexCounter >();
 	counterinfo.setDescription( "counter" );
@@ -37,7 +37,7 @@ void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std:
 
 	_2Real::bundle::InletMetainfo in = counterinfo.getInletMetainfo( "increment" );
 	in.setDescription( "counter increment" );
-	in.setDatatypeAndInitialValue( simpleInfo.makeData() );
+	in.setDatatypeAndInitialValue( simpleInfo->makeData() );
 
 	_2Real::bundle::InletMetainfo stringy = counterinfo.getInletMetainfo( "stringy" );
 	stringy.setDescription( "test string inlet" );
@@ -49,11 +49,11 @@ void ComplexCounter::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std:
 
 	_2Real::bundle::ParameterMetainfo param = counterinfo.getParameterMetainfo( "init" );
 	param.setDescription( "counter initial value" );
-	param.setDatatypeAndInitialValue( complexInfo.makeData() );
+	param.setDatatypeAndInitialValue( complexInfo->makeData() );
 
 	_2Real::bundle::OutletMetainfo out = counterinfo.getOutletMetainfo( "value" );
 	out.setDescription( "counter current value" );
-	out.setDatatypeAndInitialValue( complexInfo.makeData() );
+	out.setDatatypeAndInitialValue( complexInfo->makeData() );
 
 	_2Real::bundle::OutletMetainfo msg = counterinfo.getOutletMetainfo( "msg" );
 	msg.setDescription( "a test message" );

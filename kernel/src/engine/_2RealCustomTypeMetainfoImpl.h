@@ -22,6 +22,7 @@
 #include "engine/_2RealTypeMetainfoImpl_I.h"
 #include "common/_2RealData.h"
 #include "common/_2RealSignals.h"
+#include "common/_2RealDeclarations.h"
 
 namespace _2Real
 {
@@ -33,7 +34,7 @@ namespace _2Real
 
 	public:
 
-		static std::shared_ptr< CustomTypeMetainfoImpl > make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, const std::string );
+		static std::shared_ptr< CustomTypeMetainfoImpl > make( std::shared_ptr< const MetainfoId > id, std::shared_ptr< TypeCollection > types, TypeDeclaration const& );
 
 		bool isBasicType() const;
 		std::string getDescription() const;
@@ -42,7 +43,7 @@ namespace _2Real
 		CustomDataItem makeCustomData() const;
 
 		void setDescription( const std::string );
-		void addField( std::string fieldName, DataItem value );
+		void setInitialFieldValue( std::string fieldName, DataItem value );
 
 		std::vector< std::pair< std::string, std::shared_ptr< const TypeMetainfoImpl_I > > > getDataFields() const;
 

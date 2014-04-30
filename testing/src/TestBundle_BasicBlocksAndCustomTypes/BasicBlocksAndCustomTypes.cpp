@@ -33,28 +33,28 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.exportsBlock( "counter", { _2Real::declareInlet( "increment" ), _2Real::declareInlet( "stringy" ), _2Real::declareMultiInlet( "multi" ), }, { _2Real::declareOutlet( "value" ), _2Real::declareOutlet( "msg" ), _2Real::declareOutlet( "test" ) }, { _2Real::declareParameter( "init" ) } );
 }
 
-void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& previousTypes )
+void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo &info, _2Real::bundle::TypeMetainfoCollection const& existingTypes )
 {
 	if ( info.getName() == "simpleType" )
 	{
 		info.setDescription( "testing simple types, that is, types where all fields are not custom types" );
-		info.addField( "uchar_field", ( uint8_t )5 );
-		info.addField( "uint_field", ( uint32_t )0 );
-		info.addField( "ulong_field", ( uint64_t )23 );
-		info.addField( "double_field", -1.50 );
-		info.addField( "float_field", 0.1f );
+		info.setInitialFieldValue( "uchar_field", ( uint8_t )5 );
+		info.setInitialFieldValue( "uint_field", ( uint32_t )0 );
+		info.setInitialFieldValue( "ulong_field", ( uint64_t )23 );
+		info.setInitialFieldValue( "double_field", -1.50 );
+		info.setInitialFieldValue( "float_field", 0.1f );
 	}
 	else if ( info.getName() == "complexType" )
 	{
-		const _2Real::bundle::CustomTypeMetainfo simpleInfo = previousTypes.at( 0 );
+		auto simpleInfo = std::static_pointer_cast< const _2Real::bundle::CustomTypeMetainfo >( existingTypes.getTypeMetainfo( "simpleType" ) );
 
 		info.setDescription( "testing complex types, that is, types where at least one field is a custom type" );
-		info.addField( "string_field", std::string( "denn nudeln sind wir, und piraten wollen wir werden" ) );
-		info.addField( "simple_field", simpleInfo.makeData() );
+		info.setInitialFieldValue( "string_field", std::string( "denn nudeln sind wir, und piraten wollen wir werden" ) );
+		info.setInitialFieldValue( "simple_field", simpleInfo->makeData() );
 	}
 }
 
-void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, std::vector< const _2Real::bundle::CustomTypeMetainfo > const& types )
+void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, _2Real::bundle::TypeMetainfoCollection const& types )
 {
 	if ( info.getName() == "counter" )
 		ComplexCounter::getBlockMetainfo( info, types );

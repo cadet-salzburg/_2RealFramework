@@ -16,8 +16,34 @@
 	limitations under the License.
 */
 
-#include "common/_2RealPrintOutVisitor.h"
+#include "bundle/_2RealTypeMetainfo.h"
+#include "engine/_2RealBasicTypeMetainfoImpl.h"
 
 namespace _2Real
 {
+	namespace bundle
+	{
+
+		TypeMetainfo::TypeMetainfo( std::shared_ptr< const BasicTypeMetainfoImpl > metadata ) :
+			TypeMetainfo_I(),
+			mImpl( metadata )
+		{
+		}
+
+		bool TypeMetainfo::isBasicType() const
+		{
+			return true;
+		}
+
+		DataItem TypeMetainfo::makeData() const
+		{
+			return mImpl->makeData();
+		}
+
+		std::string TypeMetainfo::getName() const
+		{
+			return mImpl->getName();
+		}
+
+	}
 }

@@ -28,6 +28,7 @@
 #include "bundle/_2RealBlockMetainfo.h"
 #include "bundle/_2RealCustomTypeMetainfo.h"
 #include "bundle/_2RealIoSlotMetainfo.h"
+#include "bundle/_2RealTypeMetainfoCollection.h"
 
 namespace _2Real
 {
@@ -60,8 +61,8 @@ namespace _2Real
 	std::shared_ptr< BundleMetainfoImpl > BundleMetainfoImpl::make( std::shared_ptr< SharedLibrary > lib, Path const& path, std::shared_ptr< TypeCollection > types )
 	{
 		typedef void ( *BundleMetainfoFunc )( bundle::BundleMetainfo & );
-		typedef void ( *BlockMetainfoFunc )( bundle::BlockMetainfo &, std::vector< const bundle::CustomTypeMetainfo > const& );
-		typedef void ( *TypeMetainfoFunc )( bundle::CustomTypeMetainfo &, std::vector< const bundle::CustomTypeMetainfo > const& );
+		typedef void ( *BlockMetainfoFunc )( bundle::BlockMetainfo &, bundle::TypeMetainfoCollection const& );
+		typedef void ( *TypeMetainfoFunc )( bundle::CustomTypeMetainfo &, bundle::TypeMetainfoCollection const& );
 
 		if ( lib->hasSymbol( "getBundleMetainfo" ) )
 		{
@@ -75,7 +76,7 @@ namespace _2Real
 
 			// TODO: check basic attribs
 
-			std::vector< const bundle::CustomTypeMetainfo > previousTypes;
+			bundle::TypeMetainfoCollection previousTypes( types );
 
 			if ( !bundleinfo->mTypePreinfos.empty() && lib->hasSymbol( "getTypeMetainfo" ) )
 			{
@@ -83,12 +84,11 @@ namespace _2Real
 
 				for ( auto const& it : bundleinfo->mTypePreinfos )
 				{
-					std::shared_ptr< CustomTypeMetainfoImpl > typeinfo = CustomTypeMetainfoImpl::make( id, types, it.mName );
+					std::shared_ptr< CustomTypeMetainfoImpl > typeinfo = CustomTypeMetainfoImpl::make( id, types, it );
 					bundleinfo->mTypes.push_back( typeinfo );
 					bundle::CustomTypeMetainfo typeMetainfo( typeinfo );
 					typefunc( typeMetainfo, previousTypes );
-					previousTypes.push_back( typeMetainfo );
-
+					
 					types->addType( typeinfo );
 				}
 
@@ -201,6 +201,14 @@ namespace _2Real
 
 	void BundleMetainfoImpl::exportType( const std::string name, const std::vector< FieldDeclaration > fields )
 	{
+		if ( ( mTypeCollection.lock()->getTypeMetainfo( name ) ).get() )
+		{
+			std::ostringstream msg;
+			msg << "a type named " << name << " was already exported by a previous bundle" << std::endl;
+			throw AlreadyExists( msg.str() );
+		}
+
+
 		for ( auto const& it : mTypePreinfos )
 		{
 			if ( it.mName == name )
