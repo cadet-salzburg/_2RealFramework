@@ -28,8 +28,8 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.setContact( "fhs33223@fh-salzburg.ac.at" );
 	info.setVersion( 0, 0, 0 );
 
-	info.exportsType( "simpleType", {} );
-	info.exportsType( "complexType", {} );
+	info.exportsType( "simpleType", { _2Real::declareField( "uchar_field", "uchar" ), _2Real::declareField( "uint_field", "uint" ), _2Real::declareField( "ulong_field", "ulong" ), _2Real::declareField( "double_field", "double" ), _2Real::declareField( "float_field", "float" ) } );
+	info.exportsType( "complexType", { _2Real::declareField( "string_field", "string" ), _2Real::declareField( "simple_field", "simpleType" ) } );
 	info.exportsBlock( "counter", { _2Real::declareInlet( "increment" ), _2Real::declareInlet( "stringy" ), _2Real::declareMultiInlet( "multi" ), }, { _2Real::declareOutlet( "value" ), _2Real::declareOutlet( "msg" ), _2Real::declareOutlet( "test" ) }, { _2Real::declareParameter( "init" ) } );
 }
 

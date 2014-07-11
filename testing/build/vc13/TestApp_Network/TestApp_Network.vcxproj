@@ -11,27 +11,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\TestBundle_BasicBlocksAndCustomTypes\BasicBlocksAndCustomTypes.cpp" />
-    <ClCompile Include="..\..\..\src\TestBundle_BasicBlocksAndCustomTypes\ComplexCounterBlock.cpp" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\BsonDeserializer.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\BsonIo.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\BsonSerializer.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\Common.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqPublisher.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqNetworking.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqSubscriber.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\TestBundle_BasicBlocksAndCustomTypes\ComplexCounterBlock.h" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\BsonDeserializer.cpp" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\BsonSerializer.cpp" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\NetworkApp.cpp" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqPublisher.cpp" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqSubscriber.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F397D961-7DF8-45C5-B4FD-61539B40573A}</ProjectGuid>
+    <ProjectGuid>{60145AFF-DED9-4DEA-845B-5AC1A3883966}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFrameworkTests</RootNamespace>
-    <ProjectName>TestBundle_BasicBlocksAndCustomTypes</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -50,12 +58,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\..\bin\</OutDir>
-    <TargetName>$(ProjectName)_32d</TargetName>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\..\..\bin\</OutDir>
-    <TargetName>$(ProjectName)_32</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -63,14 +70,15 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_DIR);..\..\..\..\kernel\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(MONGODB_DIR)\include;$(ZMQ_DIR)\include;$(BOOST_DIR);..\..\..\..\kernel\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(BOOST_DIR)\stage\lib;..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>_2RealFramework_32d.lib;libzmq-v120-mt-gd-4_0_4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MONGODB_DIR)\lib;$(ZMQ_DIR)\lib;$(BOOST_DIR)\stage\lib;..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>

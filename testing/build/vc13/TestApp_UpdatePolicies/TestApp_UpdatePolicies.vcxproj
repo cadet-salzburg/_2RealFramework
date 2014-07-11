@@ -14,7 +14,7 @@
     <ClCompile Include="..\..\..\src\TestApp_UpdatePolicies\UpdatePolicies.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F1D58A8F-7194-41A6-AAB0-AF2EA9F312EE}</ProjectGuid>
+    <ProjectGuid>{5647C345-7B2D-4595-B03E-8686DC1C9EB4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFrameworkTests</RootNamespace>
   </PropertyGroup>

@@ -11,17 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\TestBundle_BasicBlocksAndCustomTypes\BasicBlocksAndCustomTypes.cpp" />
-    <ClCompile Include="..\..\..\src\TestBundle_BasicBlocksAndCustomTypes\ComplexCounterBlock.cpp" />
+    <ClCompile Include="..\..\..\src\TestBundle_Network\Subscriber.cpp" />
+    <ClCompile Include="..\..\..\src\TestBundle_Network\ZmqNetworking.cpp" />
+    <ClCompile Include="..\..\..\src\TestBundle_Network\Publisher.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\TestBundle_BasicBlocksAndCustomTypes\ComplexCounterBlock.h" />
+    <ClInclude Include="..\..\..\src\TestBundle_Network\Publisher.h" />
+    <ClInclude Include="..\..\..\src\TestBundle_Network\Subscriber.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F397D961-7DF8-45C5-B4FD-61539B40573A}</ProjectGuid>
+    <ProjectGuid>{238F087D-0685-4BD6-B088-B432036BC2D6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFrameworkTests</RootNamespace>
-    <ProjectName>TestBundle_BasicBlocksAndCustomTypes</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -64,13 +65,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_DIR);..\..\..\..\kernel\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MONGODB_DIR)\include;$(ZMQ_DIR)\include;$(BOOST_DIR);..\..\..\..\kernel\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>_2RealFramework_32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(BOOST_DIR)\stage\lib;..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>_2RealFramework_32d.lib;libzmq-v120-mt-gd-4_0_4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MONGODB_DIR)\lib;$(ZMQ_DIR)\lib;$(BOOST_DIR)\stage\lib;..\..\..\..\kernel\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>
