@@ -110,4 +110,9 @@ namespace _2Real
 	{
 		return mLinkCollection->createLink( inlet, outlet );
 	}
+
+	std::shared_ptr< TypeMetainfoImpl_I > EngineImpl::getTypeMetainfo( std::string const& name ) const
+	{
+		return mTypeCollection->getTypeMetainfo( name );
+	}
 }

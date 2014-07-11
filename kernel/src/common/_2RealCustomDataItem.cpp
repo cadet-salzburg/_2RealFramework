@@ -27,14 +27,14 @@ namespace _2Real
 {
 	std::ostream& operator<<( std::ostream& out, CustomDataItem const& val )
 	{
-		std::cout << "[ ";
+		out << "[ ";
 		for ( auto const& it : val.mDataFields )
 		{
-			if ( &it != &val.mDataFields.front() ) std::cout << " / ";
+			if ( &it != &val.mDataFields.front() ) out << " / ";
 			out << it.getName() << " : ";
-			boost::apply_visitor< PrintOutVisitor >( PrintOutVisitor( std::cout ), it.getValue() );
+			boost::apply_visitor< PrintOutVisitor >( PrintOutVisitor( out ), it.getValue() );
 		}
-		std::cout << " ]";
+		out << " ]";
 		return out;
 	}
 
@@ -116,5 +116,10 @@ namespace _2Real
 		}
 
 		throw NotFound( fieldName );
+	}
+
+	std::vector< DataField > const& CustomDataItem::fields() const
+	{
+		return mDataFields;
 	}
 }

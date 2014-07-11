@@ -39,6 +39,7 @@ namespace _2Real
 	class InletImpl;
 	class OutletImpl;
 	class Link;
+	class TypeMetainfoImpl_I;
 
 	class EngineImpl : public std::enable_shared_from_this< EngineImpl >
 	{
@@ -61,6 +62,7 @@ namespace _2Real
 		std::shared_ptr< TimerImpl >			createTimer( const double fps );
 		std::shared_ptr< ThreadpoolImpl_I >		createThreadpool( const ThreadpoolPolicy );
 		std::shared_ptr< Link >					createLink( std::shared_ptr< InletImpl >, std::shared_ptr< OutletImpl > );
+		std::shared_ptr< TypeMetainfoImpl_I >	getTypeMetainfo( std::string const& name ) const;
 
 	private:
 

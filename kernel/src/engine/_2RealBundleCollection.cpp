@@ -95,9 +95,11 @@ namespace _2Real
 		auto it = std::find_if( mBundles.begin(), mBundles.end(), BundleByPath( absPath ) );
 		if ( it != mBundles.end() )
 		{
-			std::ostringstream msg;
-			msg << "shared library " << absPath.string() << " is already loaded";
-			throw AlreadyExists( msg.str() );
+			//std::ostringstream msg;
+			//msg << "shared library " << absPath.string() << " is already loaded";
+			//throw AlreadyExists( msg.str() );
+			auto result = std::make_pair( it->second, it->second->getMetainfo() );
+			return result;
 		}
 
 		// may throw

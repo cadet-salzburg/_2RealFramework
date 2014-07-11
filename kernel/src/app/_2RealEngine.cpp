@@ -24,6 +24,9 @@
 #include "app/_2RealLinkHandle.h"
 #include "app/_2RealInletHandle.h"
 #include "app/_2RealOutletHandle.h"
+#include "app/_2RealTypeMetainfo_I.h"
+#include "app/_2RealTypeMetainfo.h"
+#include "app/_2RealCustomTypeMetainfo.h"
 
 #include "engine/_2RealEngineImpl.h"
 #include "common/_2RealBoost.h"
@@ -31,6 +34,8 @@
 #include "engine/_2RealInletImpl.h"
 #include "engine/_2RealOutletImpl.h"
 #include "engine/_2RealIoSlotMetainfoImpl.h"
+#include "engine/_2RealCustomTypeMetainfoImpl.h"
+#include "engine/_2RealBasicTypeMetainfoImpl.h"
 
 namespace _2Real
 {
@@ -84,6 +89,15 @@ namespace _2Real
 
 			auto link = mImpl->createLink( inlet.mImpl.lock(), outlet.mImpl.lock() );
 			return LinkHandle( link );
+		}
+
+		std::shared_ptr< TypeMetainfo_I > Engine::getTypeMetainfo( std::string const& name ) const
+		{
+			auto info = mImpl->getTypeMetainfo( name );
+			if ( info->isBasicType() )
+				return std::shared_ptr< TypeMetainfo_I >( new TypeMetainfo( std::dynamic_pointer_cast< BasicTypeMetainfoImpl >( info ) ) );
+			else
+				return std::shared_ptr< TypeMetainfo_I >( new CustomTypeMetainfo( std::dynamic_pointer_cast< CustomTypeMetainfoImpl >( info ) ) );
 		}
 	}
 }

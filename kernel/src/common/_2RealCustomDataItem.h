@@ -94,6 +94,8 @@ namespace _2Real
 			}
 		}
 
+		std::vector< DataField > const& fields() const;
+
 	private:
 
 		typedef std::vector< DataField >			DataFields;

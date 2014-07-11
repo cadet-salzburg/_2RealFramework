@@ -83,6 +83,11 @@ namespace _2Real
 	{
 	}
 
+	std::shared_ptr< const BundleMetainfoImpl > BundleImpl::getMetainfo() const
+	{
+		return mMetainfo;
+	}
+
 	std::shared_ptr< const InstanceId > BundleImpl::getId() const
 	{
 		return mId;
