@@ -17,7 +17,6 @@
 	limitations under the License.
 */
 
-/*
 #define BOOST_ALL_DYN_LINK
 
 #ifdef _WIN32
@@ -303,101 +302,6 @@ int main( int argc, char *argv[] )
 		std::cout << e.what() << std::endl;
 		std::cout << "-------------exception caught in main------------" << std::endl;
 	}
-
-	while( 1 )
-	{
-		Sleep( 100 );
-
-		std::string line;
-		char lineEnd = '\n';
-		std::getline( std::cin, line, lineEnd );
-		if ( line == "q" )
-			break;
-	}
-
-	return 0;
-}
-*/
-
-#define _USE_MATH_DEFINES	// -> use M_PI
-#include <math.h>			// -> use double exp( double x ) for computing e^x
-#include <stdint.h>
-#include <array>
-#include <iostream>
-#include <string>
-#include <Windows.h>
-
-static const double PI = 3.14159265358979323846;
-
-template< uint8_t NSize >
-std::array< std::array< double, NSize >, NSize >/*std::array< double, NSize*NSize > */gaussKernel( const double sigma )
-{
-	if ( 0 == ( NSize & 0x01 ) )
-		throw ( std::exception( "invalid kernel size, must be an odd number" ) );
-
-	std::array< std::array< double, NSize >, NSize > result;
-	//std::array< double, NSize*NSize > result;
-
-	const uint8_t HalfSize = NSize>>1;
-
-	for ( int8_t u = -HalfSize; u <= HalfSize; ++u )
-		for ( int8_t v = -HalfSize; v <= HalfSize; ++v )
-			/*result[ ( u+HalfSize ) * NSize + ( v+HalfSize ) ] = exp( -( u*u+v*v )/( 2*sigma*sigma ) ) / ( 2*M_PI*sigma*sigma );*/
-			result[ u+HalfSize ][ v+HalfSize ] = exp( -( u*u+v*v )/( 2*sigma*sigma ) ) / ( 2*M_PI*sigma*sigma );
-
-	return result;
-}
-
-template< uint8_t NSize >
-std::array< double, NSize*NSize > gaussKernel2( const double sigma )
-{
-	if ( 0 == ( NSize & 0x01 ) )
-		throw ( std::exception( "invalid kernel size, must be an odd number" ) );
-
-	std::array< double, NSize*NSize > result;
-
-	const uint8_t HalfSize = NSize>>1;
-
-	for ( int8_t u = -HalfSize; u <= HalfSize; ++u )
-		for ( int8_t v = -HalfSize; v <= HalfSize; ++v )
-			result[ ( u+HalfSize ) * NSize + ( v+HalfSize ) ] = exp( -( u*u+v*v )/( 2*sigma*sigma ) ) / ( 2*M_PI*sigma*sigma );
-
-	return result;
-}
-
-int main( int argc, char *argv[] )
-{
-	const uint8_t sz = 5;
-	auto kernel = gaussKernel< sz >( 1.0 );
-	auto kernel2 = gaussKernel2< sz >( 1.0 );
-
-	double sum = 0.0;
-	for ( uint8_t x = 0; x < sz; ++x )
-	{
-		for ( uint8_t y = 0; y < sz; ++y )
-		{
-			//std::cout << kernel[ sz*x + y ] << " ";
-			//sum += kernel[ sz*x + y ];
-			std::cout << kernel[ x ][ y ] << " ";
-			sum += kernel[ x ][ y ];
-		}
-		std::cout << std::endl;
-	}
-	std::cout << sum << std::endl;
-
-	for ( uint8_t x = 0; x < sz; ++x )
-	{
-		for ( uint8_t y = 0; y < sz; ++y )
-			std::cout << kernel2[ sz*x + y ] << " ";
-		std::cout << std::endl;
-	}
-
-	//for ( uint8_t x = 0; x < sz; ++x )
-	//{
-	//	for ( uint8_t y = 0; y < sz; ++y )
-	//		std::cout << kernel[ sz*x + y ]/sum << " ";
-	//	std::cout << std::endl;
-	//}
 
 	while( 1 )
 	{
