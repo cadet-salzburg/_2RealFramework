@@ -47,12 +47,31 @@ namespace _2Real
 		CustomDataItem& operator=( CustomDataItem && other );
 		~CustomDataItem() = default;
 
-		std::string	getName() const;
+		std::string getName() const;
 
 		void set( std::string const& fieldName, DataItem value );
-		void addField( DataField field );
 
-		friend std::ostream& operator<<( std::ostream& out, CustomDataItem const& val );
+		_2Real::DataItem & get( std::string const& fieldName )
+		{
+			for ( auto &it : mDataFields )
+			{
+				if ( it.getName() == fieldName )
+					return it.getValue();
+			}
+
+			throw NotFound( fieldName );
+		}
+
+		_2Real::DataItem const& get( std::string const& fieldName ) const
+		{
+			for ( auto &it : mDataFields )
+			{
+				if ( it.getName() == fieldName )
+					return it.getValue();
+			}
+
+			throw NotFound( fieldName );
+		}
 
 		template< typename TData >
 		TData const& getValue( std::string const& fieldName ) const
@@ -95,6 +114,8 @@ namespace _2Real
 		}
 
 		std::vector< DataField > const& fields() const;
+		void addField( DataField field );
+		friend std::ostream& operator<<( std::ostream& out, CustomDataItem const& val );
 
 	private:
 

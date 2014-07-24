@@ -97,10 +97,16 @@ namespace _2Real
 		if ( !mQueuedResponses.empty() )
 		{
 			mResponse = mState->nextAction( mQueuedResponses );
-			assert( mResponse.get() );
-			mIsActionInProcess = true;
-			mMutex.unlock();
-			enqueueJob();
+			if ( mResponse.get() )
+			{
+				mIsActionInProcess = true;
+				mMutex.unlock();
+				enqueueJob();
+			}
+			else // shutdown retuns nullptr
+			{
+				mMutex.unlock();
+			}
 		}
 		else
 		{
@@ -137,7 +143,10 @@ namespace _2Real
 		// change state if follow up state differs
 		BlockState next = mResponse->followupState;
 		if ( !mState->operator==( next ) )
+		{
+			mState.reset();		// this should take care of all update signals, while, strangely, the assignment below is not enough
 			mState = createBlock( next, mResponse );
+		}
 
 		// return success
 		mResponse->result.set_value( BlockResult::CARRIED_OUT );

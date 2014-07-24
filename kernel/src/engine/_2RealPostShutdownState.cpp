@@ -23,12 +23,44 @@ namespace _2Real
 {
 	std::shared_ptr< SignalResponse > PostShutdownState::nextAction( std::deque< std::shared_ptr< SignalResponse > > &responses )
 	{
+		/*assert( !responses.empty() );*/
 		if ( responses.empty() ) return nullptr;
+
+		//std::ostringstream msg;
+		//for ( auto it: responses )
+		//{
+		//	switch( it->request )
+		//	{
+		//	case BlockRequest::SETUP:
+		//		msg << "setup | ";
+		//		break;
+		//	case BlockRequest::SHUTDOWN:
+		//		msg << "shutdown | ";
+		//		break;
+		//	case BlockRequest::SINGLESTEP:
+		//		msg << "singlestep | ";
+		//		break;
+		//	case BlockRequest::START:
+		//		msg << "start | ";
+		//		break;
+		//	case BlockRequest::STOP:
+		//		msg << "stop | ";
+		//		break;
+		//	case BlockRequest::UPDATE:
+		//		msg << "update | ";
+		//		break;
+		//	default:
+		//		msg << "unknown |";
+		//		break;
+		//	}
+		//}
+		//std::cout << msg.str() << std::endl;
 
 		std::shared_ptr< SignalResponse > response;
 		for ( auto it : responses )
 			it->result.set_value( BlockResult::IGNORED );
 		responses.clear();
+
 		return response;
 	}
 
@@ -56,7 +88,7 @@ namespace _2Real
 
 	std::shared_ptr< SignalResponse > PostShutdownState::onUpdateSignalReceived()
 	{
-		assert( NULL );
+		//assert( NULL ); wtf; this came up a few times
 		return SignalResponse::makeResponse( BlockRequest::UPDATE, BlockAction::DO_NOTHING, BlockState::POST_SHUTDOWN, false );
 	}
 

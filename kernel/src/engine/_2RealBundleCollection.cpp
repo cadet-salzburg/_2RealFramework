@@ -65,7 +65,7 @@ namespace _2Real
 	{
 		for ( auto it : mBundles )
 		{
-			it.first.disconnect();
+			it.first.disconnect();				// disconnects from 'bundle was destroyed' signal
 			it.second->unload( timeout );
 		}
 

@@ -39,7 +39,10 @@ namespace _2Real
 
 			public:
 
-				static std::shared_ptr< Deserializer > Deserializer::create( std::shared_ptr< const _2Real::DataItem > dataItem, const uint32_t headerBytes = 0 );
+				// TODO
+				static std::shared_ptr< _2Real::DataItem > deserialize( std::shared_ptr< const _2Real::DataItem > message, const uint32_t headerBytes = 0 );
+
+				static std::shared_ptr< Deserializer > Deserializer::create( std::shared_ptr< const _2Real::DataItem > message, const uint32_t headerBytes = 0 );
 
 				Deserializer( Deserializer const& ) = delete;
 				Deserializer( Deserializer && ) = delete;
@@ -48,9 +51,11 @@ namespace _2Real
 
 				std::string getTypename() const;
 				std::shared_ptr< _2Real::DataItem > getDataItem( std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) const;
-				_2Real::DataItem extractDataItem( mongo::BSONObj &obj, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) const;
 
 			private:
+
+				static void extract( mongo::BSONObj &obj, _2Real::DataItem &data, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info );
+				static std::string getTypename( mongo::BSONObj &obj );
 
 				Deserializer( std::shared_ptr< mongo::BSONObj > obj );
 

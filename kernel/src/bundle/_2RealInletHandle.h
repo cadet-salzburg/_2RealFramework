@@ -45,6 +45,11 @@ namespace _2Real
 			*/
 			bool isMultiInlet() const;
 
+			/*
+			*	@return: true if the value was changed since the last update ( == is NOT used )
+			*/
+			bool wasUpdated() const;
+
 		private:
 
 			std::shared_ptr< InletImpl >	mImpl;

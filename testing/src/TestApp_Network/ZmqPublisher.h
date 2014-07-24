@@ -57,52 +57,5 @@ namespace _2Real
 			};
 
 		};
-
-	//template< >
-	//inline void ZmqPublisher::Publisher::publish( _2Real::CustomDataItem const& data )
-	//{
-	//	//std::cout << "custom data item" << std::endl;
-
-	//	std::string header( s_MaxPublisherNameLength, '-' );
-	//	for ( uint32_t i=0; i<mName.size(); ++i )
-	//		header[ i ] = mName[ i ];
-
-	//	mongo::BufBuilder bufbuilder;
-	//	auto ptr = bufbuilder.skip( s_MaxPublisherNameLength );
-	//	memcpy( ptr, header.c_str(), s_MaxPublisherNameLength );
-
-	//	mongo::BSONObjBuilder builder( bufbuilder );
-
-	//	mongo::BSONArrayBuilder arrayBuilder;
-	//	for ( auto const& field : data.fields() )
-	//	{
-	//		mongo::BSONObjBuilder fieldBuilder;
-	//		fieldBuilder.append( std::string( "fieldname" ), field.getName() );
-	//		BSONSerializer serializer( fieldBuilder );
-	//		boost::apply_visitor< BSONSerializer >( serializer, field.getValue() );
-	//		arrayBuilder.append( fieldBuilder.obj() );
-	//	}
-
-	//	builder.appendArray( std::string( "value" ), arrayBuilder.arr() );
-	//	builder.append( std::string( "test string" ), std::string( "THE END" ) );
-
-	//	mongo::BSONObj dataSerialized = builder.done();
-	//	char *dataBuffer = bufbuilder.buf();
-	//	int length = bufbuilder.len();
-
-	//	std::shared_ptr< _2Real::DataItem > content( new _2Real::DataItem( std::vector< uint8_t >() ) );
-	//	std::vector< uint8_t > &buffer = boost::get< std::vector< uint8_t > >( *content.get() );
-	//	buffer.resize( length, ' ' );
-
-	//	memcpy( &buffer[ 0 ], dataBuffer, length );
-
-	//	//std::cout << "sender: length of content = " << length << std::endl;
-	//	//std::cout << "sender: content = " << std::endl;
-	//	//for ( auto element : buffer )
-	//	//	std::cout << ( char ) element;
-	//	//std::cout << std::endl;
-
-	//	mPublisherInlet.setValue( content );
-	//}
 	}
 }

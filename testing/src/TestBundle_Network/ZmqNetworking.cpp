@@ -29,7 +29,8 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 	info.setContact( "fhs33223@fh-salzburg.ac.at" );
 	info.setVersion( 0, 0, 0 );
 
-	info.exportsType( "testType", { _2Real::declareField( "int_field", "int" ), _2Real::declareField( "string_", "string" ) } );
+	//_2Real::HumanReadableNameVisitor name;
+	//info.exportsType( "message", { _2Real::declareField( "topic", name( std::string( "" ) ) ), _2Real::declareField( "content", name( std::vector< uint8_t >() ) ) } );
 
 	info.exportsBlock( "zmq_publisher", { _2Real::declareMultiInlet( "topic_data" ) }, {}, { _2Real::declareParameter( "address" ) } );
 	info.exportsBlock( "zmq_subscriber", {}, { _2Real::declareOutlet( "data" ) }, { _2Real::declareParameter( "topic" ), _2Real::declareParameter( "address" ), _2Real::declareParameter( "rcvtimeo" ) } );
@@ -37,13 +38,12 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 
 void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo &info, _2Real::bundle::TypeMetainfoCollection const& existingTypes )
 {
-	( void )( existingTypes );
-	if ( info.getName() == "testType" )
-	{
-		info.setDescription( "network custom type test" );
-		info.setInitialFieldValue( "int_field", ( int32_t )15 );
-		info.setInitialFieldValue( "string_field", std::string( "poit" ) );
-	}
+	//if ( info.getName() == "message" )
+	//{
+	//	info.setDescription( "the message type, consisting of topic and actual data" );
+	//	info.setInitialFieldValue( "topic", "" );
+	//	info.setInitialFieldValue( "content", std::vector< uint8_t >() );
+	//}
 }
 
 void getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, _2Real::bundle::TypeMetainfoCollection const& existingTypes )

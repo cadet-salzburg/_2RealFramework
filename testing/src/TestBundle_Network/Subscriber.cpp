@@ -64,6 +64,7 @@ Subscriber::~Subscriber()
 {
 	mSocket.reset();
 	mContext.reset();
+	//std::cout << "goodbye subscriber" << std::endl;
 }
 
 void Subscriber::setup()
@@ -71,10 +72,12 @@ void Subscriber::setup()
 	try
 	{
 		std::string const& topic = boost::get< std::string >( mIo.mParameters[ 0 ]->getValue() );
+		std::string actualTopic = std::string( "*" ) + topic + std::string( "*" );
 		std::string const& address = boost::get< std::string >( mIo.mParameters[ 1 ]->getValue() );
 		uint32_t rcvtimeo = boost::get< uint32_t >( mIo.mParameters[ 2 ]->getValue() );
 		mSocket->connect( address.c_str() );
-		mSocket->setsockopt( ZMQ_SUBSCRIBE, topic.c_str(), topic.size() );
+		mSocket->setsockopt( ZMQ_SUBSCRIBE, actualTopic.c_str(), actualTopic.size()+1 );
+		//mSocket->setsockopt( ZMQ_SUBSCRIBE, "", 0 );
 		mSocket->setsockopt( ZMQ_RCVTIMEO, &rcvtimeo, sizeof( rcvtimeo ) );
 	}
 	catch( zmq::error_t &e )
@@ -100,7 +103,7 @@ void Subscriber::update()
 			auto &outletData = dataOutlet->getValue();
 			std::vector< uint8_t > data = boost::get< std::vector< uint8_t > >( outletData );
 			data.clear();
-			// TODO: discard
+			mIo.mOutlets[ 0 ]->discard();
 		}
 		else
 		{
@@ -129,4 +132,5 @@ void Subscriber::update()
 void Subscriber::shutdown()
 {
 	mSocket->close();
+	mContext->close();
 }

@@ -319,6 +319,9 @@ namespace _2Real
 			mDestroyed( shared_from_this() );
 			mDestroyed.disconnect_all_slots();
 
+			//std::cout << "removed from bundle collection" << std::endl;
+
+			// huh?
 			tmp.reset();
 		}
 		else

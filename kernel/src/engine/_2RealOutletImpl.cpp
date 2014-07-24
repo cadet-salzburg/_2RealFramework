@@ -39,8 +39,14 @@ namespace _2Real
 		mMetainfo( meta ),
 		mId( id ),
 		mTmpValue( new DataItem( meta->getInitialValue() ) ),
-		mValue( new DataItem( meta->getInitialValue() ) )
+		mValue( new DataItem( meta->getInitialValue() ) ),
+		mWasDiscarded( false )
 	{
+	}
+
+	void OutletImpl::discard()
+	{
+		mWasDiscarded = true;
 	}
 
 	std::shared_ptr< const IoSlotMetainfoImpl > OutletImpl::getMetainfo() const
@@ -71,9 +77,18 @@ namespace _2Real
 	void OutletImpl::update()
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
-		mTmpValue = mValue;
-		mValue.reset( new DataItem( mMetainfo.lock()->getInitialValue() ) );
-		mUpdated( mTmpValue );
+
+		if ( mWasDiscarded )
+		{
+			// nothing to do
+			mWasDiscarded = false;
+		}
+		else
+		{
+			mTmpValue = mValue;
+			mValue.reset( new DataItem( mMetainfo.lock()->getInitialValue() ) );
+			mUpdated( mTmpValue );
+		}
 	}
 
 	void OutletImpl::unlink()

@@ -32,5 +32,10 @@ namespace _2Real
 		{
 			return mImpl->getValue();
 		}
+
+		void OutletHandle::discard()
+		{
+			mImpl->discard();
+		}
 	}
 }

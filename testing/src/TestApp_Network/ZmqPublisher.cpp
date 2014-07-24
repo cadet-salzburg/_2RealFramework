@@ -62,7 +62,6 @@ namespace _2Real
 
 				std::shared_ptr< Publisher > zmqPublisher( new Publisher( publisherBlock), deleter );
 				return zmqPublisher;
-
 			}
 			else
 			{
@@ -76,13 +75,15 @@ namespace _2Real
 
 		void Publisher::publish( std::string const& topic, std::shared_ptr< _2Real::DataItem > message )
 		{
-			if ( topic.size() > Constants::MaxTopicNameLength )
-				throw _2Real::Exception( "name too long, should be max 20 characters" );
+			if ( topic.size() > Constants::MaxTopicNameLength - 2 )
+				throw _2Real::Exception( "name too long, should be max 18 characters" );
 
 			try
 			{
 				std::vector< uint8_t > &data = boost::get< std::vector< uint8_t > >( *message.get() );
-				for ( uint32_t i=0; i<topic.size(); ++i ) data[ i ] = topic[ i ];
+				std::string actualTopic = std::string( "*" ) + topic + std::string( "*" );
+				std::cout << "publishing " << actualTopic << " " << actualTopic.size() << std::endl;
+				for ( uint32_t i=0; i<actualTopic.size(); ++i ) data[ i ] = actualTopic[ i ];
 			}
 			catch ( boost::bad_get &e )
 			{

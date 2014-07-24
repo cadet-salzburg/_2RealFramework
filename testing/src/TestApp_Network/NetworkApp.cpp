@@ -21,253 +21,207 @@
 	#define BOOST_ALL_DYN_LINK
 #endif
 
-#ifdef _WIN32
-	#ifdef _DEBUG
-		//#include "vld.h"
-	#endif
-	//#include <Windows.h>
-#elif _WIN64
-	#ifdef _DEBUG
-		#include "vld.h"
-	#endif
-	#include <Windows.h>
-#endif
-
 #include "ZmqPublisher.h"
 #include "ZmqSubscriber.h"
 #include "BsonIo.h"
 #include "Common.h"
 #include "BsonDeserializer.h"
 
-class TestReceiver
-{
-public:
-
-	std::thread							mThread;
-	std::atomic< bool >					mRun;
-	std::string							mTopic;
-	std::unique_ptr< zmq::context_t >	mContext;
-	std::unique_ptr< zmq::socket_t >	mSocket;
-
-	TestReceiver( std::string const& topic ) : mTopic( topic )
-	{
-		int linger = 100;
-		int timeout = 100;
-
-		mContext.reset( new zmq::context_t( 1 ) );
-		mSocket.reset( new zmq::socket_t( *mContext.get(), ZMQ_SUB ) );
-		mSocket->connect( "tcp://localhost:5556" );
-		mSocket->setsockopt( ZMQ_SUBSCRIBE, mTopic.c_str(), mTopic.size() );
-		mSocket->setsockopt( ZMQ_LINGER, &linger, sizeof( linger ) );
-		mSocket->setsockopt( ZMQ_RCVTIMEO, &timeout, sizeof( timeout ) );
-
-		mRun = true;
-
-		mThread.swap( std::thread( std::bind( &TestReceiver::handleMessages, this ) ) );
-	}
-
-	void handleMessages()
-	{
-		while( 1 )
-		{
-			if ( mRun )
-			{
-				zmq::message_t message;
-				bool success = mSocket->recv( &message );
-				if ( !success )
-				{
-					// std::cout << "failed to receive" << std::endl;
-					// exception?
-				}
-				else
-				{
-					try
-					{
-						auto messageData = reinterpret_cast< char * >( message.data() );
-						auto messageStart = &( messageData )[ _2Real::network::Constants::MaxTopicNameLength ];
-						mongo::BSONObj object( messageStart );
-
-						if ( object.hasField( "typename" ) )
-						{
-							auto typeElem = object.getField( "typename" );
-
-							// weird. prolly sth to do with /0 termination
-							std::string typeName;
-							typeElem.Val( typeName );
-
-							if ( typeName == "uint" )
-							{
-								if ( object.hasField( "value" ) )
-								{
-									auto valElem = object.getField( "value" );
-									int32_t val;
-									valElem.Val( val );
-									std::ostringstream msg;
-									msg << "received value " << val << " for topic \'" << mTopic << "\'" << std::endl;
-									std::cout << msg.str();
-								}
-								else
-								{
-									std::cout << "no field \'value\' found" << std::endl;
-								}
-							}
-							else
-							{
-								std::cout << "wrong type received: " << typeName << std::endl;
-							}
-						}
-						else
-						{
-							std::cout << "no field \'typename\' found" << std::endl;
-						}
-					}
-					catch ( zmq::error_t &e )
-					{
-						std::cout << "zmq error in TestReceiver::handleMessages " << e.what() << std::endl;
-					}
-					catch ( std::exception &e )
-					{
-						std::cout << "error in TestReceiver::handleMessages " << e.what() << std::endl;
-					}
-				}
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
-
-	~TestReceiver()
-	{
-		mRun = false;
-		mThread.join();
-		mSocket->close();
-		mContext->close();
-	}
-};
-
 int main( int argc, char *argv[] )
 {
 	try
 	{
+		const unsigned int numSubscribers = 20;
+
 		_2Real::app::Engine engine;
 
 		auto threadpool = engine.createThreadpool( _2Real::ThreadpoolPolicy::FIFO );
-		// loaded b/c of custom types
+
+		// additional bundle loaded b/c of custom type
 		auto customTypeBundle = engine.loadBundle( "TestBundle_CustomTypes" );
 		auto simpleInfo = customTypeBundle.second.getExportedType( "simpleType" );
 
 		std::shared_ptr< _2Real::network::Publisher > publisher = _2Real::network::Publisher::create( "tcp://*:5556", engine, threadpool );
-	
-		_2Real::network::ReceiverQueue data_1st, data_2nd, data_3rd, data_4th;
-		std::shared_ptr< _2Real::network::Subscriber > subscriber_1st = _2Real::network::Subscriber::create( "tcp://localhost:5556", "first", std::bind( &_2Real::network::ReceiverQueue::add, &data_1st, std::placeholders::_1 ), engine, threadpool );
-		std::shared_ptr< _2Real::network::Subscriber > subscriber_2nd = _2Real::network::Subscriber::create( "tcp://localhost:5556", "second", std::bind( &_2Real::network::ReceiverQueue::add, &data_2nd, std::placeholders::_1 ), engine, threadpool );
-		std::shared_ptr< _2Real::network::Subscriber > subscriber_3rd = _2Real::network::Subscriber::create( "tcp://localhost:5556", "third", std::bind( &_2Real::network::ReceiverQueue::add, &data_3rd, std::placeholders::_1 ), engine, threadpool );
-		std::shared_ptr< _2Real::network::Subscriber > subscriber_4th = _2Real::network::Subscriber::create( "tcp://localhost:5556", "fourth", std::bind( &_2Real::network::ReceiverQueue::add, &data_4th, std::placeholders::_1 ), engine, threadpool );
 
-// for testing purposes
-// std::shared_ptr< TestReceiver > receiver_1st( new TestReceiver( "first" ) );
-// std::shared_ptr< TestReceiver > receiver_2nd( new TestReceiver( "second" ) );
+		std::vector< std::shared_ptr< _2Real::network::Subscriber > > subscribers( numSubscribers, nullptr );
+		std::vector< std::shared_ptr< _2Real::network::ReceiverQueue > > dataQueues;
+		for ( unsigned int i=0; i<numSubscribers; ++i )
+		{
+			std::shared_ptr< _2Real::network::ReceiverQueue > queue( new _2Real::network::ReceiverQueue( std::to_string( i ) + " received!\n" ) );
+			dataQueues.push_back( queue );
+			std::string label = std::to_string( i );
+			subscribers[ i ] = _2Real::network::Subscriber::create( "tcp://localhost:5556", label, std::bind( &_2Real::network::ReceiverQueue::add, dataQueues[ i ].get(), std::placeholders::_1 ), engine, threadpool );
+		}
 
-		uint32_t in_1st = 0;
-		double in_2nd = 0.0;
-		std::string in_3rd = "";
+		int8_t in1 = 0; int8_t inc1 = -5;
+		uint8_t in2 = 0; uint8_t inc2 = 4;
+		uint32_t in3 = 0; uint32_t inc3 = 8;
+		int32_t in4 = 0; int32_t inc4 = 6;
+		uint64_t in5 = 0; uint64_t inc5 = 8;
+		int64_t in6 = 0; int64_t inc6 = -10;
+		double in7 = 0.0; double inc7 = 0.5;
+		float in8 = 0.0; float inc8 = 2.5f;
+		std::string in9 = ""; std::string app9 = "a";
+		bool in10 = false; // flip
+		std::vector< int32_t > in11; int32_t app11 = 77;
+		std::vector< double > in12; double app12 = 0.1;
 
-		// problem with vectors: don't send
-		// std::vector< int > in_4th = { 0 };
+		_2Real::CustomDataItem in13 = simpleInfo.makeCustomData();
+		int32_t in13_int = 19;
+		std::string in13_str = "";
 
-		_2Real::CustomDataItem in_4th = simpleInfo.makeCustomData();
-		in_4th.set( "int_field", 10 );
-		in_4th.set( "string_field", std::string( "test" ) );
 		while( 1 )
 		{
-			Sleep( 100 );
+			std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 
 			std::string line;
 			char lineEnd = '\n';
 			std::getline( std::cin, line, lineEnd );
-			if ( line == "p1" )
-			{
-				in_1st += 5;
-				{
-					_2Real::io::bson::Serializer serializer;
-					serializer( in_1st );
-					auto data = serializer.getDataItem(_2Real::network::Constants::MaxTopicNameLength );
-					publisher->publish( "first", data );
-				}
-				
-				if ( !data_1st.empty() )
-				{
-					std::shared_ptr< const _2Real::DataItem > data = data_1st.getNewest();
-					auto deserializer = _2Real::io::bson::Deserializer::create( data, _2Real::network::Constants::MaxTopicNameLength );
-					auto dataItem = deserializer->getDataItem( engine.getTypeMetainfo( deserializer->getTypename() ) );
-				}
-				else std::cout << "no data available" << std::endl;
-			}
-			else if ( line == "p2" )
-			{
-				in_2nd += 0.5;
-				{
-					_2Real::io::bson::Serializer serializer;
-					serializer( in_2nd );
-					auto data = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
-					publisher->publish( "second", data );
-				}
-				
-				if ( !data_2nd.empty() )
-				{
-					std::shared_ptr< const _2Real::DataItem > data = data_2nd.getNewest();
-					auto deserializer = _2Real::io::bson::Deserializer::create( data, _2Real::network::Constants::MaxTopicNameLength );
-					auto dataItem = deserializer->getDataItem( engine.getTypeMetainfo( deserializer->getTypename() ) );
-				}
-				else std::cout << "no data available" << std::endl;
-			}
-			else if ( line == "p3" )
-			{
-				in_3rd.append( "a" );
-				{
-					_2Real::io::bson::Serializer serializer;
-					serializer( in_3rd );
-					auto data = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
-					publisher->publish( "third", data );
-				}
-				
-				if ( !data_3rd.empty() )
-				{
-					std::shared_ptr< const _2Real::DataItem > data = data_3rd.getNewest();
-					auto deserializer = _2Real::io::bson::Deserializer::create( data, _2Real::network::Constants::MaxTopicNameLength );
-					auto dataItem = deserializer->getDataItem( engine.getTypeMetainfo( deserializer->getTypename() ) );
-				}
-				else std::cout << "no data available" << std::endl;
-			}
-			else if ( line == "p4" )
-			{
-				{
-					_2Real::io::bson::Serializer serializer;
-					serializer( in_4th );
-					auto data = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
-					publisher->publish( "fourth", data );
-				}
-				
-				if ( !data_4th.empty() )
-				{
-					std::shared_ptr< const _2Real::DataItem > data = data_4th.getNewest();
-					auto deserializer = _2Real::io::bson::Deserializer::create( data, _2Real::network::Constants::MaxTopicNameLength );
-					auto dataItem = deserializer->getDataItem( engine.getTypeMetainfo( deserializer->getTypename() ) );
-				}
-				else std::cout << "no data available" << std::endl;
-			}
-			else if ( line == "q" )
+
+			if ( line == "q" )
 				break;
+
+			std::shared_ptr< _2Real::DataItem > serialized;
+			bool publish = false;
+			std::string label;
+			if ( line ==  "1" )
+			{
+				publish = true;
+				label = line;
+				in1 += inc1;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in1 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "2" )
+			{
+				publish = true;
+				label = line;
+				in2 += inc2;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in2 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "3" )
+			{
+				publish = true;
+				label = line;
+				in3 += inc3;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in3 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "4" )
+			{
+				publish = true;
+				label = line;
+				in4 += inc4;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in4 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "5" )
+			{
+				publish = true;
+				label = line;
+				in5 += inc5;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in5 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "6" )
+			{
+				publish = true;
+				label = line;
+				in6 += inc6;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in6 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "7" )
+			{
+				publish = true;
+				label = line;
+				in7 += inc7;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in7 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "8" )
+			{
+				publish = true;
+				label = line;
+				in8 += inc8;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in8 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "9" )
+			{
+				publish = true;
+				label = line;
+				in9.append( app9 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in9 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "10" )
+			{
+				publish = true;
+				label = line;
+				in10 = !in10;
+				_2Real::io::bson::Serializer serializer;
+				serializer( in10 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "11" )
+			{
+				publish = true;
+				label = line;
+				in11.push_back( app11 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in11 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "12" )
+			{
+				publish = true;
+				label = line;
+				in12.push_back( app12 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in12 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "13" )
+			{
+				publish = true;
+				label = line;
+				in13_int += 1;
+				in13_str.append( "-yay-" );
+				in13.set( "int_field", in13_int );
+				in13.set( "string_field", in13_str );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in13 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+
+			if ( publish )
+				publisher->publish( label, serialized );
+
+			for ( unsigned int i=0; i<numSubscribers; ++i )
+			{
+				if ( !dataQueues[ i ]->empty() )
+				{
+					std::cout << "data available for subscriber " << i << " ( consumed )" << std::endl;
+					std::shared_ptr< const _2Real::DataItem > d = dataQueues[ i ]->getNewest();
+					auto deserializer = _2Real::io::bson::Deserializer::create( d, _2Real::network::Constants::MaxTopicNameLength );
+					auto dataItem = deserializer->getDataItem( engine.getTypeMetainfo( deserializer->getTypename() ) );
+				}
+				else std::cout << "no data available for subscriber " << i << std::endl;
+			}
 		}
 
-// for testing purposes
-// receiver_1st.reset();
-// receiver_2nd.reset();
-
 		engine.clear();
-
 		std::cout << "enter \'q\' to exit the application" << std::endl;
 	}
 	catch ( _2Real::Exception &e )

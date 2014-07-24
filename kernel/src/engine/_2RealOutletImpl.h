@@ -44,6 +44,8 @@ namespace _2Real
 
 		~OutletImpl() = default;
 
+
+		void discard();
 		DataItem & getValue();
 		std::shared_ptr< const DataItem > getData() const;
 		void update();
@@ -71,6 +73,8 @@ namespace _2Real
 
 		mutable boost::signals2::signal< void( std::shared_ptr< const DataItem > ) >		mUpdated;
 		mutable boost::signals2::signal< void( std::shared_ptr< const DataSource_I > ) >	mRemoved;
+
+		bool mWasDiscarded;
 
 	};
 }

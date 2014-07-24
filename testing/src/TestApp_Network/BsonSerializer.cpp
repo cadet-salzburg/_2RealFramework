@@ -33,13 +33,7 @@ namespace _2Real
 				{
 					_2Real::HumanReadableNameVisitor typeName;
 					builder->append( protocol::TypeField, typeName( data ) );
-					//mongo::BSONArrayBuilder arrayBuilder;
-					//for ( TType const& element : data )
-					//{
-					//	arrayBuilder.append< TType >( element );
-					//}
-					//builder->append( protocol::ValueField, arrayBuilder.arr() );
-
+	
 					// array builder always crashes -> I'm doing here what they'd be doing anyway
 					uint32_t fieldCount = 0;
 					for ( TType const& element : data )
@@ -72,6 +66,7 @@ namespace _2Real
 			{
 				auto obj = mObjBuilder->asTempObj();
 
+				( void )( bytesToSkip );
 				std::shared_ptr< _2Real::DataItem > result( new _2Real::DataItem );
 				result->operator=( std::vector< uint8_t >() );
 				auto &data = boost::get< std::vector< uint8_t > >( *result.get() );

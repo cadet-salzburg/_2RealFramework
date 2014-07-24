@@ -23,6 +23,7 @@ namespace _2Real
 {
 	std::shared_ptr< SignalResponse > PreSetupState::nextAction( std::deque< std::shared_ptr< SignalResponse > > &responses )
 	{
+		//assert( !responses.empty() );
 		if ( responses.empty() ) return nullptr;
 
 		struct PrioritySort
@@ -55,6 +56,7 @@ namespace _2Real
 			response->followupState = BlockState::POST_SHUTDOWN;
 			response->shouldBeQueued = false;
 		}
+		assert( response.get() );
 
 		for ( auto it : responses )
 			it->result.set_value( BlockResult::IGNORED );

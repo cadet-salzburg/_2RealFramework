@@ -63,6 +63,8 @@ namespace _2Real
 		void linkTo( std::shared_ptr< DataSource_I > );
 		void receiveData( std::shared_ptr< const DataItem > );
 
+		bool wasUpdated() const;
+
 		//void setData( DataItem );
 		using InSlot::getValue;
 

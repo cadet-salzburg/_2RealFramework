@@ -55,7 +55,7 @@ namespace _2Real
 
 				// we prolly can't match this timer, anyway
 				// QTS: sth that allows re-triggering of updates?
-				_2Real::app::TimerHandle updateTimer = engine.createTimer( 100.0 );
+				_2Real::app::TimerHandle updateTimer = engine.createTimer( 1000.0 );
 			
 				//updateTimer.registerToTimer( std::bind( [](){ std::cout << "timer test" << std::endl; } ) );
 
@@ -68,8 +68,8 @@ namespace _2Real
 				updateTimer.start();
 
 				Subscriber::Deleter deleter;
-				std::shared_ptr< Subscriber > zmqPublisher( new Subscriber( subscriberBlock, updateTimer, dataCallback ), deleter );
-				return zmqPublisher;
+				std::shared_ptr< Subscriber > zmqSubscriber( new Subscriber( subscriberBlock, updateTimer, dataCallback ), deleter );
+				return zmqSubscriber;
 			}
 			else
 			{
@@ -100,7 +100,7 @@ namespace _2Real
 			_2Real::app::TimerHandle &timer = sub->mUpdateTimer;
 
 			// engine clear happened before delete
-			if ( !subscriber.isValid() || timer.isValid() )
+			if ( !subscriber.isValid() || !timer.isValid() )
 				return;
 
 			// no more updates

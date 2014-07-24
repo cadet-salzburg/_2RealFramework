@@ -14,7 +14,7 @@
     <ClCompile Include="..\..\..\src\TestApp_BasicBlocksAndCustomTypes\BasicBlocksAndCustomTypes.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5647C345-7B2D-4595-B03E-8686DC1C9EB4}</ProjectGuid>
+    <ProjectGuid>{CCD881F1-782B-47BC-987C-B7F8FA3B4B6E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>_2RealFrameworkTests</RootNamespace>
   </PropertyGroup>

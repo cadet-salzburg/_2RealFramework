@@ -18,6 +18,7 @@ namespace _2Real
 			ReceiverQueue( ReceiverQueue && ) = delete;
 
 			ReceiverQueue() = default;
+			ReceiverQueue( const std::string msg ) : mDebugmsg( msg ) {}
 			~ReceiverQueue() = default;
 
 			typedef boost::signals2::signal< void() >::slot_type OverflowCallback;
@@ -33,6 +34,7 @@ namespace _2Real
 
 		private:
 
+			std::string mDebugmsg;
 			std::deque< std::shared_ptr< const _2Real::DataItem > >		mData;
 			mutable std::mutex											mLock;
 
@@ -40,6 +42,7 @@ namespace _2Real
 
 		inline void ReceiverQueue::add( std::shared_ptr< const DataItem > data )
 		{
+			std::cout << mDebugmsg;
 			std::lock_guard< std::mutex > lock( mLock );
 			mData.push_front( data );
 		}

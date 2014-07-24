@@ -24,6 +24,8 @@ void Publisher::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, _2Real::b
 {
 	_2Real::bundle::BlockMetainfo &publisherInfo = dynamic_cast< _2Real::bundle::BlockMetainfo & >( info );
 
+	//auto messageInfo = std::static_pointer_cast< const _2Real::bundle::CustomTypeMetainfo >( types.getTypeMetainfo( "message" ) );
+
 	publisherInfo.setBlockClass< Publisher >();
 	publisherInfo.setDescription( "sender based on publish - subscribe pattern" );
 
@@ -37,6 +39,7 @@ void Publisher::getBlockMetainfo( _2Real::bundle::BlockMetainfo &info, _2Real::b
 	_2Real::bundle::InletMetainfo in = publisherInfo.getInletMetainfo( "topic_data" );
 	in.setDescription( "every subinlet represents one kind of topic" );
 	in.setDatatypeAndInitialValue( std::vector< uint8_t >() );
+	//in.setDatatypeAndInitialValue( messageInfo->makeCustomData() );
 }
 
 Publisher::Publisher( _2Real::bundle::BlockIo const& io, std::vector< std::shared_ptr< _2Real::bundle::Block > > const& dependencies ) 
@@ -73,14 +76,26 @@ void Publisher::update()
 		for ( unsigned int i = 0; i< dataInlet->getSize(); ++i )
 		{
 			auto subinlet = dataInlet->operator[]( i );
-			auto const& data = subinlet.getValue();
+			if ( !subinlet.wasUpdated() )
+				continue;
 
-			// allright, now I really just want to resend the stuff that was updated.....
-			// TODO: -> inlet / subinlet wasUpdated; reset right after update; set when a value is set.
+			auto const& data = subinlet.getValue();
 
 			std::vector< uint8_t > const& buffer = boost::get< std::vector< uint8_t > >( data );
 			if ( buffer.empty() )
+			{
+				std::cout << "empty message in publisher, ignored" << std::endl;
 				continue;
+			}
+
+			//_2Real::CustomDataItem const& msg = boost::get< _2Real::CustomDataItem >( data );
+			//std::string topic = msg.getValue< std::string >( "topic" );
+			//std::vector< uint8_t > const& buffer = msg.getValue< std::vector< uint8_t > >( "content" );
+			//if ( buffer.empty() )
+			//{
+			//	std::cout << "empty message in publisher, ignored" << std::endl;
+			//	continue;
+			//}
 
 			//std::cout << "block -> sending " << buffer.size() << " bytes " << std::endl;
 
@@ -88,6 +103,7 @@ void Publisher::update()
 			memcpy( reinterpret_cast< void * >( message.data() ), reinterpret_cast< void const* >( &buffer[0] ), buffer.size() );
 
 			bool success = mSocket->send( message );
+			success &= mSocket->send( message );
 
 			if ( !success )
 				std::cout << "failed to send " << message.size() << std::endl;

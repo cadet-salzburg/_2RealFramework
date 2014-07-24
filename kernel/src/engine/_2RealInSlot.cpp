@@ -47,7 +47,19 @@ namespace _2Real
 	void InSlot::update()
 	{
 		std::lock_guard< std::mutex > lock( mMutex );
+
+		if ( mValue == mTmpValue )
+			mWasUpdated = false;
+		else
+			mWasUpdated = true;
+
 		mValue = mTmpValue;
+	}
+
+	bool InSlot::wasUpdated() const
+	{
+		//std::lock_guard< std::mutex > lock( mMutex );
+		return mWasUpdated;
 	}
 
 }
