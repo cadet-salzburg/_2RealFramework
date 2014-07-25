@@ -44,4 +44,7 @@
       <UniqueIdentifier>{ec238877-b4c4-4d48-b662-30b7fb5f6466}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\TestApp_Network\todos.txt" />
+  </ItemGroup>
 </Project>

@@ -73,10 +73,11 @@ void Subscriber::setup()
 	{
 		std::string const& topic = boost::get< std::string >( mIo.mParameters[ 0 ]->getValue() );
 		std::string actualTopic = std::string( "*" ) + topic + std::string( "*" );
+		std::cout << "sub to " << actualTopic << " " << actualTopic.size() << std::endl;
 		std::string const& address = boost::get< std::string >( mIo.mParameters[ 1 ]->getValue() );
 		uint32_t rcvtimeo = boost::get< uint32_t >( mIo.mParameters[ 2 ]->getValue() );
 		mSocket->connect( address.c_str() );
-		mSocket->setsockopt( ZMQ_SUBSCRIBE, actualTopic.c_str(), actualTopic.size()+1 );
+		mSocket->setsockopt( ZMQ_SUBSCRIBE, actualTopic.c_str(), actualTopic.size() );
 		//mSocket->setsockopt( ZMQ_SUBSCRIBE, "", 0 );
 		mSocket->setsockopt( ZMQ_RCVTIMEO, &rcvtimeo, sizeof( rcvtimeo ) );
 	}

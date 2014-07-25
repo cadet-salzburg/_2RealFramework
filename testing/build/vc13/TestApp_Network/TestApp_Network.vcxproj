@@ -26,6 +26,9 @@
     <ClCompile Include="..\..\..\src\TestApp_Network\ZmqPublisher.cpp" />
     <ClCompile Include="..\..\..\src\TestApp_Network\ZmqSubscriber.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\TestApp_Network\todos.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{60145AFF-DED9-4DEA-845B-5AC1A3883966}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

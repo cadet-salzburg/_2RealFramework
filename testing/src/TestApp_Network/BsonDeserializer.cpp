@@ -88,7 +88,7 @@ namespace _2Real
 			std::string get( mongo::BSONElement &value )
 			{
 				std::string result;
-				value.Val( result );
+				result = value.String();
 				return result;
 			}
 
@@ -97,14 +97,15 @@ namespace _2Real
 			{
 				uint32_t numElements = get< uint32_t >( value );
 				std::cout << "vector size " << numElements << std::endl;
-
 				std::vector< TType > result( numElements );
 				for ( unsigned int i=0; i<numElements; ++i )
 				{
 					std::string label = std::to_string( i );
 					auto field = obj.getField( label );
+					auto debugVal = get< TType >( field );
 					result[ i ] = get< TType >( field );
 				}
+
 				return result;
 			}
 
@@ -114,7 +115,7 @@ namespace _2Real
 				{
 					( void )( headerBytes );
 					std::vector< uint8_t > const& data = boost::get< std::vector< uint8_t > >( *dataItem.get() );
-					std::shared_ptr< mongo::BSONObj > obj( new mongo::BSONObj( reinterpret_cast< char const* >( &data[ 0/*headerBytes*/ ] ) ) );
+					std::shared_ptr< mongo::BSONObj > obj( new mongo::BSONObj( reinterpret_cast< char const* >( &data[ headerBytes ] ) ) );
 
 					return std::shared_ptr< Deserializer >( new Deserializer( obj ) );
 				}
@@ -160,7 +161,7 @@ namespace _2Real
 
 				if ( info->isBasicType() )
 				{
-					auto basicInfo = std::static_pointer_cast< const _2Real::app::TypeMetainfo >( info );
+					auto basicInfo = std::dynamic_pointer_cast< const _2Real::app::TypeMetainfo >( info );
 
 					if ( !obj.hasField( protocol::ValueField ) )
 						throw _2Real::Exception( std::string( "missing required field: " ) + protocol::ValueField );

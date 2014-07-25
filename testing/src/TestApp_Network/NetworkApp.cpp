@@ -62,7 +62,7 @@ int main( int argc, char *argv[] )
 		double in7 = 0.0; double inc7 = 0.5;
 		float in8 = 0.0; float inc8 = 2.5f;
 		std::string in9 = ""; std::string app9 = "a";
-		bool in10 = false; // flip
+		bool in10 = false; // just flip
 		std::vector< int32_t > in11; int32_t app11 = 77;
 		std::vector< double > in12; double app12 = 0.1;
 
@@ -70,9 +70,18 @@ int main( int argc, char *argv[] )
 		int32_t in13_int = 19;
 		std::string in13_str = "";
 
+		std::vector< float > in14; float app14 = -0.2f;
+		std::vector< bool > in15; bool app15 = true;
+		std::vector< std::string > in16; std::string app16 = "hello";
+		std::vector< uint32_t > in17; uint32_t app17 = 25;
+		std::vector< uint8_t > in18; uint8_t app18 = 1;
+		std::vector< int64_t > in19; int64_t app19 = -33;
+
+		// 5 ( ! ), 12, 13 ( after a while -> crash ), 16
+
 		while( 1 )
 		{
-			std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
+			std::this_thread::yield();
 
 			std::string line;
 			char lineEnd = '\n';
@@ -204,9 +213,66 @@ int main( int argc, char *argv[] )
 				serializer( in13 );
 				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
 			}
+			else if ( line == "14" )
+			{
+				publish = true;
+				label = line;
+				in14.push_back( app14 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in14 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "15" )
+			{
+				publish = true;
+				label = line;
+				in15.push_back( app15 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in15 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "16" )
+			{
+				publish = true;
+				label = line;
+				in16.push_back( app16 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in16 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "17" )
+			{
+				publish = true;
+				label = line;
+				in17.push_back( app17 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in17 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "18" )
+			{
+				publish = true;
+				label = line;
+				in18.push_back( app18 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in18 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
+			else if ( line == "19" )
+			{
+				publish = true;
+				label = line;
+				in19.push_back( app19 );
+				_2Real::io::bson::Serializer serializer;
+				serializer( in19 );
+				serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+			}
 
 			if ( publish )
 				publisher->publish( label, serialized );
+
+			// let's wait a bit, so that the data arrives
+			std::this_thread::sleep_for( std::chrono::milliseconds( 500 ) );
 
 			for ( unsigned int i=0; i<numSubscribers; ++i )
 			{
@@ -216,6 +282,11 @@ int main( int argc, char *argv[] )
 					std::shared_ptr< const _2Real::DataItem > d = dataQueues[ i ]->getNewest();
 					auto deserializer = _2Real::io::bson::Deserializer::create( d, _2Real::network::Constants::MaxTopicNameLength );
 					auto dataItem = deserializer->getDataItem( engine.getTypeMetainfo( deserializer->getTypename() ) );
+
+					//_2Real::PrintOutVisitor printy( std::cout );
+					//std::cout << "data: ";
+					//boost::apply_visitor( printy, *dataItem.get() );
+					//std::cout << std::endl;
 				}
 				else std::cout << "no data available for subscriber " << i << std::endl;
 			}
