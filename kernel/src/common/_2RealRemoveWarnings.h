@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include "common/_2RealRemoveWarnings.h"
-#include "common/_2RealBoostDefines.h"
-#include "boost/signals2.hpp"
-#include "boost/bind.hpp"
+#include <sdkddkver.h>
 
-namespace _2Real
-{
-	typedef boost::signals2::connection Connection;
-}
+// removes silly warning related to assignment operator
+#pragma warning(disable: 4512)
+// removes silly warning related to unreachable code in boost/signals2/detail/variadic_slot_invoker.hpp
+#pragma warning(disable: 4702)
+// removes silly warning related to unused args in boost/signals2/detail/variadic_slot_invoker.hpp
+#pragma warning(disable: 4100)
+#pragma warning(disable: 4503)

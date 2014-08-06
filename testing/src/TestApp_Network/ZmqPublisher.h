@@ -20,7 +20,6 @@
 #pragma once
 
 #include "ZmqNetworking.h"
-#include "BSONSerializer.h"
 #include "_2RealApplication.h"
 
 namespace _2Real

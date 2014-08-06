@@ -23,7 +23,7 @@ namespace _2Real
 {
 	namespace network
 	{
-		std::shared_ptr< Subscriber > Subscriber::create( std::string const& address, std::string const& topic, Subscriber::DataCallback dataCallback, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool )
+		std::shared_ptr< Subscriber > Subscriber::init( std::string const& address, std::string const& topic, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool )
 		{
 		// returns bundle & metainfo if already loaded
 			std::pair< _2Real::app::BundleHandle, _2Real::app::BundleMetainfo > zmqBundle = engine.loadBundle( "TestBundle_Network" );
@@ -65,10 +65,8 @@ namespace _2Real
 						throw _2Real::Exception( "network block start failed" );
 				}
 
-				updateTimer.start();
-
 				Subscriber::Deleter deleter;
-				std::shared_ptr< Subscriber > zmqSubscriber( new Subscriber( subscriberBlock, updateTimer, dataCallback ), deleter );
+				std::shared_ptr< Subscriber > zmqSubscriber( new Subscriber( subscriberBlock, updateTimer ), deleter );
 				return zmqSubscriber;
 			}
 			else
@@ -76,26 +74,52 @@ namespace _2Real
 				throw _2Real::CreationFailure( "no threadpool" );
 			}
 		}
-	
-		Subscriber::Subscriber( _2Real::app::BlockHandle block, _2Real::app::TimerHandle updateTimer, DataCallback dataCallback ) : mUnderlyingBlock( block ), mUpdateTimer( updateTimer ), mDataCallback( dataCallback )
+
+		std::pair< std::shared_ptr< Subscriber >, _2Real::Connection > Subscriber::create( std::string const& address, std::string const& topic, Subscriber::DataCallback dataCallback, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool, bool start )
 		{
-			auto outlet = block.getOutlet( "data" );
-			std::function< void( std::shared_ptr< const _2Real::DataItem > ) > func =  std::bind( &Subscriber::outletListener, this, std::placeholders::_1 );
-			outlet.registerToNewData( func );
+			auto subscriber = init( address, topic, engine, threadpool );
+			auto connection = subscriber->registerToData( dataCallback );
+			if ( start ) subscriber->mUpdateTimer.start();
+			return std::make_pair( subscriber, connection );
 		}
 
-		void Subscriber::outletListener( std::shared_ptr< const _2Real::DataItem > dataItem )
+		std::shared_ptr< Subscriber > Subscriber::create( std::string const& address, std::string const& topic, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool, bool start )
 		{
-			std::vector< uint8_t > const& data = boost::get< std::vector< uint8_t > >( *dataItem.get() );
+			auto result = init( address, topic, engine, threadpool );
+			if ( start ) result->mUpdateTimer.start();
+			return result;
+		}
+	
+		Subscriber::Subscriber( _2Real::app::BlockHandle block, _2Real::app::TimerHandle updateTimer ) : mUnderlyingBlock( block ), mUpdateTimer( updateTimer )
+		{
+		}
 
-			if ( data.empty() )
-				return;
+		_2Real::Connection Subscriber::registerToData( Subscriber::DataCallback dataCallback )
+		{
+			auto outlet = mUnderlyingBlock.getOutlet( "data" );
+			auto connection = outlet.registerToNewData( dataCallback );
+			mConnections.push_back( connection );
+			return connection;
+		}
 
-			mDataCallback( dataItem );
+		void Subscriber::startListening()
+		{
+			mUpdateTimer.start();
+		}
+
+		void Subscriber::stopListening()
+		{
+			mUpdateTimer.stop();
 		}
 
 		void Subscriber::Deleter::operator()( Subscriber *& sub )
 		{
+			for ( auto c : sub->mConnections )
+			{
+				if ( c.connected() )
+					c.disconnect();
+			}
+
 			_2Real::app::BlockHandle &subscriber = sub->mUnderlyingBlock;
 			_2Real::app::TimerHandle &timer = sub->mUpdateTimer;
 

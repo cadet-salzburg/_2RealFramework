@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "common/_2RealRemoveWarnings.h"
 #include "common/_2RealStdIncludes.h"
 #include "common/_2RealData.h"
 
@@ -33,6 +34,7 @@ namespace _2Real
 		template< typename TData >
 		std::string operator()( std::vector< TData > const& data ) const
 		{
+			( void )( data );
 			std::string result = "vector of ";
 			TData *dummyval = new TData;
 			result.append( this->operator()( *dummyval ) );

@@ -82,11 +82,12 @@ namespace _2Real
 			{
 				std::vector< uint8_t > &data = boost::get< std::vector< uint8_t > >( *message.get() );
 				std::string actualTopic = std::string( "*" ) + topic + std::string( "*" );
-				std::cout << "publishing " << actualTopic << " " << actualTopic.size() << std::endl;
+				//std::cout << "publishing " << actualTopic << " " << actualTopic.size() << std::endl;
 				for ( uint32_t i=0; i<actualTopic.size(); ++i ) data[ i ] = actualTopic[ i ];
 			}
 			catch ( boost::bad_get &e )
 			{
+				( void )( e );
 				throw _2Real::TypeMismatch( "expected type: vector of bytes" );
 			}
 

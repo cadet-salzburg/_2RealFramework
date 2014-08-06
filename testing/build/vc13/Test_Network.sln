@@ -9,6 +9,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestBundle_Network", "TestB
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\..\kernel\build\vc13\_2RealFramework.vcxproj", "{2BB60466-18B9-428F-BCDF-E992ACC60997}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp_Network_Subscriber", "TestApp_Network_Subscriber\TestApp_Network_Subscriber.vcxproj", "{317E4869-9052-47FD-9810-0D92EB8331FC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp_Network_Publisher", "TestApp_Network_Publisher\TestApp_Network_Publisher.vcxproj", "{ACB23175-2DA3-4831-BCE9-D7905632A731}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestBundle_CustomTypes", "TestBundle_CustomTypes\TestBundle_CustomTypes.vcxproj", "{4D6D146E-4B22-428A-B870-189B8D5A394C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +33,18 @@ Global
 		{2BB60466-18B9-428F-BCDF-E992ACC60997}.Debug|Win32.Build.0 = Debug|Win32
 		{2BB60466-18B9-428F-BCDF-E992ACC60997}.Release|Win32.ActiveCfg = Release|Win32
 		{2BB60466-18B9-428F-BCDF-E992ACC60997}.Release|Win32.Build.0 = Release|Win32
+		{317E4869-9052-47FD-9810-0D92EB8331FC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{317E4869-9052-47FD-9810-0D92EB8331FC}.Debug|Win32.Build.0 = Debug|Win32
+		{317E4869-9052-47FD-9810-0D92EB8331FC}.Release|Win32.ActiveCfg = Release|Win32
+		{317E4869-9052-47FD-9810-0D92EB8331FC}.Release|Win32.Build.0 = Release|Win32
+		{ACB23175-2DA3-4831-BCE9-D7905632A731}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ACB23175-2DA3-4831-BCE9-D7905632A731}.Debug|Win32.Build.0 = Debug|Win32
+		{ACB23175-2DA3-4831-BCE9-D7905632A731}.Release|Win32.ActiveCfg = Release|Win32
+		{ACB23175-2DA3-4831-BCE9-D7905632A731}.Release|Win32.Build.0 = Release|Win32
+		{4D6D146E-4B22-428A-B870-189B8D5A394C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4D6D146E-4B22-428A-B870-189B8D5A394C}.Debug|Win32.Build.0 = Debug|Win32
+		{4D6D146E-4B22-428A-B870-189B8D5A394C}.Release|Win32.ActiveCfg = Release|Win32
+		{4D6D146E-4B22-428A-B870-189B8D5A394C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,6 +16,9 @@
 	limitations under the License.
 */
 
+#include "common/_2RealRemoveWarnings.h"
+#include "common/_2RealBoostDefines.h"
+
 #include "app/_2RealEngine.h"
 #include "app/_2RealBundleHandle.h"
 #include "app/_2RealBundleMetainfo.h"
@@ -29,7 +32,6 @@
 #include "app/_2RealCustomTypeMetainfo.h"
 
 #include "engine/_2RealEngineImpl.h"
-#include "common/_2RealBoost.h"
 
 #include "engine/_2RealInletImpl.h"
 #include "engine/_2RealOutletImpl.h"

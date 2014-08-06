@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "common/_2RealBoost.h"
+#include "common/_2RealBoostDefines.h"
 #include "boost/variant.hpp"
 
 #include "common/_2RealStdIncludes.h"

@@ -19,6 +19,9 @@
 
 #pragma once
 
+#include "common/_2RealRemoveWarnings.h"
+#include "common/_2RealBoostDefines.h"		// included bc/of max list size redefinition
+
 #include "BsonIo.h"
 #include "common/_2RealData.h"
 

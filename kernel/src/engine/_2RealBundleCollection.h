@@ -33,7 +33,7 @@ namespace _2Real
 
 	public:
 
-		BundleCollection( std::shared_ptr< TypeCollection > registry );
+		BundleCollection();
 		~BundleCollection() = default;
 
 		BundleCollection( BundleCollection const& other ) = delete;
@@ -41,13 +41,19 @@ namespace _2Real
 		BundleCollection& operator=( BundleCollection const& other ) = delete;
 		BundleCollection& operator=( BundleCollection && other ) = delete;
 
+		/*
+		*	loads dll, retrieves metainfo -> creates a bundle object + a metainfo object. returns both a handle to the bundle and to the metainfo
+		*	the only place where a bundle import failure can be thrown.
+		*	if the bundle already exists ( same path ), will return handles to iot & it's metainfo
+		*/
 		typedef std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > LoadResult;
-
 		LoadResult			loadBundle( Path const& pathToBundle, std::shared_ptr< TypeCollection > );
 	
+		// removes ( unloads ) all bundles
 		void				clear( const unsigned long timeout );
+		// called if a user explicitly unloads a bundle
 		void				bundleUnloaded( std::shared_ptr< const BundleImpl > );
-
+		// returns the bundle directory
 		Path				getBundleDirectory() const;
 
 	private:

@@ -36,7 +36,7 @@ namespace _2Real
 		mTimerCollection( new TimerCollection ),
 		mThreadpoolCollection( new ThreadpoolCollection ),
 		mTypeCollection( new TypeCollection ),
-		mBundleCollection( new BundleCollection( mTypeCollection ) ),
+		mBundleCollection( new BundleCollection ),
 		mLinkCollection( new LinkCollection )
 	{
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( uint8_t )0 ) );
@@ -84,6 +84,7 @@ namespace _2Real
 
 	std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > EngineImpl::loadLibrary( std::string const& filename )
 	{
+		// append the proper suffix, if it's missing
 		std::string file = filename;
 		if ( file.find( Constants::SharedLibrarySuffix ) == std::string::npos )
 			file.append( Constants::SharedLibrarySuffix );

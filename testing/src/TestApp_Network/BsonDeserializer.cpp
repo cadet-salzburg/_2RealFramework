@@ -57,7 +57,7 @@ namespace _2Real
 			template< >
 			uint64_t get( mongo::BSONElement &value )
 			{
-				return static_cast< uint64_t >( value.numberInt() );
+				return std::stoull( value.String() );
 			}
 
 			template< >
@@ -87,22 +87,18 @@ namespace _2Real
 			template< >
 			std::string get( mongo::BSONElement &value )
 			{
-				std::string result;
-				result = value.String();
-				return result;
+				return value.String();
 			}
 
 			template< typename TType >
 			std::vector< TType > vec( mongo::BSONObj obj, mongo::BSONElement &value )
 			{
 				uint32_t numElements = get< uint32_t >( value );
-				std::cout << "vector size " << numElements << std::endl;
 				std::vector< TType > result( numElements );
 				for ( unsigned int i=0; i<numElements; ++i )
 				{
 					std::string label = std::to_string( i );
 					auto field = obj.getField( label );
-					auto debugVal = get< TType >( field );
 					result[ i ] = get< TType >( field );
 				}
 
