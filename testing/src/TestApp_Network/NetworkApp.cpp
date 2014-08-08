@@ -336,16 +336,23 @@ int main( int argc, char *argv[] )
 		auto simpleInfo = customTypeBundle.second.getExportedType( "simpleType" );
 
 		std::shared_ptr< _2Real::network::Publisher > publisher = _2Real::network::Publisher::create( "tcp://*:5556", engine, threadpool );
-		std::shared_ptr< _2Real::network::SubscriberWithFuture > subscriber = _2Real::network::SubscriberWithFuture::create( "tcp://localhost:5556", "test", engine, threadpool );
+		//std::shared_ptr< _2Real::network::SubscriberWithFuture > subscriber = _2Real::network::SubscriberWithFuture::create( "tcp://localhost:5556", "test", engine, threadpool );
+		//auto promised = subscriber->nextItem();
 
-		auto promised = subscriber->nextItem();
+		_2Real::CustomDataItem in_custom = simpleInfo.makeCustomData();
+		int32_t in_custom_int_field = 19;
+		std::string in_custom_str_field = "";
 
-		_2Real::CustomDataItem in = simpleInfo.makeCustomData();
-		int32_t in_int = 19;
-		std::string in_str = "";
+		int in_int = 0;
 
-		//auto callback = std::bind( []( const int i ){ std::cout << "received int " << i << std::endl; }, std::placeholders::_1 );
-		//auto testSubscriber = _2Real::network::Subscriber_T< int >::create( "tcp://localhost:5556", "test", callback, engine, threadpool );
+		auto callback_int = std::bind( []( const int i ){ std::cout << i << std::endl; }, std::placeholders::_1 );
+		auto callback_custom = std::bind( []( _2Real::CustomDataItem const& c ){ std::cout << c << std::endl; }, std::placeholders::_1 );
+
+		auto testAsyncSubscriber_int = _2Real::network::AsyncSubscriber_T< int >::create( "tcp://localhost:5556", "int", callback_int, engine, threadpool );
+		auto testAsyncSubscriber_custom = _2Real::network::AsyncSubscriber_T< _2Real::CustomDataItem >::create( "tcp://localhost:5556", "custom", "simpleType", callback_custom, engine, threadpool );
+
+		auto testQueuedSubscriber_int = _2Real::network::QueuedSubscriber_T< int >::create( "tcp://localhost:5556", "int", engine, threadpool );
+		auto testQueuedSubscriber_custom = _2Real::network::QueuedSubscriber_T< _2Real::CustomDataItem >::create( "tcp://localhost:5556", "custom", "simpleType", engine, threadpool );
 
 		while( 1 )
 		{
@@ -360,24 +367,40 @@ int main( int argc, char *argv[] )
 
 			else if ( line == "pub" )
 			{
-				in_int += 1;
-				in_str.append( "-yay-" );
-				in.set( "int_field", in_int );
-				in.set( "string_field", in_str );
-				_2Real::io::bson::Serializer serializer;
-				serializer( in );
-				auto serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
+				in_custom_int_field += 1;
+				in_custom_str_field.append( "-yay-" );
+				in_custom.set( "int_field", in_custom_int_field );
+				in_custom.set( "string_field", in_custom_str_field );
 
-				publisher->publish( "test", serialized );
+				in_int += 5;
 
-				promised.wait();
-				auto dataItem = promised.get();
-				promised = subscriber->nextItem();
+				_2Real::io::bson::Serializer serializer_custom;
+				serializer_custom( in_custom );
+				publisher->publish( "custom", serializer_custom.getDataItem( _2Real::network::Constants::MaxTopicNameLength ) );
 
-				_2Real::PrintOutVisitor printy( std::cout );
-				std::cout << "data: ";
-				boost::apply_visitor( printy, *dataItem.get() );
-				std::cout << std::endl;
+				_2Real::io::bson::Serializer serializer_int;
+				serializer_int( in_int );
+				publisher->publish( "int", serializer_int.getDataItem( _2Real::network::Constants::MaxTopicNameLength ) );
+
+				while ( testQueuedSubscriber_int->empty() || testQueuedSubscriber_custom->empty() )
+					std::this_thread::yield();
+
+				int val_int = testQueuedSubscriber_int->getNewest();
+				_2Real::CustomDataItem val_custom = testQueuedSubscriber_custom->getNewest();
+
+				std::cout << "the int is " << val_int << std::endl;
+				std::cout << "the custom data is " << val_custom << std::endl;
+
+				//promised.wait();
+				//auto dataItem = promised.get();
+				//auto deserializer = _2Real::io::bson::Deserializer::create( dataItem, _2Real::network::Constants::MaxTopicNameLength );
+				//auto deserialized = deserializer->getDataItem( engine.getTypeMetainfo( "simpleType" ) );
+				//promised = subscriber->nextItem();
+
+				//_2Real::PrintOutVisitor printy( std::cout );
+				//std::cout << "data: ";
+				//boost::apply_visitor( printy, *deserialized.get() );
+				//std::cout << std::endl;
 			}
 		}
 

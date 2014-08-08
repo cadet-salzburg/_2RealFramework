@@ -45,6 +45,7 @@ namespace _2Real
 
 			_2Real::Connection registerToData( DataCallback );
 
+			// these actually start & stop the underlying block
 			void startListening();
 			void stopListening();
 
@@ -127,7 +128,7 @@ namespace _2Real
 			{
 				assert( data.get() );
 
-				std::cout << mName << " received data" << std::endl;
+				//std::cout << mName << " received data" << std::endl;
 
 				std::lock_guard< std::mutex > lock( mLock );
 				mQueue.push_front( data );

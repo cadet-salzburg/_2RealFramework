@@ -84,7 +84,7 @@ void Publisher::update()
 			std::vector< uint8_t > const& buffer = boost::get< std::vector< uint8_t > >( data );
 			if ( buffer.empty() )
 			{
-				std::cout << "empty message in publisher, ignored" << std::endl;
+				//std::cout << "empty message in publisher, ignored" << std::endl;
 				continue;
 			}
 
