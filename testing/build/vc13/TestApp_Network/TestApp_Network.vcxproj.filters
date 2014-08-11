@@ -2,30 +2,20 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\..\src\TestApp_Network\NetworkApp.cpp" />
-    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqSubscriber.cpp">
-      <Filter>networking</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqPublisher.cpp">
-      <Filter>networking</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\TestApp_Network\BsonSerializer.cpp">
       <Filter>serialization</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TestApp_Network\BsonDeserializer.cpp">
       <Filter>serialization</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqPublisherWrapper.cpp">
+      <Filter>networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqSubscriberWrapper.cpp">
+      <Filter>networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\TestApp_Network\Common.h" />
-    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqSubscriber.h">
-      <Filter>networking</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqPublisher.h">
-      <Filter>networking</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\TestApp_Network\zmq.hpp">
-      <Filter>networking</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\TestApp_Network\BsonIo.h">
       <Filter>serialization</Filter>
     </ClInclude>
@@ -36,6 +26,16 @@
       <Filter>serialization</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\TestApp_Network\Subscriber.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqSubscriberWrapper.h">
+      <Filter>networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqPublisherWrapper.h">
+      <Filter>networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqNetworking.h">
+      <Filter>networking</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TestApp_Network\Publisher.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="serialization">

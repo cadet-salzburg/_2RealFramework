@@ -19,11 +19,11 @@
 
 #pragma once
 
-#include "common/_2RealBoostDefines.h"
-#include "boost/signals2.hpp"
-#include "ZmqSubscriber.h"
-#include "BsonDeserializer.h"
+#include "common/_2RealSignals.h"
 #include "engine/_2RealHumanReadableNameVisitor.h"
+
+#include "ZmqSubscriberWrapper.h"
+#include "BsonDeserializer.h"
 
 namespace _2Real
 {
@@ -129,7 +129,7 @@ namespace _2Real
 				auto info = engine.getTypeMetainfo( expectedType );		// may throw NotFound
 
 				// create basic subscriber ( not running ) & wrap it
-				auto basicSubscriber = Subscriber::create( address, topic, engine, threadpool, false );
+				auto basicSubscriber = SubscriberBlockWrapper::create( address, topic, engine, threadpool, false );
 				std::shared_ptr< AsyncSubscriber_T< TType > > result( new AsyncSubscriber_T< TType >( basicSubscriber, info ), AsyncSubscriber_T< TType >::Deleter() );
 				// connect & start basic subscriber
 				auto connection = result->mReceivedSignal.connect( callback );
@@ -140,10 +140,10 @@ namespace _2Real
 
 		private:
 
-			AsyncSubscriber_T( std::shared_ptr< Subscriber > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mUnderlyingBasicSubscriber( subscriber ), mDeserializer( info )
+			AsyncSubscriber_T( std::shared_ptr< SubscriberBlockWrapper > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mUnderlyingBasicSubscriber( subscriber ), mDeserializer( info )
 			{
 				auto callback = std::bind( &_2Real::network::AsyncSubscriber_T< TType >::received, this, std::placeholders::_1 );
-				mConnection = subscriber->registerToData( callback );
+				mConnectionToBasicSubscriber = subscriber->registerToData( callback );
 			}
 
 			~AsyncSubscriber_T() = default;
@@ -159,21 +159,20 @@ namespace _2Real
 				catch ( TypeMismatch &e )
 				{
 					std::cout << e.what() << std::endl;
-					( void )( e );
 				}
 			}
 
-			std::shared_ptr< _2Real::network::Subscriber >			mUnderlyingBasicSubscriber;
-			_2Real::Connection										mConnection;
-			boost::signals2::signal< void( const TType ) >			mReceivedSignal;
-			Deserializer_T< TType >									mDeserializer;
+			std::shared_ptr< _2Real::network::SubscriberBlockWrapper >			mUnderlyingBasicSubscriber;
+			_2Real::Connection													mConnectionToBasicSubscriber;
+			boost::signals2::signal< void( const TType ) >						mReceivedSignal;
+			Deserializer_T< TType >												mDeserializer;
 
 			struct Deleter
 			{
 				void operator()( AsyncSubscriber_T< TType > *& sub )
 				{
-					if ( sub->mConnection.connected() )
-						sub->mConnection.disconnect();
+					if ( sub->mConnectionToBasicSubscriber.connected() )
+						sub->mConnectionToBasicSubscriber.disconnect();
 
 					sub->mReceivedSignal.disconnect_all_slots();
 
@@ -207,7 +206,7 @@ namespace _2Real
 				auto info = engine.getTypeMetainfo( expectedType );		// may throw NotFound
 
 				// create basic subscriber ( not running ) & wrap it
-				auto basicSubscriber = Subscriber::create( address, topic, engine, threadpool, false );
+				auto basicSubscriber = SubscriberBlockWrapper::create( address, topic, engine, threadpool, false );
 				std::shared_ptr< AsyncSubscriber_T< _2Real::CustomDataItem  > > result( new AsyncSubscriber_T< _2Real::CustomDataItem >( basicSubscriber, info ), AsyncSubscriber_T< _2Real::CustomDataItem  >::Deleter() );
 				// connect & start basic subscriber
 				auto connection = result->mReceivedSignal.connect( callback );
@@ -218,10 +217,10 @@ namespace _2Real
 
 		private:
 
-			AsyncSubscriber_T( std::shared_ptr< Subscriber > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mUnderlyingBasicSubscriber( subscriber ), mDeserializer( info )
+			AsyncSubscriber_T( std::shared_ptr< SubscriberBlockWrapper > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mUnderlyingBasicSubscriber( subscriber ), mDeserializer( info )
 			{
 				auto callback = std::bind( &_2Real::network::AsyncSubscriber_T< _2Real::CustomDataItem  >::received, this, std::placeholders::_1 );
-				mConnection = subscriber->registerToData( callback );
+				mConnectionToBasicSubscriber = subscriber->registerToData( callback );
 			}
 
 			~AsyncSubscriber_T() = default;
@@ -237,21 +236,20 @@ namespace _2Real
 				catch ( TypeMismatch &e )
 				{
 					std::cout << e.what() << std::endl;
-					( void )( e );
 				}
 			}
 
-			std::shared_ptr< _2Real::network::Subscriber >								mUnderlyingBasicSubscriber;
-			_2Real::Connection															mConnection;
-			boost::signals2::signal< void( const _2Real::CustomDataItem  ) >			mReceivedSignal;
-			Deserializer_T< _2Real::CustomDataItem >									mDeserializer;
+			std::shared_ptr< _2Real::network::SubscriberBlockWrapper >			mUnderlyingBasicSubscriber;
+			_2Real::Connection													mConnectionToBasicSubscriber;
+			boost::signals2::signal< void( _2Real::CustomDataItem const& ) >	mReceivedSignal;
+			Deserializer_T< _2Real::CustomDataItem >							mDeserializer;
 
 			struct Deleter
 			{
 				void operator()( AsyncSubscriber_T< _2Real::CustomDataItem > *& sub )
 				{
-					if ( sub->mConnection.connected() )
-						sub->mConnection.disconnect();
+					if ( sub->mConnectionToBasicSubscriber.connected() )
+						sub->mConnectionToBasicSubscriber.disconnect();
 
 					sub->mReceivedSignal.disconnect_all_slots();
 
@@ -282,7 +280,7 @@ namespace _2Real
 				auto info = engine.getTypeMetainfo( expectedType );		// may throw NotFound
 
 				// create basic subscriber ( not running ) & wrap it
-				auto basicSubscriber = Subscriber::create( address, topic, engine, threadpool, false );
+				auto basicSubscriber = SubscriberBlockWrapper::create( address, topic, engine, threadpool, false );
 				std::shared_ptr< QueuedSubscriber_T< TType > > result( new QueuedSubscriber_T< TType >( basicSubscriber, info ), QueuedSubscriber_T< TType >::Deleter() );
 				basicSubscriber->startListening();
 
@@ -317,19 +315,19 @@ namespace _2Real
 
 		private:
 
-			QueuedSubscriber_T( std::shared_ptr< Subscriber > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mUnderlyingBasicSubscriber( subscriber ), mDeserializer( info )
+			QueuedSubscriber_T( std::shared_ptr< SubscriberBlockWrapper > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mUnderlyingBasicSubscriber( subscriber ), mDeserializer( info )
 			{
 				auto callback = std::bind( &_2Real::network::QueuedSubscriber_T< TType >::received, this, std::placeholders::_1 );
-				mConnection = subscriber->registerToData( callback );
+				mConnectionToBasicSubscriber = subscriber->registerToData( callback );
 			}
 
 			~QueuedSubscriber_T() = default;
 
-			std::shared_ptr< _2Real::network::Subscriber >		mUnderlyingBasicSubscriber;
-			_2Real::Connection									mConnection;
-			Deserializer_T< TType >								mDeserializer;
-			std::deque< TType >									mQueue;
-			mutable std::mutex									mLock;
+			std::shared_ptr< _2Real::network::SubscriberBlockWrapper >			mUnderlyingBasicSubscriber;
+			_2Real::Connection													mConnectionToBasicSubscriber;
+			Deserializer_T< TType >												mDeserializer;
+			std::deque< TType >													mQueue;
+			mutable std::mutex													mLock;
 
 			void received( std::shared_ptr< const _2Real::DataItem > data )
 			{
@@ -344,11 +342,6 @@ namespace _2Real
 				catch ( TypeMismatch &e )
 				{
 					std::cout << e.what() << std::endl;
-					( void )( e );
-				}
-				catch ( ... )
-				{
-					std::cout << "ARGH" << std::endl;
 				}
 			}
 
@@ -356,8 +349,8 @@ namespace _2Real
 			{
 				void operator()( QueuedSubscriber_T< TType > *& sub )
 				{
-					if ( sub->mConnection.connected() )
-						sub->mConnection.disconnect();
+					if ( sub->mConnectionToBasicSubscriber.connected() )
+						sub->mConnectionToBasicSubscriber.disconnect();
 
 					sub->mUnderlyingBasicSubscriber.reset();
 
@@ -384,7 +377,7 @@ namespace _2Real
 				auto info = engine.getTypeMetainfo( expectedType );		// may throw NotFound
 
 				// create basic subscriber ( not running ) & wrap it
-				auto basicSubscriber = Subscriber::create( address, topic, engine, threadpool, false );
+				auto basicSubscriber = SubscriberBlockWrapper::create( address, topic, engine, threadpool, false );
 				std::shared_ptr< QueuedSubscriber_T< _2Real::CustomDataItem > > result( new QueuedSubscriber_T< _2Real::CustomDataItem >( basicSubscriber, info ), QueuedSubscriber_T< _2Real::CustomDataItem >::Deleter() );
 				basicSubscriber->startListening();
 
@@ -419,19 +412,20 @@ namespace _2Real
 
 		private:
 
-			QueuedSubscriber_T( std::shared_ptr< Subscriber > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mUnderlyingBasicSubscriber( subscriber ), mDeserializer( info )
+			QueuedSubscriber_T( std::shared_ptr< SubscriberBlockWrapper > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mUnderlyingBasicSubscriber( subscriber ), mDeserializer( info )
 			{
 				auto callback = std::bind( &_2Real::network::QueuedSubscriber_T<  _2Real::CustomDataItem >::received, this, std::placeholders::_1 );
-				mConnection = subscriber->registerToData( callback );
+				mConnectionToBasicSubscriber = subscriber->registerToData( callback );
 			}
 
 			~QueuedSubscriber_T() = default;
 
-			std::shared_ptr< _2Real::network::Subscriber >		mUnderlyingBasicSubscriber;
-			_2Real::Connection									mConnection;
-			Deserializer_T< _2Real::CustomDataItem >			mDeserializer;
-			std::deque< _2Real::CustomDataItem >				mQueue;
-			mutable std::mutex									mLock;
+			std::shared_ptr< _2Real::network::SubscriberBlockWrapper >			mUnderlyingBasicSubscriber;
+			_2Real::Connection													mConnectionToBasicSubscriber;
+			Deserializer_T< _2Real::CustomDataItem >							mDeserializer;
+			// TODO std::reference_wrapper - maybe
+			std::deque< _2Real::CustomDataItem >								mQueue;
+			mutable std::mutex													mLock;
 
 			void received( std::shared_ptr< const _2Real::DataItem > data )
 			{
@@ -446,11 +440,6 @@ namespace _2Real
 				catch ( TypeMismatch &e )
 				{
 					std::cout << e.what() << std::endl;
-					( void )( e );
-				}
-				catch ( ... )
-				{
-					std::cout << "ARGH" << std::endl;
 				}
 			}
 
@@ -458,8 +447,8 @@ namespace _2Real
 			{
 				void operator()( QueuedSubscriber_T< _2Real::CustomDataItem > *& sub )
 				{
-					if ( sub->mConnection.connected() )
-						sub->mConnection.disconnect();
+					if ( sub->mConnectionToBasicSubscriber.connected() )
+						sub->mConnectionToBasicSubscriber.disconnect();
 
 					sub->mUnderlyingBasicSubscriber.reset();
 
@@ -469,171 +458,5 @@ namespace _2Real
 			};
 
 		};
-
-		///*
-		//*	this name is going to change. soon ;-)
-		//*/
-		//template< typename TType >
-		//class FuturisticSubscriber_T
-		//{
-
-		//public:
-
-		//	FuturisticSubscriber_T( FuturisticSubscriber_T< TType > const& ) = delete;
-		//	FuturisticSubscriber_T( FuturisticSubscriber_T< TType > && ) = delete;
-
-		//	static std::shared_ptr< FuturisticSubscriber_T > create( std::string const& address, std::string const& topic, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool )
-		//	{
-		//		_2Real::HumanReadableNameVisitor name;
-
-		//		// TODO: get name for a certain type, not just an object ( also, this causes a shitty warning and does not compile in debug mode )
-		//		TType dummy;
-		//		std::string expectedType = name( dummy );
-		//		auto info = engine.getTypeMetainfo( expectedType );		// may throw NotFound
-
-		//		// create basic subscriber ( not running ) & wrap it
-		//		auto basicSubscriber = Subscriber::create( address, topic, engine, threadpool, false );
-		//		std::shared_ptr< FuturisticSubscriber_T< TType > > result( new FuturisticSubscriber_T< TType >( basicSubscriber, info ), FuturisticSubscriber_T< TType >::Deleter() );
-		//		basicSubscriber->startListening();
-
-		//		return result;
-		//	}
-
-		//	std::future< TType > nextItem()
-		//	{
-		//		std::lock_guard< std::mutex > lock( mLock );
-		//		mQueue.push_front( std::promise< TType >() );
-		//		return mQueue.front().get_future();
-		//	}
-
-		//private:
-
-		//	FuturisticSubscriber_T( std::shared_ptr< Subscriber > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mSubscriber( subscriber ), mDeserializer( info )
-		//	{
-		//		auto callback = std::bind( &_2Real::network::FuturisticSubscriber_T<  _2Real::CustomDataItem >::received, this, std::placeholders::_1 );
-		//		mConnection = subscriber->registerToData( callback );
-		//	}
-
-		//	~FuturisticSubscriber_T() = default;
-
-		//	std::shared_ptr< Subscriber >				mSubscriber;
-		//	_2Real::Connection							mConnection;
-		//	Deserializer_T< TType >						mDeserializer;
-		//	std::deque< std::promise< TType > >			mQueue;
-		//	mutable std::mutex							mLock;
-
-		//	void received( std::shared_ptr< const _2Real::DataItem > data )
-		//	{
-		//		assert( data.get() );
-
-		//		std::lock_guard< std::mutex > lock( mLock );
-
-		//		if ( mQueue.empty() )
-		//			return;
-
-		//		try
-		//		{
-		//			mQueue.back.set_value( mDeserializer.extract( data ) );
-		//			mQueue.pop_back();
-		//		}
-		//		catch ( TypeMismatch &e )
-		//		{
-		//			( void )( e );
-		//		}
-		//	}
-
-		//	struct Deleter
-		//	{
-		//		void operator()( FuturisticSubscriber_T< TType > *& sub )
-		//		{
-		//			if ( sub->mConnection.connected() )
-		//				sub->mConnection.disconnect();
-
-		//			sub->mSubscriber.reset();
-
-		//			delete sub;
-		//			sub = nullptr;
-		//		}
-		//	};
-		//};
-
-		//template< >
-		//class FuturisticSubscriber_T< _2Real::CustomDataItem >
-		//{
-
-		//public:
-
-		//	FuturisticSubscriber_T( FuturisticSubscriber_T< _2Real::CustomDataItem > const& ) = delete;
-		//	FuturisticSubscriber_T( FuturisticSubscriber_T< _2Real::CustomDataItem > && ) = delete;
-
-		//	static std::shared_ptr< FuturisticSubscriber_T > create( std::string const& address, std::string const& topic, std::string const& expectedType, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool )
-		//	{
-		//		auto info = engine.getTypeMetainfo( expectedType );		// may throw NotFound
-
-		//		// create basic subscriber ( not running ) & wrap it
-		//		auto basicSubscriber = Subscriber::create( address, topic, engine, threadpool, false );
-		//		std::shared_ptr< FuturisticSubscriber_T< _2Real::CustomDataItem > > result( new FuturisticSubscriber_T< _2Real::CustomDataItem >( basicSubscriber, info ), FuturisticSubscriber_T< _2Real::CustomDataItem >::Deleter() );
-		//		basicSubscriber->startListening();
-
-		//		return result;
-		//	}
-
-		//	std::future< _2Real::CustomDataItem > nextItem()
-		//	{
-		//		std::lock_guard< std::mutex > lock( mLock );
-		//		mQueue.push_front( std::promise< _2Real::CustomDataItem >() );
-		//		return mQueue.front().get_future();
-		//	}
-
-		//private:
-
-		//	FuturisticSubscriber_T( std::shared_ptr< Subscriber > subscriber, std::shared_ptr< const _2Real::app::TypeMetainfo_I > info ) : mSubscriber( subscriber ), mDeserializer( info )
-		//	{
-		//		auto callback = std::bind( &_2Real::network::FuturisticSubscriber_T<  _2Real::CustomDataItem >::received, this, std::placeholders::_1 );
-		//		mConnection = subscriber->registerToData( callback );
-		//	}
-
-		//	~FuturisticSubscriber_T() = default;
-
-		//	std::shared_ptr< Subscriber >							mSubscriber;
-		//	_2Real::Connection										mConnection;
-		//	Deserializer_T< _2Real::CustomDataItem >				mDeserializer;
-		//	std::deque< std::promise< _2Real::CustomDataItem > >	mQueue;
-		//	mutable std::mutex										mLock;
-
-		//	void received( std::shared_ptr< const _2Real::DataItem > data )
-		//	{
-		//		assert( data.get() );
-
-		//		std::lock_guard< std::mutex > lock( mLock );
-
-		//		if ( mQueue.empty() )
-		//			return;
-
-		//		try
-		//		{
-		//			mQueue.back().set_value( mDeserializer.extract( data ) );
-		//			mQueue.pop_back();
-		//		}
-		//		catch ( TypeMismatch &e )
-		//		{
-		//			( void )( e );
-		//		}
-		//	}
-
-		//	struct Deleter
-		//	{
-		//		void operator()( FuturisticSubscriber_T< _2Real::CustomDataItem > *& sub )
-		//		{
-		//			if ( sub->mConnection.connected() )
-		//				sub->mConnection.disconnect();
-
-		//			sub->mSubscriber.reset();
-
-		//			delete sub;
-		//			sub = nullptr;
-		//		}
-		//	};
-		//};
 	}
 }

@@ -17,13 +17,13 @@
 	limitations under the License.
 */
 
-#include "ZmqPublisher.h"
+#include "ZmqPublisherWrapper.h"
 
 namespace _2Real
 {
 	namespace network
 	{
-		std::shared_ptr< Publisher > Publisher::create( std::string const& address, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool )
+		std::shared_ptr< PublisherBlockWrapper > PublisherBlockWrapper::create( std::string const& address, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool )
 		{
 		// returns bundle & metainfo if already loaded
 			std::pair< _2Real::app::BundleHandle, _2Real::app::BundleMetainfo > zmqBundle = engine.loadBundle( "TestBundle_Network" );
@@ -52,15 +52,16 @@ namespace _2Real
 				//updatePolicy.set( _2Real::DefaultUpdatePolicy::ANY );
 				// TODO: obvious bug in there
 
-				{
-					auto result = publisherBlock.startUpdating();
-					if ( result.get() != _2Real::BlockResult::CARRIED_OUT )
-						throw _2Real::Exception( "network block start failed" );
-				}
+				//// this block does not update...
+				//{
+				//	auto result = publisherBlock.startUpdating();
+				//	if ( result.get() != _2Real::BlockResult::CARRIED_OUT )
+				//		throw _2Real::Exception( "network block start failed" );
+				//}
 
-				Publisher::Deleter deleter;
+				PublisherBlockWrapper::Deleter deleter;
 
-				std::shared_ptr< Publisher > zmqPublisher( new Publisher( publisherBlock), deleter );
+				std::shared_ptr< PublisherBlockWrapper > zmqPublisher( new PublisherBlockWrapper( publisherBlock), deleter );
 				return zmqPublisher;
 			}
 			else
@@ -69,20 +70,25 @@ namespace _2Real
 			}
 		}
 	
-		Publisher::Publisher( _2Real::app::BlockHandle sender ) : mUnderlyingBlock( sender )
+		PublisherBlockWrapper::PublisherBlockWrapper( _2Real::app::BlockHandle sender ) : mUnderlyingBlock( sender )
 		{
 		}
 
-		void Publisher::publish( std::string const& topic, std::shared_ptr< _2Real::DataItem > message )
+		void PublisherBlockWrapper::publish( std::string const& topic, std::shared_ptr< _2Real::DataItem > message, const uint64_t timeout )
 		{
-			if ( topic.size() > Constants::MaxTopicNameLength - 2 )
+			if ( !PublisherBlockWrapper::topicNameCheck( topic ) )
 				throw _2Real::Exception( "name too long, should be max 18 characters" );
 
+			setTopicMessage( topic, message );
+			blockingSend( timeout );
+		}
+
+		void PublisherBlockWrapper::setTopicMessage( std::string const& topic, std::shared_ptr< _2Real::DataItem > message )
+		{
 			try
 			{
 				std::vector< uint8_t > &data = boost::get< std::vector< uint8_t > >( *message.get() );
 				std::string actualTopic = std::string( "*" ) + topic + std::string( "*" );
-				//std::cout << "publishing " << actualTopic << " " << actualTopic.size() << std::endl;
 				for ( uint32_t i=0; i<actualTopic.size(); ++i ) data[ i ] = actualTopic[ i ];
 			}
 			catch ( boost::bad_get &e )
@@ -103,7 +109,26 @@ namespace _2Real
 			}
 		}
 
-		void Publisher::Deleter::operator()( Publisher *& pub )
+		bool PublisherBlockWrapper::topicNameCheck( std::string const& topic )
+		{
+			if ( topic.size() > Constants::MaxTopicNameLength - 2 )
+				return false;
+			else return true;
+		}
+
+		void PublisherBlockWrapper::blockingSend( const uint64_t timeout )
+		{
+			auto result = mUnderlyingBlock.singlestep();
+			auto isReady = result.wait_for( std::chrono::milliseconds( timeout ) );
+			if ( isReady == std::future_status::ready )
+			{
+				if ( result.get() != _2Real::BlockResult::CARRIED_OUT )
+					throw _2Real::Exception( "publish failed" );
+			}
+			else throw _2Real::Timeout( "" );
+		}
+
+		void PublisherBlockWrapper::Deleter::operator()( PublisherBlockWrapper *& pub )
 		{
 			//pub->mTopics.clear();
 			_2Real::app::BlockHandle &sender = pub->mUnderlyingBlock;

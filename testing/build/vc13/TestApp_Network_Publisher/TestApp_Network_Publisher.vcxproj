@@ -13,8 +13,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\TestApp_Network\BsonDeserializer.cpp" />
     <ClCompile Include="..\..\..\src\TestApp_Network\BsonSerializer.cpp" />
-    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqPublisher.cpp" />
-    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqSubscriber.cpp" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqPublisherWrapper.cpp" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqSubscriberWrapper.cpp" />
     <ClCompile Include="..\..\..\src\TestApp_Network_Publisher\NetworkPublisherApp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -24,8 +24,8 @@
     <ClInclude Include="..\..\..\src\TestApp_Network\Common.h" />
     <ClInclude Include="..\..\..\src\TestApp_Network\zmq.hpp" />
     <ClInclude Include="..\..\..\src\TestApp_Network\ZmqNetworking.h" />
-    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqPublisher.h" />
-    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqSubscriber.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqPublisherWrapper.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqSubscriberWrapper.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ACB23175-2DA3-4831-BCE9-D7905632A731}</ProjectGuid>

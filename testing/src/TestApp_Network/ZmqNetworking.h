@@ -9,7 +9,6 @@ namespace _2Real
 		namespace Constants
 		{
 			static const uint32_t MaxTopicNameLength = 20;
-			static const uint8_t TopicFillChar = '-';
 		}
 	}
 }

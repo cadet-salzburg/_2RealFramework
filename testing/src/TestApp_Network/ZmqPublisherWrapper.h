@@ -26,25 +26,29 @@ namespace _2Real
 {
 	namespace network
 	{
-		class Publisher
+		class PublisherBlockWrapper
 		{
 
 		public:
 		
-			Publisher( Publisher const& ) = delete;
-			Publisher( Publisher && ) = delete;
+			PublisherBlockWrapper( PublisherBlockWrapper const& ) = delete;
+			PublisherBlockWrapper( PublisherBlockWrapper && ) = delete;
 
-			static std::shared_ptr< Publisher > create( std::string const& address, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool );
+			static std::shared_ptr< PublisherBlockWrapper > create( std::string const& address, _2Real::app::Engine &engine, _2Real::app::ThreadpoolHandle threadpool );
 
 			// !!!!! assumption: message contains space for header ( see Serializer ctor -> bytesToSkip )
 			// also, will be altered ( header copied into msg )
-			// is a shared ptr because thats what the setter function expects
-			void publish( std::string const& topic, std::shared_ptr< _2Real::DataItem > message );
+			void publish( std::string const& topic, std::shared_ptr< _2Real::DataItem > message, const uint64_t timeout = 1000 );
+
+			void setTopicMessage( std::string const& topic, std::shared_ptr< _2Real::DataItem > message );
+			void blockingSend( const uint64_t timeout );
+
+			static bool topicNameCheck( std::string const& );
 
 		private:
 
-			Publisher( _2Real::app::BlockHandle sender );
-			~Publisher() = default;
+			PublisherBlockWrapper( _2Real::app::BlockHandle sender );
+			~PublisherBlockWrapper() = default;
 
 			_2Real::app::BlockHandle							mUnderlyingBlock;
 			std::map< std::string, _2Real::app::InletHandle >	mTopics;
@@ -52,7 +56,7 @@ namespace _2Real
 			// deleter for shared ptr
 			struct Deleter
 			{
-				void operator()( Publisher *& pub );
+				void operator()( PublisherBlockWrapper *& pub );
 			};
 
 		};

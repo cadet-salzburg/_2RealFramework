@@ -14,18 +14,18 @@
     <ClInclude Include="..\..\..\src\TestApp_Network\BsonDeserializer.h" />
     <ClInclude Include="..\..\..\src\TestApp_Network\BsonIo.h" />
     <ClInclude Include="..\..\..\src\TestApp_Network\BsonSerializer.h" />
-    <ClInclude Include="..\..\..\src\TestApp_Network\Common.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\Publisher.h" />
     <ClInclude Include="..\..\..\src\TestApp_Network\Subscriber.h" />
-    <ClInclude Include="..\..\..\src\TestApp_Network\zmq.hpp" />
-    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqPublisher.h" />
-    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqSubscriber.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqNetworking.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqPublisherWrapper.h" />
+    <ClInclude Include="..\..\..\src\TestApp_Network\ZmqSubscriberWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\TestApp_Network\BsonDeserializer.cpp" />
     <ClCompile Include="..\..\..\src\TestApp_Network\BsonSerializer.cpp" />
     <ClCompile Include="..\..\..\src\TestApp_Network\NetworkApp.cpp" />
-    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqPublisher.cpp" />
-    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqSubscriber.cpp" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqPublisherWrapper.cpp" />
+    <ClCompile Include="..\..\..\src\TestApp_Network\ZmqSubscriberWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\src\TestApp_Network\todos.txt" />
