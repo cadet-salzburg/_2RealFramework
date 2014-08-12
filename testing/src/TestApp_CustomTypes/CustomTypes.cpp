@@ -17,18 +17,8 @@
 	limitations under the License.
 */
 
-#define BOOST_ALL_DYN_LINK
-
-#ifdef _WIN32
-	#ifdef _DEBUG
-		#include "vld.h"
-	#endif
-	#include <Windows.h>
-#elif _WIN64
-	#ifdef _DEBUG
-		#include "vld.h"
-	#endif
-	#include <Windows.h>
+#ifndef BOOST_ALL_DYN_LINK
+	#define BOOST_ALL_DYN_LINK
 #endif
 
 #include "_2RealApplication.h"
@@ -92,7 +82,7 @@ int main( int argc, char *argv[] )
 
 		while( 1 )
 		{
-			Sleep( 100 );
+			std::this_thread::yield();
 
 			std::string line;
 			char lineEnd = '\n';
@@ -132,7 +122,7 @@ int main( int argc, char *argv[] )
 
 	while( 1 )
 	{
-		Sleep( 100 );
+		std::this_thread::yield();
 
 		std::string line;
 		char lineEnd = '\n';

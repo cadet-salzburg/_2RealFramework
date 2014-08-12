@@ -17,7 +17,10 @@
 	limitations under the License.
 */
 
-#include "common/_2RealBoost.h"
+#ifndef BOOST_ALL_DYN_LINK
+	#define BOOST_ALL_DYN_LINK
+#endif
+
 #include "_2RealApplication.h"
 
 int main( int argc, char *argv[] )

@@ -17,8 +17,11 @@
 	limitations under the License.
 */
 
-#include "ZmqPublisher.h"
-#include "BsonSerializer.h"
+#ifndef BOOST_ALL_DYN_LINK
+	#define BOOST_ALL_DYN_LINK
+#endif
+
+#include "Publisher.h"
 
 int main( int argc, char *argv[] )
 {
@@ -33,13 +36,12 @@ int main( int argc, char *argv[] )
 		std::cout << "topic: " << topic << std::endl;
 
 		_2Real::app::Engine engine;
-
 		auto threadpool = engine.createThreadpool( _2Real::ThreadpoolPolicy::FIFO );
-
 		auto customTypeBundle = engine.loadBundle( "TestBundle_CustomTypes" );
 		auto simpleInfo = customTypeBundle.second.getExportedType( "simpleType" );
 
 		std::shared_ptr< _2Real::network::Publisher > publisher = _2Real::network::Publisher::create( address, engine, threadpool );
+		_2Real::network::Publisher::Topic_T< _2Real::CustomDataItem > topic_custom = publisher->addTopic( "simpleType", topic );
 
 		_2Real::CustomDataItem in = simpleInfo.makeCustomData();
 		int32_t in_int = 0;
@@ -60,16 +62,15 @@ int main( int argc, char *argv[] )
 			{
 				in_int += 100;
 				in_str.append( ( flip ? "--brunzbeppl--" : "--hurenhans--" ) );
+				flip = !flip;
+
 				in.set( "int_field", in_int );
 				in.set( "string_field", in_str );
-				_2Real::io::bson::Serializer serializer;
-				serializer( in );
-				auto serialized = serializer.getDataItem( _2Real::network::Constants::MaxTopicNameLength );
-				publisher->publish( topic, serialized );
-				flip = !flip;
+				topic_custom.publish( in );
 			}
 		}
 
+		publisher.reset();
 		engine.clear();
 		std::cout << "enter \'quit\' to exit the application" << std::endl;
 	}

@@ -17,6 +17,10 @@
 	limitations under the License.
 */
 
+#ifndef BOOST_ALL_DYN_LINK
+	#define BOOST_ALL_DYN_LINK
+#endif
+
 #include "Publisher.h"
 #include "Subscriber.h"
 
@@ -93,7 +97,6 @@ int main( int argc, char *argv[] )
 			}
 		}
 
-
 		publisher.reset();		// <---- absolutely vital! the 'high level' publisher attempts to manipulate ( singlestep ) a framework block
 								// in a separate thread; clearing the engine in this thread while a block is still in use is a very bad idea
 		engine.clear();
@@ -114,7 +117,7 @@ int main( int argc, char *argv[] )
 
 	while( 1 )
 	{
-		Sleep( 100 );
+		std::this_thread::yield();
 
 		std::string line;
 		char lineEnd = '\n';

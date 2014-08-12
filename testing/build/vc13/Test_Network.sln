@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp_Network", "TestApp_Network\TestApp_Network.vcxproj", "{60145AFF-DED9-4DEA-845B-5AC1A3883966}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestBundle_Network", "TestBundle_Network\TestBundle_Network.vcxproj", "{238F087D-0685-4BD6-B088-B432036BC2D6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp_Network", "TestApp_Network\TestApp_Network.vcxproj", "{591E08E7-06E7-4678-AD62-951A57741271}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealFramework", "..\..\..\kernel\build\vc13\_2RealFramework.vcxproj", "{2BB60466-18B9-428F-BCDF-E992ACC60997}"
 EndProject
@@ -15,20 +13,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp_Network_Publisher",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestBundle_CustomTypes", "TestBundle_CustomTypes\TestBundle_CustomTypes.vcxproj", "{4D6D146E-4B22-428A-B870-189B8D5A394C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_2RealNetwork", "..\..\..\network\build\vc13\_2RealNetwork.vcxproj", "{9FD68C01-D925-4A9B-BFEE-5AD283E78612}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bundle_Network", "..\..\..\network\build\vc13\Bundle_Network.vcxproj", "{7752FE3D-7C7E-4410-B79D-3C48E4D6C456}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{60145AFF-DED9-4DEA-845B-5AC1A3883966}.Debug|Win32.ActiveCfg = Debug|Win32
-		{60145AFF-DED9-4DEA-845B-5AC1A3883966}.Debug|Win32.Build.0 = Debug|Win32
-		{60145AFF-DED9-4DEA-845B-5AC1A3883966}.Release|Win32.ActiveCfg = Release|Win32
-		{60145AFF-DED9-4DEA-845B-5AC1A3883966}.Release|Win32.Build.0 = Release|Win32
-		{238F087D-0685-4BD6-B088-B432036BC2D6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{238F087D-0685-4BD6-B088-B432036BC2D6}.Debug|Win32.Build.0 = Debug|Win32
-		{238F087D-0685-4BD6-B088-B432036BC2D6}.Release|Win32.ActiveCfg = Release|Win32
-		{238F087D-0685-4BD6-B088-B432036BC2D6}.Release|Win32.Build.0 = Release|Win32
+		{591E08E7-06E7-4678-AD62-951A57741271}.Debug|Win32.ActiveCfg = Debug|Win32
+		{591E08E7-06E7-4678-AD62-951A57741271}.Debug|Win32.Build.0 = Debug|Win32
+		{591E08E7-06E7-4678-AD62-951A57741271}.Release|Win32.ActiveCfg = Release|Win32
+		{591E08E7-06E7-4678-AD62-951A57741271}.Release|Win32.Build.0 = Release|Win32
 		{2BB60466-18B9-428F-BCDF-E992ACC60997}.Debug|Win32.ActiveCfg = Debug|Win32
 		{2BB60466-18B9-428F-BCDF-E992ACC60997}.Debug|Win32.Build.0 = Debug|Win32
 		{2BB60466-18B9-428F-BCDF-E992ACC60997}.Release|Win32.ActiveCfg = Release|Win32
@@ -45,6 +43,14 @@ Global
 		{4D6D146E-4B22-428A-B870-189B8D5A394C}.Debug|Win32.Build.0 = Debug|Win32
 		{4D6D146E-4B22-428A-B870-189B8D5A394C}.Release|Win32.ActiveCfg = Release|Win32
 		{4D6D146E-4B22-428A-B870-189B8D5A394C}.Release|Win32.Build.0 = Release|Win32
+		{9FD68C01-D925-4A9B-BFEE-5AD283E78612}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9FD68C01-D925-4A9B-BFEE-5AD283E78612}.Debug|Win32.Build.0 = Debug|Win32
+		{9FD68C01-D925-4A9B-BFEE-5AD283E78612}.Release|Win32.ActiveCfg = Release|Win32
+		{9FD68C01-D925-4A9B-BFEE-5AD283E78612}.Release|Win32.Build.0 = Release|Win32
+		{7752FE3D-7C7E-4410-B79D-3C48E4D6C456}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7752FE3D-7C7E-4410-B79D-3C48E4D6C456}.Debug|Win32.Build.0 = Debug|Win32
+		{7752FE3D-7C7E-4410-B79D-3C48E4D6C456}.Release|Win32.ActiveCfg = Release|Win32
+		{7752FE3D-7C7E-4410-B79D-3C48E4D6C456}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

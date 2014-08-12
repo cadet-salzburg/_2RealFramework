@@ -17,8 +17,9 @@
 	limitations under the License.
 */
 
-#include "ZmqSubscriber.h"
-#include "BsonDeserializer.h"
+#ifndef BOOST_ALL_DYN_LINK
+	#define BOOST_ALL_DYN_LINK
+#endif
 
 #include "Subscriber.h"
 
@@ -41,8 +42,7 @@ int main( int argc, char *argv[] )
 		auto customTypeBundle = engine.loadBundle( "TestBundle_CustomTypes" );
 		auto simpleInfo = customTypeBundle.second.getExportedType( "simpleType" );
 
-		
-		std::shared_ptr< _2Real::network::SubscriberWithQueue > subscriber = _2Real::network::SubscriberWithQueue::create( address, topic, engine, threadpool );
+		auto subscriber = _2Real::network::QueuedSubscriber_T< _2Real::CustomDataItem >::create( address, topic, "simpleType", engine, threadpool );
 
 		std::cout << "enter \'out\' to print all data to std::cout, \'quit\' to shutdown the receiver" << std::endl;
 		while( 1 )
@@ -57,16 +57,7 @@ int main( int argc, char *argv[] )
 			else if ( input == "out" )
 			{
 				while ( !subscriber->empty() )
-				{
-					std::shared_ptr< const _2Real::DataItem > d = subscriber->getNewestDataItem();
-					auto deserializer = _2Real::io::bson::Deserializer::create( d, _2Real::network::Constants::MaxTopicNameLength );
-					auto dataItem = deserializer->getDataItem( engine.getTypeMetainfo( deserializer->getTypename() ) );
-
-					_2Real::PrintOutVisitor printy( std::cout );
-					std::cout << "data item in queue: ";
-					boost::apply_visitor( printy, *dataItem.get() );
-					std::cout << std::endl;
-				}
+					std::cout << subscriber->getNewest() << std::endl;
 			}
 		}
 
