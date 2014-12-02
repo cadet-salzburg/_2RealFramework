@@ -44,6 +44,8 @@ namespace _2Real
 
 		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const uint8_t val ) const;
 		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const int8_t val ) const;
+		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const uint16_t val ) const;
+		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const int16_t val ) const;
 		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const uint32_t val ) const;
 		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const int32_t val ) const;
 		std::shared_ptr< const TypeMetainfoImpl_I > operator()( const uint64_t val ) const;

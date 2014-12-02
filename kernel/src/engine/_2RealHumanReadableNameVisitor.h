@@ -43,6 +43,8 @@ namespace _2Real
 
 		std::string operator()( const uint8_t val ) const;
 		std::string operator()( const int8_t val ) const;
+		std::string operator()( const uint16_t val ) const;
+		std::string operator()( const int16_t val ) const;
 		std::string operator()( const uint32_t val ) const;
 		std::string operator()( const int32_t val ) const;
 		std::string operator()( const uint64_t val ) const;

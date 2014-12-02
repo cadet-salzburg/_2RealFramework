@@ -47,17 +47,18 @@ int main( int argc, char *argv[] )
 		_2Real::CustomDataItem in_custom = simpleInfo.makeCustomData();
 		int32_t in_custom_int_field = 0;
 		std::string in_custom_str_field = "";
+		std::vector< uint16_t > in_custom_vec_field;
 
 		int in_int = 0;
 		float in_float = 0.f;
 
-		auto callback_int = std::bind( []( const int i ){ std::cout << i << std::endl; }, std::placeholders::_1 );
-		auto callback_float = std::bind( []( const float f ){ std::cout << f << std::endl; }, std::placeholders::_1 );
-		auto callback_custom = std::bind( []( _2Real::CustomDataItem const& c ){ std::cout << c << std::endl; }, std::placeholders::_1 );
+		//auto callback_int = std::bind( []( const int i ){ std::cout << i << std::endl; }, std::placeholders::_1 );
+		//auto callback_float = std::bind( []( const float f ){ std::cout << f << std::endl; }, std::placeholders::_1 );
+		//auto callback_custom = std::bind( []( _2Real::CustomDataItem const& c ){ std::cout << c << std::endl; }, std::placeholders::_1 );
 
-		auto testAsyncSubscriber_int = _2Real::network::AsyncSubscriber_T< int >::create( "tcp://localhost:5556", "int", callback_int, engine, threadpool );
-		auto testAsyncSubscriber_float = _2Real::network::AsyncSubscriber_T< float >::create( "tcp://localhost:5556", "float", callback_float, engine, threadpool );
-		auto testAsyncSubscriber_custom = _2Real::network::AsyncSubscriber_T< _2Real::CustomDataItem >::create( "tcp://localhost:5556", "custom", "simpleType", callback_custom, engine, threadpool );
+		//auto testAsyncSubscriber_int = _2Real::network::AsyncSubscriber_T< int >::create( "tcp://localhost:5556", "int", callback_int, engine, threadpool );
+		//auto testAsyncSubscriber_float = _2Real::network::AsyncSubscriber_T< float >::create( "tcp://localhost:5556", "float", callback_float, engine, threadpool );
+		//auto testAsyncSubscriber_custom = _2Real::network::AsyncSubscriber_T< _2Real::CustomDataItem >::create( "tcp://localhost:5556", "custom", "simpleType", callback_custom, engine, threadpool );
 
 		auto testQueuedSubscriber_int = _2Real::network::QueuedSubscriber_T< int >::create( "tcp://localhost:5556", "int", engine, threadpool );
 		auto testQueuedSubscriber_float = _2Real::network::QueuedSubscriber_T< float >::create( "tcp://localhost:5556", "float", engine, threadpool );
@@ -78,8 +79,11 @@ int main( int argc, char *argv[] )
 			{
 				in_custom_int_field += 1;
 				in_custom_str_field.append( "-yay-" );
+				in_custom_vec_field.push_back( 10 );
 				in_custom.set( "int_field", in_custom_int_field );
 				in_custom.set( "string_field", in_custom_str_field );
+				in_custom.set( "ushort_field", (uint16_t)100 );
+				in_custom.set( "vector_field", in_custom_vec_field );
 
 				in_int += 5;
 				in_float += 0.1f;
@@ -91,8 +95,8 @@ int main( int argc, char *argv[] )
 				while ( testQueuedSubscriber_int->empty() || testQueuedSubscriber_float->empty() || testQueuedSubscriber_custom->empty() )
 					std::this_thread::yield();
 
-				std::cout << "the int data is    " << testQueuedSubscriber_int->getNewest() << std::endl;
-				std::cout << "the float data is  " << testQueuedSubscriber_float->getNewest() << std::endl;
+				//std::cout << "the int data is    " << testQueuedSubscriber_int->getNewest() << std::endl;
+				//std::cout << "the float data is  " << testQueuedSubscriber_float->getNewest() << std::endl;
 				std::cout << "the custom data is " << testQueuedSubscriber_custom->getNewest() << std::endl;
 			}
 		}

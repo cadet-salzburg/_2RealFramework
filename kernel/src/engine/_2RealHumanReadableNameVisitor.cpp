@@ -33,6 +33,18 @@ namespace _2Real
 		return "char";
 	}
 
+	std::string HumanReadableNameVisitor::operator()( const uint16_t val ) const
+	{
+		( void )( val );
+		return "ushort";
+	}
+
+	std::string HumanReadableNameVisitor::operator()( const int16_t val ) const
+	{
+		( void )( val );
+		return "short";
+	}
+
 	std::string HumanReadableNameVisitor::operator()( const uint32_t val ) const
 	{
 		( void )( val );

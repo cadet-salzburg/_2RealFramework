@@ -44,6 +44,8 @@ namespace _2Real
 
 				void operator()( std::vector< uint8_t > const& value );
 				void operator()( std::vector< int8_t > const& value );
+				void operator()( std::vector< uint16_t > const& value );
+				void operator()( std::vector< int16_t > const& value );
 				void operator()( std::vector< uint32_t > const& value );
 				void operator()( std::vector< int32_t > const& value );
 				void operator()( std::vector< uint64_t > const& value );
@@ -55,6 +57,8 @@ namespace _2Real
 
 				void operator()( const uint8_t value );
 				void operator()( const int8_t value );
+				void operator()( const uint16_t value );
+				void operator()( const int16_t value );
 				void operator()( const uint32_t value );
 				void operator()( const int32_t value );
 				void operator()( const uint64_t value );

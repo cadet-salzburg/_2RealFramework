@@ -55,6 +55,18 @@ namespace _2Real
 			}
 
 			template< >
+			uint16_t get( mongo::BSONElement &value )
+			{
+				return static_cast< uint16_t >( value.numberInt() );
+			}
+
+			template< >
+			int16_t get( mongo::BSONElement &value )
+			{
+				return static_cast< int16_t >( value.numberInt() );
+			}
+
+			template< >
 			uint64_t get( mongo::BSONElement &value )
 			{
 				return std::stoull( value.String() );
@@ -95,12 +107,17 @@ namespace _2Real
 			{
 				uint32_t numElements = get< uint32_t >( value );
 				std::vector< TType > result( numElements );
-				for ( unsigned int i=0; i<numElements; ++i )
-				{
-					std::string label = std::to_string( i );
-					auto field = obj.getField( label );
-					result[ i ] = get< TType >( field );
-				}
+				//for ( unsigned int i=0; i<numElements; ++i )
+				//{
+				//	std::string label = std::to_string( i );
+				//	auto field = obj.getField( label );
+				//	result[ i ] = get< TType >( field );
+				//}
+
+				auto field = obj.getField( protocol::BinDataField );
+				int length = sizeof( TType ) * numElements;
+				char const* data = field.binData( length );
+				memcpy( &result.front(), data, length );
 
 				return result;
 			}
@@ -172,6 +189,10 @@ namespace _2Real
 						data = get< uint32_t >( value );
 					else if ( typeName == name( (int32_t)0 ) )
 						data = get< int32_t >( value );
+					else if ( typeName == name( (uint16_t)0 ) )
+						data = get< uint16_t >( value );
+					else if ( typeName == name( (int16_t)0 ) )
+						data = get< int16_t >( value );
 					else if ( typeName == name( (uint64_t)0 ) )
 						data = get< uint64_t >( value );
 					else if ( typeName == name( (int64_t)0 ) )
@@ -192,6 +213,10 @@ namespace _2Real
 						data = vec< uint32_t >( obj, value );
 					else if ( typeName == name( std::vector< int32_t >() ) )
 						data = vec< int32_t >( obj, value );
+					else if ( typeName == name( std::vector< uint16_t >() ) )
+						data = vec< uint16_t >( obj, value );
+					else if ( typeName == name( std::vector< int16_t >() ) )
+						data = vec< int16_t >( obj, value );
 					else if ( typeName == name( std::vector< uint64_t >() ) )
 						data = vec< uint64_t >( obj, value );
 					else if ( typeName == name( std::vector< int64_t >() ) )

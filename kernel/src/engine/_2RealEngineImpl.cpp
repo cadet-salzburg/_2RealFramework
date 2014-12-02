@@ -43,6 +43,8 @@ namespace _2Real
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( int8_t )0 ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( uint32_t )0 ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( int32_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( uint16_t )0 ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( int16_t )0 ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( uint64_t )0 ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, ( int64_t )0 ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, 0.0 ) );
@@ -54,6 +56,8 @@ namespace _2Real
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::vector< int8_t >() ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::vector< uint32_t >() ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::vector< int32_t >() ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::vector< uint16_t >() ) );
+			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::vector< int16_t >() ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::vector< uint64_t >() ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::vector< int64_t >() ) );
 			mTypeCollection->addType( BasicTypeMetainfoImpl::make( mTypeCollection, std::vector< double >() ) );

@@ -12,6 +12,7 @@ namespace _2Real
 			{
 				static const std::string TypeField = "type";
 				static const std::string ValueField = "value";
+				static const std::string BinDataField = "bindata";
 			}
 		}
 	}
