@@ -107,18 +107,40 @@ namespace _2Real
 			{
 				uint32_t numElements = get< uint32_t >( value );
 				std::vector< TType > result( numElements );
-				//for ( unsigned int i=0; i<numElements; ++i )
-				//{
-				//	std::string label = std::to_string( i );
-				//	auto field = obj.getField( label );
-				//	result[ i ] = get< TType >( field );
-				//}
 
 				auto field = obj.getField( protocol::BinDataField );
 				int length = sizeof( TType ) * numElements;
 				char const* data = field.binData( length );
 				memcpy( &result.front(), data, length );
 
+				return result;
+			}
+
+			template< >
+			std::vector< bool > vec( mongo::BSONObj obj, mongo::BSONElement &value )
+			{
+				uint32_t numElements = get< uint32_t >( value );
+				std::vector< bool > result( numElements );
+				for ( unsigned int i=0; i<numElements; ++i )
+				{
+					std::string label = std::to_string( i );
+					auto field = obj.getField( label );
+					result[ i ] = get< bool >( field );
+				}
+				return result;
+			}
+
+			template< >
+			std::vector< std::string > vec( mongo::BSONObj obj, mongo::BSONElement &value )
+			{
+				uint32_t numElements = get< uint32_t >( value );
+				std::vector< std::string > result( numElements );
+				for ( unsigned int i=0; i<numElements; ++i )
+				{
+					std::string label = std::to_string( i );
+					auto field = obj.getField( label );
+					result[ i ] = get< std::string >( field );
+				}
 				return result;
 			}
 

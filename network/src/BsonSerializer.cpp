@@ -39,16 +39,6 @@ namespace _2Real
 
 					int length = sizeof( TType )*data.size();
 					builder->appendBinData( protocol::BinDataField, length, mongo::BinDataGeneral, reinterpret_cast< void const* >( &( data[0] ) ) );
-
-					// array builder always crashes -> I'm doing here what they'd be doing anyway
-					//uint32_t fieldCount = 0;
-					//for ( auto element : data )
-					//{
-					//	std::string fieldName = std::to_string( fieldCount );
-					//	builder->append( fieldName, element );
-					//	fieldCount+=1;
-					//}
-					//builder->append( protocol::ValueField, fieldCount );
 				}
 			};
 
@@ -69,25 +59,6 @@ namespace _2Real
 					builder->append( protocol::ValueField, fieldCount );
 				}
 			};
-
-			//template< >
-			//struct VectorSerializer_T< uint64_t >
-			//{
-			//	void operator()( std::vector< uint64_t > const& data, mongo::BSONObjBuilder *builder ) const
-			//	{
-			//		_2Real::HumanReadableNameVisitor typeName;
-			//		builder->append( protocol::TypeField, typeName( data ) );
-	
-			//		uint32_t fieldCount = 0;
-			//		for ( uint64_t element : data )
-			//		{
-			//			std::string fieldName = std::to_string( fieldCount );
-			//			builder->append( fieldName, std::to_string( element ) );
-			//			fieldCount+=1;
-			//		}
-			//		builder->append( protocol::ValueField, fieldCount );
-			//	}
-			//};
 
 			template< >
 			struct VectorSerializer_T< std::string >
