@@ -505,9 +505,6 @@
     <ClInclude Include="..\..\src\common\_2RealBlockState.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\_2RealBoost.h">
-      <Filter>Header Files\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\common\_2RealConstants.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
@@ -639,6 +636,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\bundle\_2RealTypeMetainfo.h">
       <Filter>Header Files\bundle\metainfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealRemoveWarnings.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\_2RealBoostDefines.h">
+      <Filter>Header Files\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

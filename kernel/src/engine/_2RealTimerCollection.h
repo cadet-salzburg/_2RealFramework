@@ -20,9 +20,7 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-
 #include "common/_2RealSignals.h"
-#include "common/_2RealBoost.h"
 #include "boost/asio.hpp"
 
 namespace _2Real

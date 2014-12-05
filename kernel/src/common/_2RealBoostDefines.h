@@ -18,20 +18,12 @@
 
 #pragma once
 
-#define BOOST_ALL_DYN_LINK
+#ifndef BOOST_ALL_DYN_LINK
+	#define BOOST_ALL_DYN_LINK
+#endif
 
-#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+#ifndef BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+	#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+#endif
+
 #define BOOST_MPL_LIMIT_LIST_SIZE 40
-
-#include <sdkddkver.h>
-
-//#ifndef _DEBUG
-
-// removes silly warning related to assignment operator
-#pragma warning(disable: 4512)
-// removes silly warning related to unreachable code in boost/signals2/detail/variadic_slot_invoker.hpp
-#pragma warning(disable: 4702)
-// removes silly warning related to unused args in boost/signals2/detail/variadic_slot_invoker.hpp
-#pragma warning(disable: 4100)
-
-//#endif

@@ -19,7 +19,7 @@
 #pragma once
 
 #include "common/_2RealStdIncludes.h"
-#include "common/_2RealBoost.h"
+#include "common/_2RealBoostDefines.h"
 #include "common/_2RealDefaultUpdatePolicy.h"
 #include "common/_2RealBlockResult.h"
 #include "common/_2RealThreadpoolPolicy.h"

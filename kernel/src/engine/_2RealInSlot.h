@@ -44,11 +44,14 @@ namespace _2Real
 
 		void update();
 
+		bool wasUpdated() const;
+
 	private:
 
 		mutable std::mutex					mMutex;
 		std::shared_ptr< const DataItem >	mTmpValue;
 		std::shared_ptr< const DataItem >	mValue;
+		bool								mWasUpdated = false;
 
 	};
 

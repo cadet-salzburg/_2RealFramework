@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "common/_2RealBoost.h"
+#include "common/_2RealBoostDefines.h"
 #include "boost/variant.hpp"
 
 #include "common/_2RealStdIncludes.h"
@@ -43,6 +43,8 @@ namespace _2Real
 
 	typedef boost::variant< uint8_t,		std::vector< uint8_t >,
 							int8_t,			std::vector< int8_t >,
+							uint16_t,		std::vector< uint16_t >,
+							int16_t,		std::vector< int16_t >,
 							uint32_t,		std::vector< uint32_t >,
 							int32_t,		std::vector< int32_t >,
 							uint64_t,		std::vector< uint64_t >,

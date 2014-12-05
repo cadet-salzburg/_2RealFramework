@@ -49,7 +49,7 @@ namespace _2Real
 		~BundleImpl() = default;
 
 		std::shared_ptr< const InstanceId >			getId() const;
-
+		std::shared_ptr< const BundleMetainfoImpl > getMetainfo() const;
 		Path 										getFilePath() const;
 		void										unload( const uint64_t timeout );
 		std::shared_ptr< BlockImpl >				createBlock( std::string const& name, std::shared_ptr< ThreadpoolImpl_I > system, std::vector< std::shared_ptr< BlockImpl > > const& dependencies );

@@ -40,6 +40,8 @@
 #include "bundle/_2RealOutletHandle.h"
 #include "bundle/_2RealParameterHandle.h"
 
+#include "engine/_2RealHumanReadableNameVisitor.h"
+
 #if defined( _WIN32 )
 	#define _2REAL_LIBRARY_API __declspec( dllexport )
 #else

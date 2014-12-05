@@ -39,6 +39,11 @@ namespace _2Real
 			*/
 			DataItem & getValue();
 
+			/*
+			*	@signals to the engine that no value was produced during the update
+			*/
+			void discard();
+
 		private:
 
 			std::shared_ptr< OutletImpl >		mImpl;

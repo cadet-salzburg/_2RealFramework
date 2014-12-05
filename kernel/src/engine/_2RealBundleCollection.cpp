@@ -17,7 +17,7 @@
 	limitations under the License.
 */
 
-#include "common/_2RealBoost.h"
+#include "common/_2RealBoostDefines.h"
 #include "common/_2RealException.h"
 #include "common/_2RealConstants.h"
 
@@ -56,13 +56,14 @@ namespace _2Real
 
 	/////////////////////////////////////////////////////////////////////////////////////
 
-	BundleCollection::BundleCollection( std::shared_ptr< TypeCollection > registry )
+	BundleCollection::BundleCollection()
 	{
 		updateBundleDirectory();
 	}
 
 	void BundleCollection::clear( const unsigned long timeout )
 	{
+		// disconnect from all 'bundle was destroyed' signals
 		for ( auto it : mBundles )
 		{
 			it.first.disconnect();
@@ -82,29 +83,26 @@ namespace _2Real
 		char * dir = std::getenv( Constants::BundleEnvName.c_str() );
 		if ( nullptr != dir )
 			mBundleDirectory = Path( dir );
-
-		std::cout << mBundleDirectory << std::endl;
-
-		// TODO: exception? or some reasonable default value
+		// TODO: exception? currently, the execution dir is being used
 	}
 
 	std::pair< std::shared_ptr< BundleImpl >, std::shared_ptr< const BundleMetainfoImpl > > BundleCollection::loadBundle( Path const& path, std::shared_ptr< TypeCollection > types )
 	{
-		Path absPath = mBundleDirectory / path;
+		Path absPath = path.is_absolute() ? path : mBundleDirectory / path;
 
+		// check if bundle already exists
 		auto it = std::find_if( mBundles.begin(), mBundles.end(), BundleByPath( absPath ) );
 		if ( it != mBundles.end() )
 		{
-			std::ostringstream msg;
-			msg << "shared library " << absPath.string() << " is already loaded";
-			throw AlreadyExists( msg.str() );
+			auto result = std::make_pair( it->second, it->second->getMetainfo() );
+			return result;
 		}
 
-		// may throw
-		std::shared_ptr< SharedLibrary > lib( new SharedLibrary( path ) );
+		// actual dll loading, may throw bundle import exception
+		std::shared_ptr< SharedLibrary > lib( new SharedLibrary( absPath ) );
 
-		std::shared_ptr< BundleMetainfoImpl > bundleMetainfo = BundleMetainfoImpl::make( lib, path, types );
-
+		// get bundle metainfo
+		std::shared_ptr< BundleMetainfoImpl > bundleMetainfo = BundleMetainfoImpl::make( lib, absPath, types );
 		if ( !bundleMetainfo.get() )
 		{
 			std::ostringstream msg;
@@ -112,13 +110,13 @@ namespace _2Real
 			throw BundleImportFailure( msg.str() );
 		}
 
+		// create bundle obj, register a unload listener & store
 		std::shared_ptr< BundleImpl > bundle = BundleImpl::createFromMetainfo( bundleMetainfo, lib, absPath );
+		boost::signals2::connection connection = bundle->registerToDestroyed( std::bind( &BundleCollection::bundleUnloaded, this, std::placeholders::_1 ) );
+		mBundles.push_back( std::make_pair( connection, bundle ) );
 
-		boost::signals2::connection con = bundle->registerToDestroyed( std::bind( &BundleCollection::bundleUnloaded, this, std::placeholders::_1 ) );
-
+		// return bundle + metainfo
 		auto result = std::make_pair( bundle, bundleMetainfo );
-
-		mBundles.push_back( std::make_pair( con, bundle ) );
 		return result;
 	}
 
@@ -128,5 +126,4 @@ namespace _2Real
 		if ( it != mBundles.end() )
 			mBundles.erase( it );
 	}
-
 }

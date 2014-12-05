@@ -83,6 +83,11 @@ namespace _2Real
 	{
 	}
 
+	std::shared_ptr< const BundleMetainfoImpl > BundleImpl::getMetainfo() const
+	{
+		return mMetainfo;
+	}
+
 	std::shared_ptr< const InstanceId > BundleImpl::getId() const
 	{
 		return mId;
@@ -94,9 +99,12 @@ namespace _2Real
 		std::shared_ptr< BundleImpl > tmp = shared_from_this();
 
 		std::vector< std::pair< std::shared_ptr< BlockImpl >, std::future< BlockResult > > > blocks;
+		// stores pointres to blocks, and the block's response to 'parent unloaded'
 		for ( auto it : mBlocks )
 			blocks.push_back( std::make_pair( it.second, it.second->parentUnloaded() ) );
 
+		// give the blocks enough time to perform the shutdown
+		// ( default timeout = 5000 milliseconds, which is pretty long )
 		if ( !blocks.empty() )
 			std::this_thread::sleep_for( std::chrono::milliseconds( timeout ) );
 
@@ -106,8 +114,10 @@ namespace _2Real
 		{
 			try
 			{
+				// see if 'get' function returns anything, but we don't actually care about the result
 				BlockResult result = it.second.get();
 				( void )( result );
+				// if get did NOT throw, remove the block
 				auto blockIter = std::find_if( mBlocks.begin(), mBlocks.end(), BlockByAddress( it.first ) );
 				mBlocks.erase( blockIter );
 				it.first.reset();

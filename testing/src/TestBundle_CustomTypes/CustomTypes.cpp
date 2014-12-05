@@ -31,24 +31,26 @@ void getBundleMetainfo( _2Real::bundle::BundleMetainfo &info )
 
 	// -- types ( by name )
 
-	info.exportsType( "simpleType", { _2Real::declareField( "int_field", "int" ), _2Real::declareField( "string_field", "string" ) } );
-	info.exportsType( "complexType", { _2Real::declareField( "simple_field1", "simpleType" ), _2Real::declareField( "simple_field2", "simpleType" ), _2Real::declareField( "simple_field3", "simpleType" ), _2Real::declareField( "simple_field4", "simpleType" ), _2Real::declareField( "float_field", "float" ) } );
+	info.exportsType( "simpleType", { _2Real::declareField( "ushort_field", "ushort" ), _2Real::declareField( "vector_field", "vector of ushort" ), _2Real::declareField( "int_field", "int" ), _2Real::declareField( "string_field", "string" ) } );
+	info.exportsType( "complexType", { _2Real::declareField( "vector_field", "vector of int" ), _2Real::declareField( "simple_field1", "simpleType" ), _2Real::declareField( "simple_field2", "simpleType" ), _2Real::declareField( "simple_field3", "simpleType" ), _2Real::declareField( "simple_field4", "simpleType" ), _2Real::declareField( "float_field", "float" ) } );
 }
 
-struct FindType : public std::unary_function< bool, const _2Real::bundle::CustomTypeMetainfo >
-{
-	explicit FindType( const std::string baseline ) : mBaseline( baseline ) {}
-	bool operator()( const _2Real::bundle::CustomTypeMetainfo obj ) const { return mBaseline == obj.getName(); }
-	std::string mBaseline;
-};
+//struct FindType : public std::unary_function< bool, const _2Real::bundle::CustomTypeMetainfo >
+//{
+//	explicit FindType( const std::string baseline ) : mBaseline( baseline ) {}
+//	bool operator()( const _2Real::bundle::CustomTypeMetainfo obj ) const { return mBaseline == obj.getName(); }
+//	std::string mBaseline;
+//};
 
 void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, _2Real::bundle::TypeMetainfoCollection const& existingTypes )
 {
 	if ( info.getName() == "simpleType" )
 	{
 		info.setDescription( "testing simple types, that is, types where all fields are not custom types" );
+		info.setInitialFieldValue( "ushort_field", (uint16_t)0 );
 		info.setInitialFieldValue( "int_field", ( int32_t )15 );
 		info.setInitialFieldValue( "string_field", std::string( "poit" ) );
+		info.setInitialFieldValue( "vector_field", std::vector< uint16_t >() );
 	}
 	else if ( info.getName() == "complexType" )
 	{
@@ -59,6 +61,7 @@ void getTypeMetainfo( _2Real::bundle::CustomTypeMetainfo & info, _2Real::bundle:
 		aSimple.set( "string_field", std::string( "narf" ) );
 
 		info.setDescription( "testing complex types, that is, types where at least one field is a custom type" );
+		info.setInitialFieldValue( "vector_field", std::vector< int >() );
 		info.setInitialFieldValue( "simple_field1", aSimple );	
 		info.setInitialFieldValue( "simple_field2", std::move( aSimple ) );
 		info.setInitialFieldValue( "simple_field3", std::move( simpleInfo->makeData() ) );

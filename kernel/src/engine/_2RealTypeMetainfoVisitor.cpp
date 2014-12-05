@@ -44,6 +44,20 @@ namespace _2Real
 		return mTypes->getTypeMetainfo( name );
 	}
 
+	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const uint16_t val ) const
+	{
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
+	}
+
+	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const int16_t val ) const
+	{
+		HumanReadableNameVisitor visitor;
+		std::string name = visitor( val );
+		return mTypes->getTypeMetainfo( name );
+	}
+
 	std::shared_ptr< const TypeMetainfoImpl_I > TypeMetainfoVisitor::operator()( const uint32_t val ) const
 	{
 		HumanReadableNameVisitor visitor;

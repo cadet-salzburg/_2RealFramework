@@ -38,5 +38,10 @@ namespace _2Real
 		{
 			return mImpl->getValue();
 		}
+
+		bool InletHandle::wasUpdated() const
+		{
+			return mImpl->wasUpdated();
+		}
 	}
 }

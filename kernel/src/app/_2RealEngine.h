@@ -36,6 +36,7 @@ namespace _2Real
 		class InletHandle;
 		class OutletHandle;
 		class LinkHandle;
+		class TypeMetainfo_I;
 
 		class Engine
 		{
@@ -51,6 +52,7 @@ namespace _2Real
 
 			// loads a bundle, path must be relative to bundle dir, with or without the suffix
 			// throws a _2Real::Exception if anything goes wrong
+			// will return bundle handle & info also if bundle was already loaded
 			std::pair< BundleHandle, BundleMetainfo > loadBundle( std::string const& libname );
 
 			// creates a threadpool w. an assignment policy
@@ -64,6 +66,9 @@ namespace _2Real
 
 			// links and inlet & and outlet
 			LinkHandle link( InletHandle, OutletHandle );
+
+			// return type metainfo
+			std::shared_ptr< TypeMetainfo_I > getTypeMetainfo( std::string const& name ) const;
 
 			// destroys everything inside the engine: bundles, timers, threadpools, etc
 			void clear();

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\src\BsonDeserializer.cpp" />
+    <ClCompile Include="..\..\src\BsonSerializer.cpp" />
+    <ClCompile Include="..\..\src\ZmqPublisherWrapper.cpp" />
+    <ClCompile Include="..\..\src\ZmqSubscriberWrapper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\BsonDeserializer.h" />
+    <ClInclude Include="..\..\src\BsonIo.h" />
+    <ClInclude Include="..\..\src\BsonSerializer.h" />
+    <ClInclude Include="..\..\src\Publisher.h" />
+    <ClInclude Include="..\..\src\Subscriber.h" />
+    <ClInclude Include="..\..\src\zmq.hpp" />
+    <ClInclude Include="..\..\src\ZmqNetworking.h" />
+    <ClInclude Include="..\..\src\ZmqPublisherWrapper.h" />
+    <ClInclude Include="..\..\src\ZmqSubscriberWrapper.h" />
+  </ItemGroup>
+</Project>

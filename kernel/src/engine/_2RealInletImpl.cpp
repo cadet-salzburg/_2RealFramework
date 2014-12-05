@@ -108,6 +108,11 @@ namespace _2Real
 		return mParentInlet.lock();
 	}
 
+	bool InletImpl::wasUpdated() const
+	{
+		return InSlot::wasUpdated();
+	}
+
 	void InletImpl::update()
 	{
 		InSlot::update();

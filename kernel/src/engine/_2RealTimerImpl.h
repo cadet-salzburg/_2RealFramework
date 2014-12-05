@@ -22,7 +22,7 @@
 #include "common/_2RealStdIncludes.h"
 #include "engine/_2RealUpdateTrigger_I.h"
 
-#include "common/_2RealBoost.h"
+#include "common/_2RealBoostDefines.h"
 #include "boost/asio.hpp"
 
 namespace _2Real

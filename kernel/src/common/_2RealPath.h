@@ -18,8 +18,7 @@
 
 #pragma once
 
-#include "_2RealBoost.h"
-
+#include "_2RealBoostDefines.h"
 #include "boost/filesystem.hpp"
 
 namespace _2Real

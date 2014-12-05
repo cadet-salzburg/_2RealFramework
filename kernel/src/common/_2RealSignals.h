@@ -18,7 +18,8 @@
 
 #pragma once
 
-#include "common/_2RealBoost.h"
+#include "common/_2RealRemoveWarnings.h"
+#include "common/_2RealBoostDefines.h"
 #include "boost/signals2.hpp"
 #include "boost/bind.hpp"
 

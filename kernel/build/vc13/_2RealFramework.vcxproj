@@ -343,7 +343,7 @@
     <ClInclude Include="..\..\src\common\_2RealBlockRequest.h" />
     <ClInclude Include="..\..\src\common\_2RealBlockResult.h" />
     <ClInclude Include="..\..\src\common\_2RealBlockState.h" />
-    <ClInclude Include="..\..\src\common\_2RealBoost.h" />
+    <ClInclude Include="..\..\src\common\_2RealBoostDefines.h" />
     <ClInclude Include="..\..\src\common\_2RealConstants.h" />
     <ClInclude Include="..\..\src\common\_2RealCustomDataItem.h" />
     <ClInclude Include="..\..\src\common\_2RealData.h" />
@@ -352,6 +352,7 @@
     <ClInclude Include="..\..\src\common\_2RealDeclarations.h" />
     <ClInclude Include="..\..\src\common\_2RealDefaultUpdatePolicy.h" />
     <ClInclude Include="..\..\src\common\_2RealPrintOutVisitor.h" />
+    <ClInclude Include="..\..\src\common\_2RealRemoveWarnings.h" />
     <ClInclude Include="..\..\src\common\_2RealSignals.h" />
     <ClInclude Include="..\..\src\common\_2RealException.h" />
     <ClInclude Include="..\..\src\common\_2RealInletPolicy.h" />
